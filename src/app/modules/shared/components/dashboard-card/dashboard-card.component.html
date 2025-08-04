@@ -1,0 +1,38 @@
+<div class="bg-white rounded-2xl p-6 shadow-md border border-gray-100 h-48">
+    <div class="flex items-start mt-5 justify-between h-full">
+      <div class="flex-1">
+
+        <div class="text-2xl font-bold text-gray-900 mb-1">
+          {{ data.value }}
+        </div>
+        <div class="text-sm text-gray-600">
+          {{ data.label }}
+        </div>
+
+      </div>
+      <div class="flex justify-between flex-col col-auto">
+        <div 
+          *ngIf="data.percentage !== undefined" 
+          class="flex items-center justify-center mt-2 text-sm font-medium mb-10"
+          [class.text-green-600]="data.isPositive"
+          [class.text-red-500]="!data.isPositive"
+        >
+          <mat-icon class="text-xs mr-1">
+            {{ data.isPositive ? 'trending_up' : 'trending_down' }}
+          </mat-icon>
+          {{ data.percentage }}%
+        </div>
+        <div 
+          class="w-12 h-12 rounded-full flex items-center justify-center ml-4"
+          [style.background-color]="data.iconBackground"
+        >
+          <mat-icon 
+            class="text-xl ml-1 mb-1"
+            [style.color]="data.iconColor"
+          >
+            {{ data.icon }}
+          </mat-icon>
+        </div>
+      </div>
+    </div>
+</div>
