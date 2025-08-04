@@ -1,0 +1,14 @@
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<div class="h-48 w-full rounded-md border-2 border-dashed border-gray-300 cursor-pointer" (click)="imageInput.click()">
+  <div class="h-48 flex flex-col justify-center items-center text-center">
+    <mat-icon>cloud_upload</mat-icon>
+    @if (!fileUrl) {
+      <p class="text-xl">Faça upload da imagem da capa</p>
+      <p class="text-sm">JPEG, PNG</p>
+    } @else {
+      <p>{{ fileUrl }}</p>
+    }
+  </div>
+  <input type="file" #imageInput class="hidden" (change)="imageSelected($event)">
+</div>

@@ -1,0 +1,13 @@
+<app-page-header [title]="title" [pageSession]="pageSession" />
+
+<section>
+  <app-filter-table title="Configurações">
+    <app-base-button label="Novo Colaborador" routerLink="form"></app-base-button>
+  </app-filter-table>
+
+  <app-commom-table
+    [data]="admins"
+    [displayedColumns]="displayedColumns"
+    (edit)="gotoEdit($event)"
+  ></app-commom-table>
+</section>

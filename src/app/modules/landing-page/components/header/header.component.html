@@ -1,0 +1,31 @@
+<header class="p-4 bg-[#EBEBEB] md:px-9">
+  <div class="flex flex-col justify-between items-center sm:flex-row gap-4">
+    <img src="assets/images/logo.png" alt="" class="h-16">
+    <mat-form-field appearance="outline" class="w-full md:w-1/2" subscriptSizing="dynamic">
+      <mat-label>Buscar</mat-label>
+      <input #filterInput matInput type="text">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+    <div class="flex justify-start items-center gap-4">
+      <div class="h-12 w-12 bg-[#D9D9D9] rounded-full"></div>
+      <a routerLink="/home">
+        <p class="text-xs">Faça seu</p>
+        <p class="text-sm cursor-pointer">Login ou cadastro</p>
+      </a>
+    </div>
+  </div>
+  <div class="mt-4">
+    <ul class="flex justify-between items-center gap-4 overflow-auto w-full">
+      <li class="text-nowrap">Apostilas</li>
+      <li class="text-nowrap">Catálogos</li>
+      <li class="text-nowrap">Livros</li>
+      <li class="text-nowrap">Livretos</li>
+      <li class="text-nowrap">Manuais</li>
+      <li class="text-nowrap">Revistas</li>
+      <li class="text-nowrap">Materiais de divulgação</li>
+      <li class="text-nowrap">Cadernos</li>
+      <li class="text-nowrap">Planners</li>
+      <li class="text-nowrap">Marcador de página</li>
+    </ul>
+  </div>
+</header>

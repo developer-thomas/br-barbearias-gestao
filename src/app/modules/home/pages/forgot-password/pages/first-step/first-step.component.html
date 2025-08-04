@@ -1,0 +1,15 @@
+<section>
+  <img src="assets/images/logo.png" alt="" class="mx-auto my-5 h-24">
+  <h1 class="text-2xl font-bold mb-2">Esqueceu sua senha?</h1>
+  <p class="mb-3">Digite seu email para que possamos enviar um código de recuperação:</p>
+  
+  <form class="mb-16" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="w-full mb-2">
+      <mat-label>E-mail</mat-label>
+      <input matInput required type="email" formControlName="credential">
+      <mat-error>Campo obrigatório</mat-error>
+    </mat-form-field>
+    
+    <button mat-flat-button color="primary" class="w-full" [disabled]="form.invalid">Avançar</button>
+  </form>
+</section>

@@ -1,0 +1,57 @@
+<app-page-header [title]="title" [pageSession]="pageSession" />
+
+<section>
+  <mat-card>
+    <mat-card-content>
+      <div class="text-right">
+        <mat-slide-toggle
+          color="primary"
+          [checked]="client?.active"
+          (change)="changeStatus()"
+        />
+      </div>
+      <div class="grid md:grid-cols-[auto_1fr_1fr_1fr] gap-3">
+        <div class="rounded-full h-24 w-24 overflow-hidden md:row-span-2">
+          <img [src]="client?.avatar" alt="">
+        </div>
+        <app-label-and-info label="Nome" [info]="client?.name"></app-label-and-info>
+        <app-label-and-info label="CNPJ" [info]="client?.document"></app-label-and-info>
+        <app-label-and-info label="Status" [info]="client?.active | booleanStatus"></app-label-and-info>
+        <app-label-and-info label="Email" [info]="client?.email"></app-label-and-info>
+        <app-label-and-info label="Telefone" [info]="client?.phone"></app-label-and-info>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-tab-group class="mt-4">
+    <mat-tab label="Orçamentos">
+      <div class="p-2">
+        <mat-card>
+          <mat-card-content>
+            <app-commom-table
+              [data]="budgets"
+              [displayedColumns]="displayedColumns"
+            ></app-commom-table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Endereço">
+      <div class="p-2">
+        <mat-card>
+          <mat-card-content>
+            <div class="grid md:grid-cols-3 gap-3">
+              <app-label-and-info label="CEP" [info]="client?.addresses?.[0]?.zipCode" />
+              <app-label-and-info label="Endereço" [info]="client?.addresses?.[0]?.street" />
+              <app-label-and-info label="Número" [info]="client?.addresses?.[0]?.number" />
+              <app-label-and-info label="Bairro" [info]="client?.addresses?.[0]?.district" />
+              <app-label-and-info label="Cidade" [info]="client?.addresses?.[0]?.city" />
+              <app-label-and-info label="Estado" [info]="client?.addresses?.[0]?.state" />
+            </div>
+          </mat-card-content>
+        </mat-card>  
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</section>

@@ -1,0 +1,126 @@
+<app-page-header pageSession="Dashboard" title="Dashboard"></app-page-header>
+
+<div class="h-full">
+  <!-- Filters and Actions -->
+  <div class="flex items-center justify-between mb-8 bg-white rounded-xl p-4 shadow-md">
+    <div class="flex items-center gap-4">
+      <!-- Todas filiais -->
+      <div class="flex items-center gap-2 px-4 py-2 rounded-lg">
+        <span class="text-sm font-medium text-gray-700">Todas filiais</span>
+        <mat-icon class="text-gray-500 text-lg">business</mat-icon>
+      </div>
+
+      <!-- Tipo dropdown -->
+      <div class="flex items-center gap-2 px-4 w-36 py-2 bg-gray-100 rounded-lg">
+        <mat-select value="tipo" class="text-sm">
+          <mat-option value="tipo">Tipo</mat-option>
+        </mat-select>
+      </div>
+            
+      <!-- Todos filter -->
+      <div class="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg">
+        <span class="text-sm font-medium text-gray-700">Todos</span>
+        <mat-icon class="text-gray-500 text-lg">filter_list</mat-icon>
+      </div>
+
+      <!-- Período -->
+      <div class="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg">
+        <mat-icon class="text-gray-500 text-lg">calendar_today</mat-icon>
+        <span class="text-sm font-medium text-gray-700">Período</span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button color="primary" class="bg-green-500 hover:bg-green-600 text-white font-medium px-6 h-11 w-52 rounded-md">
+        CADASTRAR
+      </button>
+      <button mat-icon-button class="text-gray-600">
+        <mat-icon>view_list</mat-icon>
+      </button>
+      <button mat-icon-button class="text-white bg-green-500 rounded-lg">
+        <mat-icon>file_download</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Dashboard Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- First 3 cards in top row -->
+    <app-dashboard-card [data]="dashboardCards[0]"></app-dashboard-card>
+    <app-dashboard-card [data]="dashboardCards[1]"></app-dashboard-card>
+    <app-dashboard-card [data]="dashboardCards[2]"></app-dashboard-card>
+  </div>
+
+  <!-- Second row with chart and remaining cards -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Gráfico -->
+    <div class="lg:col-span-2 bg-white rounded-2xl p-6 shadow-md border border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-900 mb-6">Clientes impactados por dia</h3>
+      <div class="flex items-end justify-between h-64 gap-2 px-4">
+        <div *ngFor="let item of chartData; trackBy: trackByIndex" class="flex flex-col items-center" style="flex: 1; min-width: 0;">
+          <div class="flex-1 flex items-end mb-2 w-full">
+            <div 
+              class="w-full bg-gray-800 rounded-t-sm transition-all duration-300"
+              [style.height.px]="(item.value / maxValue) * 200"
+              [style.min-height.px]="20"
+            >
+            </div>
+          </div>
+          <div class="text-xs text-gray-600 text-center whitespace-nowrap">
+            <div>{{ item.day }}</div>
+            <div>{{ item.date }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="text-xs text-gray-500 mt-2 px-4">0000</div>
+    </div>
+
+    <!-- Card Percentual de Impacto -->
+    <div>
+      <div class="bg-white rounded-2xl p-6 shadow-md border border-gray-200">
+        <div class="mb-4">
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Percentual de impacto</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </div>
+        <div class="flex items-center justify-center">
+          <div class="relative w-24 h-24">
+            <svg class="w-24 h-24 transform -rotate-90" viewBox="0 0 36 36">
+              <path
+                class="text-gray-200"
+                stroke="currentColor"
+                stroke-width="3"
+                fill="none"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+              />
+              <path
+                class="text-green-500"
+                stroke="currentColor"
+                stroke-width="3"
+                fill="none"
+                stroke-dasharray="50, 100"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+              />
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="text-2xl font-bold text-gray-900">50%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+            
+      <!-- Last card -->
+      <div class="mt-5">
+        <app-dashboard-card [data]="dashboardCards[6]"></app-dashboard-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom row with remaining cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <app-dashboard-card [data]="dashboardCards[3]"></app-dashboard-card>
+    <app-dashboard-card [data]="dashboardCards[4]"></app-dashboard-card>
+    <app-dashboard-card [data]="dashboardCards[5]"></app-dashboard-card>
+  </div>
+</div>

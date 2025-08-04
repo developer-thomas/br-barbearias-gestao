@@ -1,0 +1,157 @@
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<app-page-header [title]="title" [pageSession]="pageSession" />
+
+<section>
+  <div>
+    <h2 class="font-bold text-xl mb-2">Dados</h2>
+    <div class="grid md:grid-cols-[auto_1fr_1fr_1fr] gap-3">
+      <div class="flex flex-col justify-center items-center md:row-span-2 mx-4">
+        <img
+          (click)="imageInput.click()"
+          [src]="avatar ? avatar : 'assets/images/default-photo.png'" alt=""
+          class="h-32 w-32 rounded-full border border-black mx-auto cursor-pointer"
+        >
+        <input type="file" #imageInput class="hidden" (change)="uploadFile($event)">
+      </div>
+
+      <div class="md:col-span-2">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Nome completo</mat-label>
+          <input matInput type="text" [formControl]="form.controls.name">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" [formControl]="form.controls.email">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Data de nascimento</mat-label>
+          <input matInput type="date" [formControl]="form.controls.birthdate">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Telefone</mat-label>
+          <input matInput type="tel" mask="(00) 00000-0000" [formControl]="form.controls.phone" [dropSpecialCharacters]="false">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>CPF/CNPJ</mat-label>
+          <input matInput type="tel" mask="CPF_CNPJ" [formControl]="form.controls.document" [dropSpecialCharacters]="false">
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h2 class="font-bold text-xl mb-2">Endereço</h2>
+    <div class="grid md:grid-cols-2 gap-3">
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>CEP</mat-label>
+          <input matInput type="text" mask="00000-000" [formControl]="form.controls.address.controls.zipcode">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Endereço</mat-label>
+          <input matInput type="text" [formControl]="form.controls.address.controls.street">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Número</mat-label>
+          <input matInput type="text" [formControl]="form.controls.address.controls.number">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Bairro</mat-label>
+          <input matInput type="text" [formControl]="form.controls.address.controls.district">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Cidade</mat-label>
+          <input matInput type="text" [formControl]="form.controls.address.controls.city">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Estado</mat-label>
+          <input matInput type="text" maxlength="2" [formControl]="form.controls.address.controls.state">
+        </mat-form-field>
+      </div>
+      
+    </div>
+  </div>
+
+  <div>
+    <h2 class="font-bold text-xl mb-2">Acesso</h2>
+    <div class="grid md:grid-cols-[auto_1fr_1fr] gap-3">
+      <div class="flex flex-col">
+          <mat-label>Cliente pode ter acesso?</mat-label>
+          <mat-radio-group [formControl]="form.controls.canAccess">
+            <mat-radio-button [value]="true">Sim</mat-radio-button>
+            <mat-radio-button [value]="false">Não</mat-radio-button>
+          </mat-radio-group>
+      </div>
+
+      @if (form.controls.canAccess.value) {
+        <div>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Senha</mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'" [formControl]="form.controls.password">
+            <button type="button" class="mr-3" mat-icon-button matSuffix (click)="hide = !hide">
+              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+  
+        <div>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Confirmar senha</mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'" [formControl]="form.controls.confirmPassword">
+            <button type="button" class="mr-3" mat-icon-button matSuffix (click)="hide = !hide">
+              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div>
+    <h2 class="font-bold text-xl mb-2">Pagamento</h2>
+    <div>
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Selecione um pagamento</mat-label>
+        <mat-select [formControl]="form.controls.payment">
+          <mat-option value="ex-01">Exemplo 01</mat-option>
+          <mat-option value="ex-02">Exemplo 02</mat-option>
+          <mat-option value="ex-03">Exemplo 03</mat-option>
+          <mat-option value="ex-04">Exemplo 04</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="flex justify-end items-center gap-3">
+    <app-base-button label="Cancelar" styleClass="outlined" (click)="goBack()"></app-base-button>
+    <app-base-button label="Salvar" (click)="submit()"></app-base-button>
+  </div>
+</section>

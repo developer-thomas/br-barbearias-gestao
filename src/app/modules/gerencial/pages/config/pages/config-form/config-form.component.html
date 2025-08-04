@@ -1,0 +1,64 @@
+<app-page-header [title]="title" [pageSession]="pageSession" />
+
+<section>
+  <div>
+    <h2 class="font-bold text-xl mb-2">Dados</h2>
+    <div class="grid md:grid-cols-2 gap-3">
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Nome</mat-label>
+          <input matInput type="text" [formControl]="form.controls.name">
+        </mat-form-field>
+      </div>
+      
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>CPF</mat-label>
+          <input matInput type="text" mask="000.000.000-00" [formControl]="form.controls.cpf" [dropSpecialCharacters]="false">
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h2 class="font-bold text-xl mb-2">Acesso</h2>
+    <div class="grid md:grid-cols-2 gap-3">
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" [formControl]="form.controls.email">
+        </mat-form-field>
+      </div>
+      
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Senha</mat-label>
+          <input matInput [type]="hide ? 'password' : 'text'" [formControl]="form.controls.password">
+          <button type="button" class="mr-3" mat-icon-button matSuffix (click)="hide = !hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h2 class="font-bold text-xl mb-2">Permissão</h2>
+    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+      @for (item of permissions; track item.id) {
+        <div class="bg-custom-gray p-2 rounded-md">
+          <mat-checkbox #permission
+            color="primary"
+            [checked]="item.checked"
+            [value]="item.id"
+          >{{item.title}}</mat-checkbox>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="flex justify-end items-center gap-3 mt-4">
+    <app-base-button label="Cancelar" styleClass="outlined" (click)="goBack()"></app-base-button>
+    <app-base-button label="Salvar" (click)="submit()"></app-base-button>
+  </div>
+</section>

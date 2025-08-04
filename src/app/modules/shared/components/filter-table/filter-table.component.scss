@@ -1,0 +1,35 @@
+.filter-input {
+    max-width: 322px;
+    &.mat-mdc-form-field {
+        --mat-form-field-container-vertical-padding: 0;
+        --mat-form-field-container-height: 40px;
+        --mdc-outlined-text-field-outline-color: transparent;
+        --mdc-outlined-text-field-container-shape: 6px;
+        border-radius: 7px;
+
+        input {
+            padding: 8px 0;
+        }
+    }
+}
+
+.filter-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9B9999;
+    background: #E1E2E6;
+    border: none;
+    border-radius: 6px;
+    
+    &.mat-mdc-outlined-button {
+        width: 40px;
+        min-width: auto;
+        height: 40px;
+        padding: 10px;
+    }
+
+    .mat-icon {
+        margin: 0;
+    }
+}

@@ -1,0 +1,17 @@
+<section class="bg-custom-gray p-4">
+  <p-timeline
+    [value]="events" [align]="(isHandset$ | async) ? 'alternate': 'top'"
+    [layout]="(isHandset$ | async) ? 'vertical': 'horizontal'"
+  >
+    <ng-template pTemplate="marker" let-event>
+      <div class="p-4 rounded-full flex justify-center items-center" [ngClass]="event.completed ? 'bg-primary' : 'bg-white'">
+        <mat-icon [ngClass]="event.completed ? 'text-white' : 'text-black'">{{ event.icon }}</mat-icon>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="content" let-event>
+      <div>
+        <p class="text-sm break-words">{{ event.title }}</p>
+      </div>
+    </ng-template>
+  </p-timeline>
+</section>
