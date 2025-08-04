@@ -35,6 +35,10 @@ export class CommomTableComponent<T> implements OnChanges, AfterViewInit {
 
   @Input({ required: true }) data!: T[];
   @Input({ required: true }) displayedColumns!: TableColumn[];
+  @Input() useDetailBtn: boolean = true;
+  @Input() useEditBtn: boolean = true;
+  @Input() useDeleteBtn: boolean = true;
+
 
   @Output() detail = new EventEmitter<T>();
   @Output() edit = new EventEmitter<T>();

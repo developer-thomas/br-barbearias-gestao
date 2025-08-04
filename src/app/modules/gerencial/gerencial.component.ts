@@ -17,7 +17,7 @@ export class AdminComponent {
       icon: "dashboard",
     },
     {
-      route: "/clientes",
+      route: "clientes",
       label: "Clientes",
       icon: "people",
     },
