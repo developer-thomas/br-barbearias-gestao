@@ -2,14 +2,15 @@
 
 <section>
   <app-filter-table (filter)="filter($event)">
-    <app-base-button label="Novo cliente" routerLink="form"></app-base-button>
+    <!-- <app-base-button label="Novo cliente" routerLink="form"></app-base-button> -->
   </app-filter-table>
 
   <app-commom-table
-    [data]="clients"
+    [data]="clients()"
     [displayedColumns]="displayedColumns"
     (detail)="gotoDetailPage($event)"
     (edit)="gotoEditPage($event)"
     (delete)="deleteClient($event)"
+    [useEditBtn]="false"
   ></app-commom-table>
 </section>

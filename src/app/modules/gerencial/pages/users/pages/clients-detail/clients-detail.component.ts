@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -32,70 +32,55 @@ export class ClientsDetailComponent implements OnInit {
 
   public title = 'Clientes';
   public pageSession = 'Detalhes do cliente';
-  public client?: ClientResponse;
+
+  public client = signal<any | null>(null);
+  public lastReviews = signal<any[]>([]);
+
+  public displayedColumns: TableColumn[] = [
+    { label: 'Data', key: 'date', type: 'text' },
+    { label: 'Estabelecimento', key: 'stablishment', type: 'text' },
+    { label: 'Nome da campanha', key: 'campaign', type: 'text' },
+    { label: 'Profissional', key: 'professional', type: 'text' },
+    { label: 'Participou?', key: 'haveParticipated', type: 'currency' },
+  ];
 
   ngOnInit(): void {
     this.getClient();
   }
 
   private getClient(): void {
-    this.clientService.getClientById(this.id).subscribe((client) => {
-      this.client = client;
-    });
+
+    this.client.set({
+      avatar: 'assets/png/default-user.png',
+      name: 'Marina Silva',
+      birthDate: '00/00/00',
+      document: '000.000.000-00',
+      gender: 'Feminino',
+      email: 'mail@email.com',
+      phone: '(00) 00000-0000',
+      active: true
+    })
+
+    let reviews: any[] = [];
+
+    for(let i = 0; i < 7; i++) {
+      reviews.push(
+        {
+          id: 1,
+          date: '00/00/0000',
+          stablishment: 'Estabelecimento',
+          campaign: 'João Carlos',
+          professional: 'Profissional',
+          haveParticipated: 0,
+          status: 'Aprovado',
+        },
+      )
+    }
+
+    this.lastReviews.set(reviews);
+    
   }
 
   public changeStatus(): void {
-    this.clientService.changeStatus(this.id).subscribe(() => {
-      this.toastr.success('Status alterado com sucesso');
-      this.getClient();
-    });
   }
-
-  public displayedColumns: TableColumn[] = [
-    { label: 'Data', key: 'data', type: 'text' },
-    { label: 'COD', key: 'COD', type: 'text' },
-    { label: 'Produto', key: 'produto', type: 'text' },
-    { label: 'Valor', key: 'valor', type: 'text' },
-    { label: 'Status', key: 'status', type: 'text' },
-    { label: '', key: 'menu', type: 'menu' },
-  ];
-
-  public budgets: any[] = [
-    {
-      id: 1,
-      data: '00/00/0000',
-      dataAtualizacao: '00/00/0000',
-      COD: '000000',
-      produto: 'João Carlos',
-      valor: 1000,
-      status: 'Aprovado',
-    },
-    {
-      id: 2,
-      data: '00/00/0000',
-      dataAtualizacao: '00/00/0000',
-      COD: '000000',
-      produto: 'Marlúcia Amorin',
-      valor: 1000,
-      status: 'Finalizado',
-    },
-    {
-      id: 3,
-      data: '00/00/0000',
-      dataAtualizacao: '00/00/0000',
-      COD: '000000',
-      produto: 'João Carlos',
-      valor: 1000,
-      status: 'Aprovado',
-    },
-    {
-      id: 4,
-      data: '00/00/0000',
-      dataAtualizacao: '00/00/0000',
-      COD: '000000',
-      produto: 'Marlúcia Amorin',
-      valor: 1000,
-      status: 'Finalizado',
-    },
-  ];
 }

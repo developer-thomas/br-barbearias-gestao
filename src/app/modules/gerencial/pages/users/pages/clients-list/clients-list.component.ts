@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BaseButtonComponent } from '../../../../../shared/components/base-button/base-button.component';
 import { CommomTableComponent, TableColumn } from '../../../../../shared/components/commom-table/commom-table.component';
@@ -28,14 +28,13 @@ export class ClientsListComponent implements OnInit {
   public title = 'Clientes';
   public pageSession = 'Clientes';
 
-  public clients: ClientResponse[] = [];
+  public clients = signal<any[]>([]);
 
   public displayedColumns: TableColumn[] = [
+    { label: 'ID', key: 'id', type: 'text' },
     { label: 'Nome', key: 'name', type: 'text' },
-    { label: 'CPF/CNPJ', key: 'document', type: 'text' },
-    { label: 'Telefone', key: 'phone', type: 'text' },
-    { label: 'E-mail', key: 'email', type: 'text' },
-    { label: 'Status', key: 'active', type: 'status' },
+    { label: 'Tempo fidelidade', key: 'fidelityTime', type: 'text' },
+    { label: 'Tempo que não vai à barbearia', key: 'timeFarAway', type: 'text' },
     { label: '', key: 'menu', type: 'menu' },
   ];
 
@@ -44,11 +43,18 @@ export class ClientsListComponent implements OnInit {
   }
 
   private getClients(search?: string) {
-    this.clientService.getClients(1, 10, search).subscribe((response) => {
-      console.log(response);
-      
-      this.clients = response.data;
-    });
+    let data: any[] = [];
+    
+    for(let i = 0; i < 10; i++) {
+      data.push({
+        id: i,
+        name: 'Anderson',
+        fidelityTime: '3 meses',
+        timeFarAway: '20 dias'
+      })
+    }
+
+    this.clients.set(data);
   }
 
   public filter(search: string) {
