@@ -10,6 +10,7 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'clientes', loadChildren: () => import('./pages/users/users.routes').then((m) => m.routes) },
+      { path: 'campanhas/comuns', loadChildren: () => import('./pages/campaigns/common-campaign/common-campaign.routes').then((m) => m.routes) },
       { path: 'configs', loadChildren: () => import('./pages/config/config.routes').then((m) => m.routes) },
     ],
   },

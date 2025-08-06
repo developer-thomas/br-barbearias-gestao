@@ -22,11 +22,11 @@ export class AdminComponent {
       icon: "people",
     },
     {
-      route: "/campanhas",
+      route: "",
       label: "Campanhas",
       icon: "campaign",
       children: [
-        { route: "/campanhas/comuns", label: "Comuns", icon: "circle" },
+        { route: "campanhas/comuns", label: "Comuns", icon: "circle" },
         { route: "/campanhas/aniversario", label: "Aniversário", icon: "circle" },
         { route: "/campanhas/feriados", label: "Feriados", icon: "circle" },
         { route: "/campanhas/recuperacao", label: "Recuperação", icon: "circle" },
