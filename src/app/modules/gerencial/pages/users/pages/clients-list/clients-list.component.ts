@@ -15,9 +15,7 @@ import { ToastrService } from 'ngx-toastr';
   imports: [
     FilterTableComponent,
     CommomTableComponent,
-    RouterLink,
     PageHeaderComponent,
-    BaseButtonComponent,
   ],
 })
 export class ClientsListComponent implements OnInit {
