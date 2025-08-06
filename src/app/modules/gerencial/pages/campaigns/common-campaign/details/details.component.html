@@ -1,0 +1,59 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+    <!-- Campaign Summary Card -->
+    <div class="bg-white rounded-2xl shadow-sm p-8 mb-8 flex gap-8 items-start">
+      <!-- Image -->
+      <div class="w-1/5">
+        <img [src]="campaign.imageUrl" alt="Campaign Image" class="rounded-xl aspect-square object-cover">
+      </div>
+  
+      <!-- Details -->
+      <div class="w-2/3">
+        <div class="flex justify-between items-start mb-4">
+          <div class="grid grid-cols-3 gap-6 w-full">
+            <div>
+              <h3 class="text-sm font-semibold text-gray-500 mb-1">Título</h3>
+              <p class="text-gray-900">{{ campaign.title }}</p>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-gray-500 mb-1">Tipo</h3>
+              <p class="text-gray-900">{{ campaign.type }}</p>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-gray-500 mb-1">Essa campanha se repete?</h3>
+              <p class="text-gray-900">{{ campaign.repeats }}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 ml-4">
+            <button mat-icon-button class="text-gray-500">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-icon-button class="text-gray-500">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <mat-slide-toggle color="primary"></mat-slide-toggle>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-gray-500 mb-1">Descrição</h3>
+          <p class="text-gray-600 text-sm leading-relaxed">{{ campaign.description }}</p>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Tabs Section -->
+    <mat-tab-group animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="start" class="custom-tabs">
+      <mat-tab label="Resultados">
+        <app-results-tab></app-results-tab>
+      </mat-tab>
+      <mat-tab label="Período e produto">
+        <app-period-product-tab></app-period-product-tab>
+      </mat-tab>
+      <mat-tab label="Público e Localização">
+        <app-audience-location-tab></app-audience-location-tab>
+      </mat-tab>
+      <mat-tab label="Posicionamentos">
+        <app-positioning-tab></app-positioning-tab>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+  
