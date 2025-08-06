@@ -1,0 +1,7 @@
+<app-commom-table
+    [data]="data()"
+    [displayedColumns]="displayedColumns"
+    (detail)="gotoDetailPage($event)"
+    (edit)="gotoEditPage($event)"
+    (delete)="deleteRow($event)"
+/>
