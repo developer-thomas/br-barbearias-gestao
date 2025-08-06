@@ -1,0 +1,55 @@
+<div class="rounded-xl shadow-sm mb-6">
+    <div class="flex items-center justify-between">
+      <!-- Left side filters -->
+      <div class="flex items-center gap-4">
+        <div *ngFor="let filter of filters" class="flex items-center gap-2">
+          <!-- Button type filter -->
+          <div *ngIf="filter.type === 'button'" class="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg">
+            <span class="text-sm font-medium text-gray-700">{{ filter.label }}</span>
+            <mat-icon *ngIf="filter.icon" class="text-gray-500 text-lg">{{ filter.icon }}</mat-icon>
+          </div>
+
+          <!-- Select type filter -->
+          <div *ngIf="filter.type === 'select'" class="flex items-center gap-2 px-4 w-36 py-2 bg-gray-100 rounded-lg">
+            <mat-select [value]="filter.value" class="text-sm">
+              <mat-option *ngFor="let option of filter.options" [value]="option.value">
+                {{ option.label }}
+              </mat-option>
+            </mat-select>
+          </div>
+
+          <!-- Date type filter -->
+          <div *ngIf="filter.type === 'date'" class="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg">
+            <mat-icon *ngIf="filter.icon" class="text-gray-500 text-lg">{{ filter.icon }}</mat-icon>
+            <span class="text-sm font-medium text-gray-700">{{ filter.label }}</span>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="flex items-center gap-3">
+        <!-- Conteúdo customizável como botão de registrar, etc...  -->
+        <ng-content></ng-content>
+
+        <button
+            class="rounded-md w-10 h-11"   
+            [class.bg-green-500]="viewMode === 'list'"
+            [class.text-gray-600]="viewMode === 'list'"
+            [class.text-gray-400]="viewMode !== 'list'"
+            (click)="toggleViewMode('list')"
+        >
+          <mat-icon>view_list</mat-icon>
+        </button>
+        <button 
+            class="rounded-md w-10 h-11"   
+            [class.bg-green-500]="viewMode === 'dashboard'"
+            [class.text-white]="viewMode === 'dashboard'"
+            [class.text-gray-400]="viewMode !== 'dashboard'"
+            [class.rounded-lg]="viewMode === 'dashboard'"
+            (click)="toggleViewMode('dashboard')"
+        >
+          <mat-icon>dashboard</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
