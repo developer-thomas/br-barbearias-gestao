@@ -1,0 +1,36 @@
+<div class="space-y-8" [formGroup]="form">
+    <h2 class="text-xl font-semibold text-gray-900 mb-8">Imagem</h2>
+  
+    <div class="bg-white rounded-xl p-6 border border-gray-200">
+      <!-- Image Upload Section -->
+      <div 
+        class="relative w-full h-64 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer hover:border-green-500 hover:bg-gray-50 transition-all"
+        (click)="!form.get('imageUrl')?.value && triggerFileInput(fileInput)"
+      >
+        <input type="file" class="hidden" #fileInput (change)="onFileSelected($event)">
+        
+        <!-- Placeholder -->
+        <div *ngIf="!form.get('imageUrl')?.value" class="text-center text-gray-500">
+          <mat-icon class="text-4xl">add</mat-icon>
+          <p>Adicione uma imagem</p>
+        </div>
+  
+        <!-- Image Preview -->
+        <div *ngIf="form.get('imageUrl')?.value" class="relative w-full h-full">
+          <img 
+            [src]="form.get('imageUrl')?.value" 
+            alt="Preview da imagem"
+            class="w-full h-full object-contain rounded-lg p-2"
+          >
+          <button 
+            mat-icon-button 
+            class="absolute top-2 right-2 bg-white bg-opacity-75 text-red-500"
+            (click)="removeImage()"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
