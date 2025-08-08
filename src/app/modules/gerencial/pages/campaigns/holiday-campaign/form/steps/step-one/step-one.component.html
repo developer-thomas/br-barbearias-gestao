@@ -1,0 +1,38 @@
+<div>
+  <h2 class="text-xl font-semibold text-gray-900 mb-8">Detalhes da campanha</h2>
+  
+  <form [formGroup]="form" class="space-y-6">
+    <!-- Title Field -->
+    <div>
+      <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+        Título
+      </label>
+      <mat-form-field appearance="outline" class="w-full">
+        <input 
+          matInput 
+          id="title"
+          formControlName="title"
+          placeholder="Placeholder text"
+          class="text-sm"
+        >
+      </mat-form-field>
+    </div>
+
+    <!-- Description Field -->
+    <div>
+      <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+        Descrição
+      </label>
+      <mat-form-field appearance="outline" class="w-full">
+        <textarea 
+          matInput 
+          id="description"
+          formControlName="description"
+          placeholder="Placeholder text"
+          rows="6"
+          class="text-sm resize-none"
+        ></textarea>
+      </mat-form-field>
+    </div>
+  </form>
+</div>

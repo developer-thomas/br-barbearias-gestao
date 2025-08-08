@@ -1,0 +1,220 @@
+<div class="space-y-8" [formGroup]="form">
+  <!-- Period Section -->
+  <div class="bg-white rounded-xl p-6 border border-gray-200">
+    <h3 class="text-lg font-semibold text-gray-900 mb-6">Período</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Date Field -->
+      <div>
+        <label for="date" class="block text-sm font-medium text-gray-700 mb-2">
+          Data
+        </label>
+        <mat-form-field appearance="outline" class="w-full">
+          <input 
+            matInput 
+            id="date"
+            formControlName="date"
+            placeholder="00/00/00"
+            class="text-sm"
+          >
+        </mat-form-field>
+      </div>
+
+      <!-- Time Field -->
+      <div>
+        <label for="time" class="block text-sm font-medium text-gray-700 mb-2">
+          Horário
+        </label>
+        <mat-form-field appearance="outline" class="w-full">
+          <input 
+            matInput 
+            id="time"
+            formControlName="time"
+            placeholder="00:00"
+            class="text-sm"
+          >
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Section -->
+  <div class="bg-white rounded-xl p-6 border border-gray-200">
+    <h3 class="text-lg font-semibold text-gray-900 mb-6">Produto</h3>
+    
+    <!-- Product Type Selection -->
+    <div class="mb-8">
+      <label class="block text-sm font-medium text-gray-500 mb-4">
+        Tipo do produto
+      </label>
+      <mat-radio-group formControlName="productType" class="flex items-center gap-8">
+        <mat-radio-button value="cupom" class="custom-radio">
+          Cupom
+        </mat-radio-button>
+        <mat-radio-button value="produto" class="custom-radio">
+          Produto
+        </mat-radio-button>
+        <mat-radio-button value="nenhum" class="custom-radio">
+          Nenhum produto
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- Coupon Fields (shown when productType is 'cupom') -->
+    <div *ngIf="showCouponFields" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Coupon Code -->
+        <div>
+          <label for="couponCode" class="block text-sm font-medium text-gray-700 mb-2">
+            Código do cupom
+          </label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input 
+              matInput 
+              id="couponCode"
+              formControlName="couponCode"
+              placeholder="000000000"
+              class="text-sm"
+            >
+          </mat-form-field>
+        </div>
+
+        <!-- Configuration -->
+        <div>
+          <label for="configuration" class="block text-sm font-medium text-gray-700 mb-2">
+            Selecione a configuração
+          </label>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-select formControlName="configuration" class="text-sm">
+              <mat-option *ngFor="let option of configurationOptions" [value]="option.value">
+                {{ option.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Coupon Value -->
+        <div>
+          <label for="couponValue" class="block text-sm font-medium text-gray-700 mb-2">
+            Valor do cupom
+          </label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input 
+              matInput 
+              id="couponValue"
+              formControlName="couponValue"
+              placeholder="000000000"
+              class="text-sm"
+            >
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Rescue Value -->
+        <div>
+          <label for="rescueValue" class="block text-sm font-medium text-gray-700 mb-2">
+            Valor para resgate
+          </label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input 
+              matInput 
+              id="rescueValue"
+              formControlName="rescueValue"
+              placeholder="000000000"
+              class="text-sm"
+            >
+          </mat-form-field>
+        </div>
+
+        <!-- Usage Limit -->
+        <div>
+          <label for="usageLimit" class="block text-sm font-medium text-gray-700 mb-2">
+            Quantas vezes
+          </label>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-select formControlName="usageLimit" class="text-sm">
+              <mat-option *ngFor="let option of usageLimitOptions" [value]="option.value">
+                {{ option.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Fields (shown when 'produto' is selected) -->
+    <div *ngIf="showProductFields" class="space-y-6">
+      <!-- Select Product -->
+      <div>
+        <label for="selectedProduct" class="block text-sm font-medium text-gray-700 mb-2">
+          Selecione o produto
+        </label>
+        <mat-form-field appearance="outline" class="w-full">
+          <input 
+            matInput 
+            id="selectedProduct"
+            formControlName="selectedProduct"
+            placeholder="Dropdown item"
+            class="text-sm"
+            (keydown)="onProductSelected($event)"
+          >
+          <mat-icon matSuffix class="text-green-500">search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <!-- Product Name Cards -->
+      <div *ngIf="productNames.length > 0" class="flex flex-wrap gap-3">
+        <div 
+          *ngFor="let productName of productNames; let i = index" 
+          class="flex items-center bg-gray-100 border border-gray-200 rounded-md px-3 py-1"
+        >
+          <span class="text-sm font-medium text-gray-700 mr-2">{{ productName }}</span>
+          <button 
+            type="button" 
+            mat-icon-button
+            class="text-gray-400 hover:text-red-500 w-5 h-5 leading-5"
+            (click)="removeProductName(i)"
+          >
+            <mat-icon class="text-sm">close</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Product Configuration -->
+        <div>
+          <label for="productConfiguration" class="block text-sm font-medium text-gray-700 mb-2">
+            Selecione a configuração
+          </label>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-select formControlName="productConfiguration" class="text-sm">
+              <mat-option *ngFor="let option of productConfigurationOptions" [value]="option.value">
+                {{ option.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Product Usage Limit -->
+        <div>
+          <label for="productUsageLimit" class="block text-sm font-medium text-gray-700 mb-2">
+            Quantas vezes
+          </label>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-select formControlName="productUsageLimit" class="text-sm">
+              <mat-option *ngFor="let option of usageLimitOptions" [value]="option.value">
+                {{ option.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Product Fields (when 'nenhum' is selected) -->
+    <div *ngIf="form.get('productType')?.value === 'nenhum'" class="text-center py-8">
+      <p class="text-gray-500">Nenhum campo adicional necessário</p>
+    </div>
+  </div>
+</div>
