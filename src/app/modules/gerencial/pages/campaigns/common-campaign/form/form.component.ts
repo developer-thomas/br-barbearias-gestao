@@ -86,7 +86,7 @@ export class FormComponent {
   })
 
   onCancel() {
-    this.router.navigate(["../"])
+    this.router.navigate(["/gerencial/campanhas/comuns"])
   }
 
   onContinue() {
