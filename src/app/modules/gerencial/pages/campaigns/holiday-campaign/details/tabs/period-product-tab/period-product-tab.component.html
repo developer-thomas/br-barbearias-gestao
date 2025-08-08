@@ -1,0 +1,48 @@
+<div class="bg-white rounded-xl shadow-sm p-8">
+    <div class="grid grid-cols-1 md:grid-cols-3">
+        <div class="space-y-6">
+            <!-- Coluna 1 -->
+            <div>
+                <h4 class="text-md font-semibold mb-1">Data</h4>
+                <p class="text-gray-500">{{ data.date }}</p>
+            </div>
+
+            <div>
+                <h4 class="text-md font-semibold mb-1">Horário</h4>
+                <p class="text-gray-500">{{ data.time }}</p>
+            </div>
+
+            <div>
+                <h4 class="text-md font-semibold mb-1">Validade</h4>
+                <p class="text-gray-500">{{ data.validity }}</p>
+            </div>
+        </div>
+        <div class="space-y-6">
+            <!-- Coluna 2 -->
+            <div>
+                <h4 class="text-md font-semibold mb-1">Produto</h4>
+                <p class="text-gray-500">{{ data.product }}</p>
+            </div>
+            <div>
+                <h4 class="text-md font-semibold mb-1">Descrição do Produto</h4>
+                <p class="text-gray-500">{{ data.productDescription }}</p>
+            </div>
+            <div>
+                <h4 class="text-md font-semibold mb-1">Valor do resgate</h4>
+                <p class="text-gray-500">{{ data.rescueValue }}</p>
+            </div>
+        </div>
+        
+        <div class="space-y-6">
+            <!-- Coluna 3 -->
+            <div>
+              <h4 class="text-md font-semibold mb-1">Validade</h4>
+              <p class="text-gray-500">{{ data.validity }}</p>
+            </div>
+            <div>
+              <h4 class="text-md font-semibold mb-1">Valor do resgate</h4>
+              <p class="text-gray-500">{{ data.rescueValue }}</p>
+            </div>
+        </div>
+    </div>
+</div>
