@@ -27,12 +27,12 @@ export class AdminComponent {
       icon: "campaign",
       children: [
         { route: "campanhas/comuns", label: "Comuns", icon: "circle" },
-        { route: "/campanhas/aniversario", label: "Aniversário", icon: "circle" },
-        { route: "/campanhas/feriados", label: "Feriados", icon: "circle" },
-        { route: "/campanhas/recuperacao", label: "Recuperação", icon: "circle" },
-        { route: "/campanhas/inteligente", label: "Inteligente", icon: "circle" },
-        { route: "/campanhas/aprovacao", label: "Aprovação (franquiados)", icon: "circle" },
-        { route: "/campanhas/banco-perguntas", label: "Banco de perguntas", icon: "circle" },
+        { route: "campanhas/aniversario", label: "Aniversário", icon: "circle" },
+        { route: "campanhas/feriados", label: "Feriados", icon: "circle" },
+        { route: "campanhas/recuperacao", label: "Recuperação", icon: "circle" },
+        { route: "campanhas/inteligente", label: "Inteligente", icon: "circle" },
+        { route: "campanhas/aprovacao", label: "Aprovação (franquiados)", icon: "circle" },
+        { route: "campanhas/banco-perguntas", label: "Banco de perguntas", icon: "circle" },
       ],
     },
     {
