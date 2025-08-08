@@ -9,6 +9,7 @@ import { AudienceLocationTabComponent } from './tabs/audience-location-tab/audie
 import { PeriodProductTabComponent } from './tabs/period-product-tab/period-product-tab.component';
 import { PositioningTabComponent } from './tabs/positioning-tab/positioning-tab.component';
 import { ResultsTabComponent } from './tabs/results-tab/results-tab.component';
+import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-details',
@@ -23,6 +24,7 @@ import { ResultsTabComponent } from './tabs/results-tab/results-tab.component';
     PeriodProductTabComponent,
     AudienceLocationTabComponent,
     PositioningTabComponent,
+    PageHeaderComponent
   ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss'
