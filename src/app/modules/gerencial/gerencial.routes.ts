@@ -13,6 +13,7 @@ export const routes: Routes = [
       { path: 'campanhas/comuns', loadChildren: () => import('./pages/campaigns/common-campaign/common-campaign.routes').then((m) => m.routes) },
       { path: 'campanhas/aniversario', loadChildren: () => import('./pages/campaigns/birthdate-campaign/birthdate-campaign.routes').then((m) => m.routes) },
       { path: 'campanhas/feriados', loadChildren: () => import('./pages/campaigns/holiday-campaign/holiday-campaign.routes').then((m) => m.routes) },
+      { path: 'campanhas/recuperacao', loadChildren: () => import('./pages/campaigns/recovery-campaign/recovery-campaign.routes').then((m) => m.routes) },
       { path: 'configs', loadChildren: () => import('./pages/config/config.routes').then((m) => m.routes) },
     ],
   },
