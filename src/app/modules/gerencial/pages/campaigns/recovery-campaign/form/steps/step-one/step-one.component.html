@@ -1,0 +1,57 @@
+<div [formGroup]="form">
+  <h2 class="text-xl font-semibold text-gray-900 mb-8">Aniversário</h2>
+  
+  <div class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <mat-form-field appearance="outline" class="md:col-span-1">
+        <mat-label>Nome da campanha</mat-label>
+        <input matInput formControlName="campaignName" placeholder="Placeholder text">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Para quem</mat-label>
+        <mat-select formControlName="targetAudience">
+          <mat-option value="cliente">Cliente</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Quais</mat-label>
+        <mat-select formControlName="specificAudience">
+          <mat-option value="cliente-especifico">Cliente específico</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Selecione os clientes específicos</mat-label>
+        <input 
+          matInput 
+          formControlName="selectedClient" 
+          placeholder="Dropdown item"
+          (keydown)="onClientSelected($event)"
+        >
+        <button mat-icon-button matSuffix (click)="addClient()">
+          <mat-icon class="text-green-500">search</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <div *ngIf="clients.length > 0" class="flex flex-wrap gap-3">
+      <div *ngFor="let client of clients; let i = index" class="flex items-center bg-gray-100 border border-gray-200 rounded-md px-3 py-2">
+        <div>
+          <p class="text-sm font-medium text-gray-800">{{ client.name }}</p>
+        </div>
+        <button mat-icon-button (click)="removeClient(i)" class="ml-2 text-green-500">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div>
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Descrição</mat-label>
+        <textarea matInput formControlName="description" placeholder="Placeholder text" rows="5" class="resize-none"></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
