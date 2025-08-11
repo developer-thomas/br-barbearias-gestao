@@ -1,0 +1,37 @@
+<app-page-header pageSession="Campanhas de recuperação" title="Campanhas" />
+
+<section>
+  <section>
+    <!-- Multiple Filter Table Component -->
+    <app-multiple-filter-table 
+      [filters]="filters"
+      [viewMode]="viewMode"
+      (viewModeChange)="onViewModeChange($event)"
+      (filterChange)="onFilterChange($event)"
+    >
+      <!-- Register button as content projection -->
+      <button 
+        mat-raised-button 
+        color="primary" 
+        class="bg-green-500 hover:bg-green-600 text-white font-medium px-6 h-11 rounded-md"
+        (click)="gotoCreatePage()"
+      >
+        CADASTRAR
+      </button>
+    </app-multiple-filter-table>
+
+  <!-- Content based on view mode -->
+  <div *ngIf="viewMode === 'list'">
+    <app-commom-table
+      [data]="data()"
+      [displayedColumns]="displayedColumns"
+      (detail)="gotoDetailPage($event)"
+      (edit)="gotoEditPage($event)"
+      (delete)="deleteRow($event)"
+    ></app-commom-table>
+  </div>
+  <!-- Dashboard View (placeholder for future implementation) -->
+  <div *ngIf="viewMode === 'dashboard'" class="bg-white rounded-xl p-8 shadow-sm text-center">
+    <app-dashboard></app-dashboard>
+  </div>
+</section>
