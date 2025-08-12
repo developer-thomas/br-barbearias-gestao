@@ -1,0 +1,107 @@
+<div class="space-y-8" [formGroup]="form">
+    <!-- Period Section -->
+    <div class="bg-white rounded-xl p-6 border border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-900 mb-6">Perguntas</h3>
+        
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+                Vinculado a que
+            </label>
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-select class="text-sm">
+                @for (items of linkedToOptions; track items) {
+                    <mat-option [value]="items.id">{{items.label}}</mat-option>
+                }
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+                Categoria da pergunta
+            </label>
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-select class="text-sm">
+                @for (items of questionCategory; track items) {
+                    <mat-option [value]="items.id">{{items.label}}</mat-option>
+                }
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+                Busque por perguntas
+            </label>
+            <mat-form-field appearance="outline" class="w-full">
+                <input matInput placeholder="Busque por pergunta" >
+            </mat-form-field>
+        </div>
+      </div>
+      <div class="max-h-60 overflow-auto">
+          <app-commom-table
+            [useCheckbox]="true"
+            [data]="tableData()"
+            [displayedColumns]="displayedColumns"
+            (checkboxChange)="addQuestion($event)"
+            [checkboxMarks]="selectedQuestions()"
+          />
+      </div>
+    </div>
+  
+    <!-- Product Section -->
+    <div class="bg-white rounded-xl p-6 border border-gray-200">
+        <div class="flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-gray-900 mb-6">Perguntas selecionadas</h3>
+            <div (click)="toggleQuestionVisibility()" class="cursor-pointer flex items-center space-x-2 bg-gray-200 border rounded-full px-5 py-1">
+                @if(showSelectedQuestions) {
+                    <mat-icon>visibility_off</mat-icon>
+                }@else {
+                    <mat-icon>visibility</mat-icon>
+                }
+                <span>Visualizar</span>
+            </div>
+        </div>
+        @if(showSelectedQuestions) {
+            <div class="grid grid-cols-1 gap-6">
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-lg">
+                    @for(item of selectedQuestions(); track item) {
+                        <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-lg mb-5">
+                            <div class="flex justify-between">
+                                <div class="flex space-x-16">
+                                    <div>
+                                        <h3 class="font-bold">ID</h3>
+                                        <span>{{ item.id }}</span>
+                                    </div>
+                    
+                                    <div>
+                                        <h3 class="font-bold">Vinculado a</h3>
+                                        <span>{{ item.linkedTo }}</span>
+                                    </div>
+                    
+                                    <div>
+                                        <h3 class="font-bold">Categoria</h3>
+                                        <span>{{ item.category }}</span>
+                                    </div>
+                                </div>
+            
+                                <div class="cursor-pointer" (click)="removeQuestion(item.id)">
+                                    <mat-icon>delete</mat-icon>
+                                </div>
+                            </div>
+            
+                            <div class="mt-5">
+                                <div >
+                                    <h3 class="font-bold">Descrição</h3>
+                                    <span>{{ item.description }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    
+                </div>
+            </div>
+        }
+    </div>
+</div>

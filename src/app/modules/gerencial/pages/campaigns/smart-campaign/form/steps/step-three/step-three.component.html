@@ -1,0 +1,87 @@
+<div class="space-y-8" [formGroup]="form">
+    <h2 class="text-xl font-semibold text-gray-900 mb-8">Público e localização</h2>
+  
+    <!-- Público Section -->
+    <div class="bg-white rounded-xl p-6 border border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-900 mb-6">Público</h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Age From -->
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Idade de</mat-label>
+          <mat-select formControlName="ageFrom">
+            <mat-option *ngFor="let age of ageOptions" [value]="age">
+              {{ age }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <!-- Age To -->
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Até idade</mat-label>
+          <mat-select formControlName="ageTo">
+            <mat-option *ngFor="let age of ageOptions" [value]="age">
+              {{ age }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <!-- Gender -->
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Selecione o gênero</mat-label>
+          <mat-select formControlName="gender">
+            <mat-option *ngFor="let option of genderOptions" [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  
+    <!-- Localização Section -->
+    <div class="bg-white rounded-xl p-6 border border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-900 mb-6">Localização</h3>
+      
+      <!-- Location Search -->
+      <div class="mb-6">
+        <div class="flex gap-3 items-start">
+          <mat-form-field appearance="outline" class="flex-1">
+            <mat-label>Selecione a localização</mat-label>
+            <input 
+              matInput 
+              formControlName="selectedLocation"
+              placeholder="Bahia, Salvador, Filial"
+              (keydown)="onLocationSelected($event)"
+            >
+          </mat-form-field>
+          <button 
+            type="button"
+            mat-stroked-button
+            class="h-[56px] px-6 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50"
+            (click)="onLocationSearch()"
+          >
+            Procurar
+          </button>
+        </div>
+      </div>
+  
+      <!-- Location Name Cards -->
+      <div *ngIf="locationNames.length > 0" class="flex flex-wrap gap-3">
+        <div 
+          *ngFor="let locationName of locationNames; let i = index" 
+          class="flex items-center bg-gray-100 border border-gray-200 rounded-md px-4 py-2"
+        >
+          <span class="text-sm font-medium text-gray-700 mr-3">{{ locationName }}</span>
+          <button 
+            type="button" 
+            mat-icon-button
+            class="text-gray-400 hover:text-red-500 w-6 h-6 leading-6"
+            (click)="removeLocationName(i)"
+          >
+            <mat-icon class="text-lg">close</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
