@@ -6,6 +6,7 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { BooleanStatusPipe } from '../../pipes/boolean-status/boolean-status.pipe';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 export type TableColumn = {
   label: string;
@@ -26,6 +27,7 @@ export type TableColumn = {
     MatMenuModule,
     MatIconModule,
     BooleanStatusPipe,
+    MatCheckboxModule
   ],
 })
 export class CommomTableComponent<T> implements OnChanges, AfterViewInit {
@@ -33,16 +35,20 @@ export class CommomTableComponent<T> implements OnChanges, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<T>;
 
+  @Input() useCheckbox = false;
   @Input({ required: true }) data!: T[];
   @Input({ required: true }) displayedColumns!: TableColumn[];
   @Input() useDetailBtn: boolean = true;
   @Input() useEditBtn: boolean = true;
   @Input() useDeleteBtn: boolean = true;
+  // Marca as box de acordo com o conteúdo
+  @Input() checkboxMarks: any[] = [];
 
 
   @Output() detail = new EventEmitter<T>();
   @Output() edit = new EventEmitter<T>();
   @Output() delete = new EventEmitter<T>();
+  @Output() checkboxChange = new EventEmitter<any>();
 
   public page = 1;
   public size = 10;
@@ -80,5 +86,15 @@ export class CommomTableComponent<T> implements OnChanges, AfterViewInit {
 
   deleteClick(row: T) {
     this.delete.emit(row);
+  }
+
+  onCheckboxChange(row: any, event: any) {
+    this.checkboxChange.emit(row);
+  }
+
+  get displayedColumnsKeysWithCheckbox() {
+    return this.useCheckbox
+      ? ['select', ...this.displayedColumnsKeys]
+      : [...this.displayedColumnsKeys]; // cópia para evitar referência
   }
 }

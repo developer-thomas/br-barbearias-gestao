@@ -1,5 +1,19 @@
 <div class="overflow-x-auto">
   <table mat-table class="w-max cursor-pointer" matSort [dataSource]="dataSource">
+    
+    <!-- Checkbox column -->
+    @if (useCheckbox) {
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox
+            (change)="onCheckboxChange(row, $event)"
+            [checked]="checkboxMarks.includes(row)"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+    }
+
     @for (item of displayedColumns; track $index) {
       @switch (item.type) {
         @case ('menu') {
@@ -16,58 +30,65 @@
                     <span>Ver detalhes</span>
                   </button>
                 }
-
                 @if(useEditBtn) {
                   <button mat-menu-item (click)="editClick(row)">
                     <mat-icon>edit</mat-icon>
                     <span>Editar</span>
                   </button>
                 }
-
                 @if(useDeleteBtn) {
                   <button mat-menu-item (click)="deleteClick(row)">
                     <mat-icon>highlight_off</mat-icon>
                     <span>Deletar</span>
                   </button>
                 }
-              </mat-menu>            
+              </mat-menu>
             </td>
           </ng-container>
         }
         @case ('currency') {
           <ng-container matColumnDef="{{ item.key }}">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ item.label | titlecase }}</th>
+            <th class="font-bold" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ item.label | titlecase }}
+            </th>
             <td mat-cell *matCellDef="let row">{{ row[item.key] | currency: 'BRL' }}</td>
           </ng-container>
         }
         @case ('status') {
           <ng-container matColumnDef="{{ item.key }}">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ item.label | titlecase }}</th>
+            <th class="font-bold" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ item.label | titlecase }}
+            </th>
             <td mat-cell *matCellDef="let row">{{ row[item.key] | booleanStatus }}</td>
           </ng-container>
         }
         @default {
           <ng-container matColumnDef="{{ item.key }}">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ item.label | titlecase }}</th>
+            <th class="font-bold" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ item.label | titlecase }}
+            </th>
             <td mat-cell *matCellDef="let row">{{ row[item.key] }}</td>
           </ng-container>
         }
       }
     }
     
-    <tr mat-header-row *matHeaderRowDef="displayedColumnsKeys"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumnsKeys;" class="hover:bg-gray-200"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsKeysWithCheckbox"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnsKeysWithCheckbox;" class="hover:bg-gray-200"></tr>
     <tr *matNoDataRow>
-      <td class="text-center py-4" [colSpan]="displayedColumnsKeys.length">Sem resultados</td>
+      <td class="text-center py-4" [colSpan]="displayedColumnsKeysWithCheckbox.length">
+        Sem resultados
+      </td>
     </tr>
   </table>
 
-  <mat-paginator #paginator
-      [pageIndex]="0"
-      [pageSize]="10"
-      [pageSizeOptions]="[5, 10, 20]"
-      aria-label="Select page"
-      (page)="pagination($event)"
+  <mat-paginator
+    #paginator
+    [pageIndex]="0"
+    [pageSize]="10"
+    [pageSizeOptions]="[5, 10, 20]"
+    aria-label="Select page"
+    (page)="pagination($event)"
   >
   </mat-paginator>
 </div>
