@@ -1,0 +1,55 @@
+<app-page-header 
+    title="Configuração de pontuação" 
+    pageSession="Configuração de pontuação" 
+/>
+
+<mat-card>
+    <mat-card-content class="h-[600px]">
+        <h1 class="text-2xl mb-5">Pontuação geral</h1>
+        <div>
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-x-5 flex flex-col justify-between">
+                <div class="space-x-5 grid grid-cols md:grid-cols-2 h-[450px]">
+                    <div>
+                        <div>
+                            <label for="search">Pesquisa</label>
+                            <mat-form-field class="w-full" appearance="outline">
+                                <input formControlName="search" appearence="outline" matInput placeholder="00000"/>
+                            </mat-form-field>
+                        </div>
+        
+                        <div>
+                            <label for="smartSearch">Pesquisa Inteligente</label>
+                            <mat-form-field class="w-full" appearance="outline">
+                                <input formControlName="smartSearch" appearence="outline" matInput placeholder="00000"/>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div>
+                            <label for="productBuy">Compra de produto</label>
+                            <mat-form-field class="w-full" appearance="outline">
+                                <input formControlName="productBuy" appearence="outline" matInput placeholder="00000"/>
+                            </mat-form-field>
+                        </div>
+    
+                        <div>
+                            <label for="serviceBuy">Compra de serviço</label>
+                            <mat-form-field class="w-full" appearance="outline">
+                                <input formControlName="serviceBuy" appearence="outline" matInput placeholder="00000"/>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between">
+                    <div></div>
+                    <div class="space-x-5">
+                        <app-base-button (click)="goBack()" styleClass="outlined" label="Cancelar" ></app-base-button>
+                        <app-base-button styleClass="green" label="Confirmar"></app-base-button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </mat-card-content>
+</mat-card>

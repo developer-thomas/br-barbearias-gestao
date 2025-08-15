@@ -36,17 +36,17 @@ export class AdminComponent {
       ],
     },
     {
-      route: "/relatorios",
+      route: "relatorios",
       label: "Relatórios",
       icon: "assessment",
     },
     {
-      route: "/configuracao",
+      route: "configuracao",
       label: "Configuração",
       icon: "settings",
       children: [
-        { route: "/configuracao/pontuacao", label: "Pontuação", icon: "circle" },
-        { route: "/configuracao/prateleira", label: "Prateleira", icon: "circle" },
+        { route: "configuracao/pontuacao", label: "Pontuação", icon: "circle" },
+        { route: "configuracao/prateleira", label: "Prateleira", icon: "circle" },
       ],
     },
     {
