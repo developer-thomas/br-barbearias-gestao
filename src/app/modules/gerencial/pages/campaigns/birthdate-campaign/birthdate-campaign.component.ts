@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-birthdate-campaign',
   standalone: true,
-  imports: [],
-  templateUrl: './birthdate-campaign.component.html',
-  styleUrl: './birthdate-campaign.component.scss'
+  imports: [RouterModule],
+  template: '<router-outlet />'
 })
 export class BirthdateCampaignComponent {
 

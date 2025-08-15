@@ -15,6 +15,8 @@ export const routes: Routes = [
       { path: 'campanhas/feriados', loadChildren: () => import('./pages/campaigns/holiday-campaign/holiday-campaign.routes').then((m) => m.routes) },
       { path: 'campanhas/recuperacao', loadChildren: () => import('./pages/campaigns/recovery-campaign/recovery-campaign.routes').then((m) => m.routes) },
       { path: 'campanhas/inteligente', loadChildren: () => import('./pages/campaigns/smart-campaign/smart-campaign.routes').then((m) => m.routes) },
+      { path: 'campanhas/aprovacao', loadChildren: () => import('./pages/campaigns/approvation-campaign/approvation-campaign.routes').then((m) => m.routes) },
+      { path: 'campanhas/banco-perguntas', loadChildren: () => import('./pages/campaigns/question-bank/question-bank.routes').then((m) => m.routes) },
       { path: 'configs', loadChildren: () => import('./pages/config/config.routes').then((m) => m.routes) },
     ],
   },

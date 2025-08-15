@@ -1,0 +1,57 @@
+
+<app-page-header title="Banco de Perguntas" pageSession="Cadastrar Pergunta"></app-page-header>
+
+<mat-card>
+    <mat-card-content>
+        <div class="flex justify-between">
+            <div></div>
+            <div (click)="openModal()" class="cursor-pointer border-4 rounded-full bg-gray-200 flex items-center p-2 space-x-2">
+                <mat-icon>visibility</mat-icon>
+                <span>Visualizar</span>
+            </div>
+        </div>
+        <form class="p-5" [formGroup]="form" (ngSubmit)="submit()">
+            <div class="grid grid-cols-1 md:grid-cols-2 space-x-8">
+                <!-- Linked to select field -->
+                <div class="flex flex-col">
+                    <span>Vinculado a que</span>
+                    <mat-form-field appearance="outline">
+                        <mat-select formControlName="linkedTo">
+                            @for(item of likedToOptions; track item) {
+                                <mat-option [value]="item.value"> {{ item.value }} </mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <!-- questionCategory select field -->
+                <div class="flex flex-col">
+                    <span>Categoria da pergunta</span>
+                    <mat-form-field appearance="outline">
+                        <mat-select formControlName="linkedTo">
+                            @for(item of categoryQuestion; track item) {
+                                <mat-option [value]="item.value"> {{ item.value }} </mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <!-- Description -->
+                 
+            </div>
+            <div class="flex flex-col">
+                <label for="description">Descrição</label> 
+                <mat-form-field appearance="outline" class="w-full">
+                    <textarea
+                     matInput
+                     id="description"
+                     formControlName="description"
+                     placeholder="Descrição"
+                     rows="6"
+                     class="text-sm resize-none w-full">
+                   </textarea>
+                 </mat-form-field>
+            </div>
+        </form>
+    </mat-card-content>
+</mat-card>

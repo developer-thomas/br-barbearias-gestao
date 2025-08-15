@@ -1,0 +1,70 @@
+<div class="flex justify-between items-center p-5">
+    <h1 class="text-lg m-5">Visualizar</h1>
+    <mat-icon class="cursor-pointer" (click)="onClose()">close</mat-icon>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 space-x-8 p-5">
+    <div>
+        <mat-card>
+            <mat-card-content class="shadow-md border-gray-700">
+                <form>
+                    <mat-radio-group class="flex flex-col" [(ngModel)]="visibleType" name="visibleType">
+                        <mat-radio-button value="sms">SMS</mat-radio-button>
+                        <mat-radio-button value="email">E-mail</mat-radio-button>
+                        <mat-radio-button value="whatsapp">Whatsapp</mat-radio-button>
+                    </mat-radio-group>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div>
+        <div>
+            @switch(visibleType) {
+                @case('sms') {
+                    <div class="phone-container">
+                        <div class="phone-content shadow-xl border-black w-4 text-sm flex justify-start items-center">
+                            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Alias, corporis.</p>
+                        </div>
+                    </div>
+                }
+
+                @case('email') {
+                    <div class="phone-container flex flex-col justify-start item-center content-center">
+
+                        <div class="w-full rounded-sm">
+                            <img src="assets/images/email-image.png">
+                        </div>
+
+                        <div class="text-sm mt-3 text-center">
+                            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Alias, corporis.</p>
+                        </div>
+                    </div>
+                }
+
+                @case('whatsapp') {
+                    <div class="phone-container">
+                        <div class="flex flex-col justify-between">
+
+                            <!--  Mensagens  -->
+                            <div class="flex flex-col space-y-2 ml-[-5%] w-[85%] h-full">
+                                <div class="phone-content shadow-xl border-black w-4 text-sm flex justify-start items-center">
+                                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Alias, corporis.</p>
+                                </div>
+        
+                                <div class="ml-8 bg-yellow-100 phone-content shadow-xl border-black w-4 text-sm flex justify-start items-center">
+                                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Alias, corporis.</p>
+                                </div>
+                            </div>
+
+                            <!-- Input -->
+                            <!-- <div>
+                                <h1>teste</h1>
+                            </div> -->
+                        </div>
+                        
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
