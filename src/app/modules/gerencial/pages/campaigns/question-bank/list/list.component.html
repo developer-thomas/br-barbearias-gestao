@@ -1,0 +1,23 @@
+<app-page-header title="Banco de perguntas" pageSession="Banco de perguntas" />
+
+<section>
+  <app-filter-table (filter)="filter($event)">
+    <button 
+        mat-raised-button 
+        color="primary" 
+        class="bg-green-500 hover:bg-green-600 text-white font-medium px-6 h-11 rounded-md"
+        routerLink="form"
+      >
+        CADASTRAR
+      </button>
+  </app-filter-table>
+
+  <app-commom-table
+    [data]="questions()"
+    [displayedColumns]="displayedColumns"
+    (detail)="gotoDetailPage($event)"
+    (edit)="gotoEditPage($event)"
+    (delete)="deleteClient($event)"
+    [useEditBtn]="false"
+  ></app-commom-table>
+</section>
