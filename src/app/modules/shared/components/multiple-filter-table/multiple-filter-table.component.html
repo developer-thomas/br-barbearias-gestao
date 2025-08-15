@@ -26,30 +26,31 @@
         </div>
       </div>
 
-      
-      <div class="flex items-center gap-3">
-        <!-- Conteúdo customizável como botão de registrar, etc...  -->
-        <ng-content></ng-content>
-
-        <button
-            class="rounded-md w-10 h-11"   
-            [class.bg-green-500]="viewMode === 'list'"
-            [class.text-gray-600]="viewMode === 'list'"
-            [class.text-gray-400]="viewMode !== 'list'"
-            (click)="toggleViewMode('list')"
-        >
-          <mat-icon>view_list</mat-icon>
-        </button>
-        <button 
-            class="rounded-md w-10 h-11"   
-            [class.bg-green-500]="viewMode === 'dashboard'"
-            [class.text-white]="viewMode === 'dashboard'"
-            [class.text-gray-400]="viewMode !== 'dashboard'"
-            [class.rounded-lg]="viewMode === 'dashboard'"
-            (click)="toggleViewMode('dashboard')"
-        >
-          <mat-icon>dashboard</mat-icon>
-        </button>
-      </div>
+      @if(useChangeViewBtn) {
+        <div class="flex items-center gap-3">
+          <!-- Conteúdo customizável como botão de registrar, etc...  -->
+          <ng-content></ng-content>
+  
+          <button
+              class="rounded-md w-10 h-11"   
+              [class.bg-green-500]="viewMode === 'list'"
+              [class.text-gray-600]="viewMode === 'list'"
+              [class.text-gray-400]="viewMode !== 'list'"
+              (click)="toggleViewMode('list')"
+          >
+            <mat-icon>view_list</mat-icon>
+          </button>
+          <button 
+              class="rounded-md w-10 h-11"   
+              [class.bg-green-500]="viewMode === 'dashboard'"
+              [class.text-white]="viewMode === 'dashboard'"
+              [class.text-gray-400]="viewMode !== 'dashboard'"
+              [class.rounded-lg]="viewMode === 'dashboard'"
+              (click)="toggleViewMode('dashboard')"
+          >
+            <mat-icon>dashboard</mat-icon>
+          </button>
+        </div>
+      }
     </div>
   </div>

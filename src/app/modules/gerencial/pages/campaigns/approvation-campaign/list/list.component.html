@@ -1,0 +1,25 @@
+<app-page-header pageSession="Campanhas dos clientes" title="Campanhas" />
+
+<section>
+  <section>
+    <!-- Multiple Filter Table Component -->
+    <app-multiple-filter-table 
+      [filters]="filters"
+      [viewMode]="viewMode"
+      (viewModeChange)="onViewModeChange($event)"
+      (filterChange)="onFilterChange($event)"
+      [useChangeViewBtn]="false"
+    >
+    </app-multiple-filter-table>
+
+  <!-- Content based on view mode -->
+  <div *ngIf="viewMode === 'list'">
+    <app-commom-table
+      [data]="data()"
+      [displayedColumns]="displayedColumns"
+      (detail)="gotoDetailPage($event)"
+      (edit)="gotoEditPage($event)"
+      (delete)="deleteRow($event)"
+    ></app-commom-table>
+  </div>
+</section>

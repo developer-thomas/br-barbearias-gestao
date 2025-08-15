@@ -46,6 +46,32 @@
             </td>
           </ng-container>
         }
+        @case ('approvation') {
+          <ng-container matColumnDef="approvation">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                @if(row.status === 'Aprovado') {
+                  <div class="flex items-center justify-center">
+                    <button> 
+                      <mat-slide-toggle (change)="changeCampaignStatus($event, row)" />
+                    </button>
+                  </div>
+                }
+
+                @if(row.status === 'Aguardando') {
+                  <div class="flex items-center justify-center gap-2">
+                    <button (click)="approveCampaign(row)">
+                      <mat-icon>check_circle</mat-icon>
+                    </button>
+                    <button (click)="repprovaCampaign(row)">
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </div>
+                }
+              
+            </td>
+          </ng-container>
+        }
         @case ('currency') {
           <ng-container matColumnDef="{{ item.key }}">
             <th class="font-bold" mat-header-cell *matHeaderCellDef mat-sort-header>

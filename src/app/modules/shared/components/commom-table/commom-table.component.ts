@@ -7,11 +7,12 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { BooleanStatusPipe } from '../../pipes/boolean-status/boolean-status.pipe';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 export type TableColumn = {
   label: string;
   key: string;
-  type: 'text' | 'date' | 'currency' | 'status' | 'menu';
+  type: 'text' | 'date' | 'currency' | 'status' | 'menu' | 'approvation';
 }
 
 @Component({
@@ -27,7 +28,8 @@ export type TableColumn = {
     MatMenuModule,
     MatIconModule,
     BooleanStatusPipe,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSlideToggleModule
   ],
 })
 export class CommomTableComponent<T> implements OnChanges, AfterViewInit {
@@ -49,6 +51,11 @@ export class CommomTableComponent<T> implements OnChanges, AfterViewInit {
   @Output() edit = new EventEmitter<T>();
   @Output() delete = new EventEmitter<T>();
   @Output() checkboxChange = new EventEmitter<any>();
+
+  // Botões da tela de aprovação de campanhas
+  @Output() onApproveCampaign = new EventEmitter<any>();
+  @Output() onReproveCampaign = new EventEmitter<any>();
+  @Output() onchangeCampaignStatus = new EventEmitter<any>();
 
   public page = 1;
   public size = 10;
@@ -96,5 +103,23 @@ export class CommomTableComponent<T> implements OnChanges, AfterViewInit {
     return this.useCheckbox
       ? ['select', ...this.displayedColumnsKeys]
       : [...this.displayedColumnsKeys]; // cópia para evitar referência
+  }
+
+  // Funções para o menu de aprovação de campanhas
+  approveCampaign(row: any) {
+    console.log('approve:', row);
+    this.onApproveCampaign.emit(row)
+  }
+
+  repprovaCampaign(row: any) {
+    this.onReproveCampaign.emit(row)
+    console.log('reprove:', row);
+
+  }
+
+  changeCampaignStatus(event: any, row: any) {
+    this.onchangeCampaignStatus.emit(event.checked);
+    console.log(event.checked); // true ou false
+    console.log('changeStatus:', row);
   }
 }

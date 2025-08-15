@@ -29,8 +29,11 @@ export type ViewMode = 'list' | 'dashboard'
   styleUrl: './multiple-filter-table.component.scss'
 })
 export class MultipleFilterTableComponent {
+  @Input() useChangeViewBtn: boolean = true;
   @Input() filters: FilterOption[] = []
   @Input() viewMode: ViewMode = 'list'
+
+
   @Output() viewModeChange = new EventEmitter<ViewMode>()
   @Output() filterChange = new EventEmitter<any>()
 
