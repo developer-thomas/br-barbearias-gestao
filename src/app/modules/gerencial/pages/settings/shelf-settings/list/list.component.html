@@ -1,0 +1,18 @@
+<app-page-header pageSession="Prateleira" title="Prateleira"></app-page-header>
+
+<app-filter-table>
+    <app-base-button 
+        label="Cadastrar"
+        styleClass="green"
+        routerLink="form"
+    />
+</app-filter-table>
+
+<app-commom-table
+    [data]="data()"
+    [displayedColumns]="displayedColumns"
+    (detail)="gotoDetailPage($event)"
+    (edit)="gotoEditPage($event)"
+    (delete)="deleteRow($event)"
+/>
+
