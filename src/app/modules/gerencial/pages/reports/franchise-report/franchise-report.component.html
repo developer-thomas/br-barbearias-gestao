@@ -1,0 +1,128 @@
+<app-page-header title="Relatórios Inteligentes" pageSession="Relatórios"></app-page-header>
+<div class="p-6">
+    <div>
+      <!-- Filters -->
+      <div class="flex items-center justify-start gap-8 mb-8">
+        <!-- Unit Selector -->
+        <div class="flex items-center gap-2 p-3 rounded-lg text-gray-700 bg-[#E1E2E6]">
+          <span class="font-medium">{{ selectedUnit }}</span>
+          <mat-icon class="text-gray-500">location_on</mat-icon>
+        </div>
+  
+        <!-- Period Selector -->
+        <div class="flex items-center gap-2 text-gray-700 p-3 rounded-lg bg-[#E1E2E6]">
+          <mat-icon class="text-gray-500">calendar_today</mat-icon>
+          <span class="font-medium">{{ selectedPeriod }}</span>
+        </div>
+      </div>
+  
+      <!-- Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div *ngFor="let metric of topMetrics">
+          <app-dashboard-card [data]="metric"></app-dashboard-card>
+        </div>
+      </div>
+  
+      <!-- Chart Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm">
+          <h3 class="text-lg font-semibold text-gray-900 mb-6">Média por período</h3>
+          <apx-chart
+            [series]="chartOptions.series!"
+            [chart]="chartOptions.chart!"
+            [xaxis]="chartOptions.xaxis!"
+            [stroke]="chartOptions.stroke!"
+            [markers]="chartOptions.markers!"
+            [dataLabels]="chartOptions.dataLabels!"
+            [grid]="chartOptions.grid!"
+            [yaxis]="chartOptions.yaxis!"
+          ></apx-chart>
+        </div>
+  
+        <!-- Right Side Cards -->
+        <div class="space-y-2">
+
+          <!-- Toggle Buttons -->
+          <div class="flex justify-end gap-2">
+            <button 
+              class="w-8 h-3 rounded-full transition-all duration-200"
+              [class.bg-green-500]="activeToggle() === 'evolution'"
+              [class.bg-gray-300]="activeToggle() !== 'evolution'"
+              (click)="setActiveToggle('evolution')"
+            ></button>
+            <button 
+              class="w-8 h-3 rounded-full transition-all duration-200"
+              [class.bg-green-500]="activeToggle() === 'quality'"
+              [class.bg-gray-300]="activeToggle() !== 'quality'"
+              (click)="setActiveToggle('quality')"
+            ></button>
+          </div>
+  
+          <!-- Quality Card -->
+          <div *ngIf="activeToggle() === 'quality'" class="bg-white rounded-2xl p-6 shadow-sm overflow-auto max-h-[500px]">
+            <div class="flex flex-col items-start justify-between space-y-5">
+              <h1>Barbeiros</h1>
+              
+              @for(item of barbers; track item) {
+                <div class="shadow-lg rounded-md w-full flex space-x-3 h-28 p-5 items-center">
+  
+                  <div>
+                    <img src="assets/png/default-user.png" class="rounded-full w-14" alt="">
+                  </div>
+  
+                  <div>
+                    <p class="font-bold text-sm"> {{ item.name }} </p>
+                    <p>Média: {{ item.average }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+  
+          
+          <!-- Evolution Cards -->
+          <div *ngIf="activeToggle() === 'evolution'" class="w-full">
+            <app-dashboard-card [data]="qualityMetric"></app-dashboard-card>
+          </div>
+
+          <div *ngIf="activeToggle() === 'evolution'" class="bg-white rounded-2xl p-6 shadow-sm">
+            <div class="flex">
+              <div class="flex items-center justify-center min-w-[40%]">
+                <apx-chart
+                  [series]="donutChartOptions.series!"
+                  [chart]="donutChartOptions.chart!"
+                  [labels]="donutChartOptions.labels!"
+                  [colors]="donutChartOptions.colors!"
+                  [legend]="donutChartOptions.legend!"
+                  [plotOptions]="donutChartOptions.plotOptions!"
+                  [dataLabels]="donutChartOptions.dataLabels!"
+                  [responsive]="donutChartOptions.responsive!"
+                ></apx-chart>
+              </div>
+              
+              <div>
+                <div class="mb-4">
+                  <h3 class="text-lg font-semibold text-gray-900 mb-2">Percentual de evolução</h3>
+                  <p class="text-xs text-gray-500 leading-relaxed">
+                    Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                  </p>
+                </div>
+                
+                <div class="mt-4">
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-gray-600">0%</span>
+                    <span class="text-gray-600">76%</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                    <div class="bg-green-500 h-2 rounded-full" style="width: 50%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  

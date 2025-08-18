@@ -1,0 +1,105 @@
+// Custom styling for the reports component
+.metric-card {
+    transition: all 0.2s ease-in-out;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  .toggle-button {
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+  
+  // ApexCharts custom styling
+  ::ng-deep {
+    .apexcharts-canvas {
+      .apexcharts-tooltip {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      
+      .apexcharts-tooltip-title {
+        background: #f9fafb;
+        border-bottom: 1px solid #e5e7eb;
+        color: #374151;
+        font-weight: 600;
+      }
+      
+      .apexcharts-tooltip-y-group {
+        .apexcharts-tooltip-text-y-label {
+          color: #6b7280;
+        }
+        
+        .apexcharts-tooltip-text-y-value {
+          color: #111827;
+          font-weight: 600;
+        }
+      }
+    }
+    
+    // Donut chart center text styling
+    .apexcharts-datalabel-label {
+      fill: #6b7280 !important;
+      font-size: 12px !important;
+    }
+    
+    .apexcharts-datalabel-value {
+      fill: #111827 !important;
+      font-weight: 700 !important;
+    }
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .metric-card {
+      .metric-value {
+        font-size: 2rem;
+      }
+    }
+  }
+  
+  // Animation for toggle buttons
+  .toggle-enter {
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  .toggle-leave {
+    animation: slideOut 0.3s ease-in;
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+  
+  // Custom progress bar styling
+  .progress-bar {
+    background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+    transition: width 0.5s ease-in-out;
+  }
+  
