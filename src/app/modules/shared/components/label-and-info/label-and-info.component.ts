@@ -5,7 +5,7 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './label-and-info.component.html',
-  styleUrl: './label-and-info.component.scss',
+  styleUrl: './label-and-info.component.scss'
 })
 export class LabelAndInfoComponent {
   @Input({ required: true }) label!: string;

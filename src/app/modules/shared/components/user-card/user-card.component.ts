@@ -7,13 +7,13 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-user-card',
   standalone: true,
-  templateUrl: './user-card.component.html',
-  styleUrl: './user-card.component.scss',
   imports: [
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
   ],
+  templateUrl: './user-card.component.html',
+  styleUrl: './user-card.component.scss'
 })
 export class UserCardComponent {
   private router = inject(Router);

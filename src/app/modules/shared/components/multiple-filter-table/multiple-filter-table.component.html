@@ -26,11 +26,11 @@
         </div>
       </div>
 
-      @if(useChangeViewBtn) {
-        <div class="flex items-center gap-3">
-          <!-- Conteúdo customizável como botão de registrar, etc...  -->
-          <ng-content></ng-content>
-  
+      <div class="flex items-center gap-3">
+        <!-- Conteúdo customizável como botão de registrar, etc...  -->
+        <ng-content></ng-content>
+
+        @if(useChangeViewBtn) {
           <button
               class="rounded-md w-10 h-11"   
               [class.bg-green-500]="viewMode === 'list'"
@@ -50,7 +50,7 @@
           >
             <mat-icon>dashboard</mat-icon>
           </button>
+        }
         </div>
-      }
     </div>
   </div>

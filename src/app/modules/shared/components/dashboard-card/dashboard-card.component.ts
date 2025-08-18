@@ -23,5 +23,5 @@ export interface DashboardCardData {
   styleUrl: './dashboard-card.component.scss'
 })
 export class DashboardCardComponent {
-  @Input() data!: DashboardCardData
+  @Input({ required: true}) data!: any;
 }
