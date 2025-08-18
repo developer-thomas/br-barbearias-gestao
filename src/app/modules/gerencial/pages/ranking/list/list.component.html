@@ -1,0 +1,35 @@
+<app-page-header pageSession="Ranking" title="Ranking" />
+
+<section>
+  <section>
+    <!-- Multiple Filter Table Component -->
+    <app-multiple-filter-table 
+      [filters]="filters"
+      (filterChange)="onFilterChange($event)"
+      [useChangeViewBtn]="false"
+    >
+    </app-multiple-filter-table>
+
+  <!-- Content based on view mode -->
+  @for(item of data(); track item.id) {
+    <div class="mb-4">
+            <mat-card class="shadow-md ">
+                <mat-card-content>
+                    <div class="flex justify-between items-center">                
+                        <!-- left side -->
+                        <div class="flex justify-center items-center space-x-4">  
+                            <span class="font-bold">{{item.position + 1}}º</span>
+                            <img class="rounded-full w-14" [src]="item.image" alt="">
+                            <span class="font-bold">{{ item.name }}</span>
+                        </div>
+                        
+                        <!-- right side -->
+                        <div>
+                            Pontos: {{ item.points }}
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    }
+</section>
