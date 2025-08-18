@@ -1,0 +1,61 @@
+.banner-toggle {
+    ::ng-deep {
+      .mdc-switch {
+        .mdc-switch__track {
+          &::before {
+            background-color: rgba(255, 255, 255, 0.3);
+          }
+          &::after {
+            background-color: rgba(255, 255, 255, 0.5);
+          }
+        }
+  
+        .mdc-switch__handle {
+          .mdc-switch__shadow {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          }
+        }
+  
+        &.mdc-switch--selected {
+          .mdc-switch__track {
+            &::before {
+              background-color: rgba(34, 197, 94, 0.8);
+            }
+            &::after {
+              background-color: #22c55e;
+            }
+          }
+  
+          .mdc-switch__handle {
+            .mdc-switch__ripple {
+              &::before {
+                background-color: #22c55e;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // Ensure the image covers the full width and maintains aspect ratio
+  .banner-image {
+    width: 100%;
+    height: 384px; // h-96 equivalent
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  // Style for action buttons overlay
+  .action-buttons {
+    backdrop-filter: blur(4px);
+    
+    button {
+      transition: all 0.2s ease-in-out;
+      
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+  

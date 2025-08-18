@@ -1,8 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { BaseButtonComponent } from '../../../../shared/components/base-button/base-button.component';
 import { CommomTableComponent, TableColumn } from '../../../../shared/components/commom-table/commom-table.component';
 import { FilterTableComponent } from '../../../../shared/components/filter-table/filter-table.component';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -17,6 +18,9 @@ import { PageHeaderComponent } from '../../../../shared/components/page-header/p
   styleUrl: './list.component.scss'
 })
 export class ListComponent {
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+
   public data = signal<any[]>([]);
 
   public displayedColumns: TableColumn[] = [
@@ -47,9 +51,16 @@ export class ListComponent {
     this.data.set(data);
   }
 
-  gotoEditPage(row: any) {}
+  gotoEditPage(row: any) {
+    // Ajustar para redirecionar para um novo component de editar na integração
+    this.router.navigate(['form'], { relativeTo: this.activatedRoute })
 
-  gotoDetailPage(row: any) {}
+  }
+
+  gotoDetailPage(row: any) {
+    console.log(row)
+    this.router.navigate([row.id], { relativeTo: this.activatedRoute })
+  }
 
   deleteRow(row: any) {}
 
