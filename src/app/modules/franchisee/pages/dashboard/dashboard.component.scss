@@ -1,0 +1,154 @@
+// Banner styling
+.banner-overlay {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 100%);
+  }
+  
+  // Card hover effects
+  .dashboard-card {
+    transition: all 0.2s ease-in-out;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  // ApexCharts custom styling
+  ::ng-deep {
+    .apexcharts-canvas {
+      .apexcharts-bar-series {
+        .apexcharts-series {
+          rect {
+            fill: #374151;
+            rx: 4;
+            ry: 4;
+          }
+        }
+      }
+      
+      .apexcharts-tooltip {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+      }
+      
+      .apexcharts-tooltip-title {
+        background: #f9fafb;
+        border-bottom: 1px solid #e5e7eb;
+        color: #374151;
+        font-weight: 600;
+        border-radius: 8px 8px 0 0;
+      }
+      
+      .apexcharts-tooltip-y-group {
+        .apexcharts-tooltip-text-y-label {
+          color: #6b7280;
+        }
+        
+        .apexcharts-tooltip-text-y-value {
+          color: #111827;
+          font-weight: 600;
+        }
+      }
+    }
+    
+    // Donut chart center text styling
+    .apexcharts-datalabel-label {
+      fill: #6b7280 !important;
+      font-size: 12px !important;
+    }
+    
+    .apexcharts-datalabel-value {
+      fill: #111827 !important;
+      font-weight: 700 !important;
+    }
+    
+    // Bar chart specific styling
+    .apexcharts-bar-area {
+      .apexcharts-series {
+        .apexcharts-bar-series {
+          .apexcharts-series-1 {
+            rect {
+              fill: #374151;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // Banner text styling
+  .banner-content {
+    h1 {
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    .highlight-text {
+      color: #fbbf24;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .banner-content {
+      h1 {
+        font-size: 2.5rem;
+      }
+    }
+    
+    .dashboard-card {
+      .card-value {
+        font-size: 1.5rem;
+      }
+    }
+  }
+  
+  // Animation for cards
+  .card-enter {
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  // Progress bar animation
+  .progress-bar {
+    background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+    transition: width 0.8s ease-in-out;
+  }
+  
+  // Custom scrollbar for mobile
+  @media (max-width: 768px) {
+    .chart-container {
+      overflow-x: auto;
+      
+      &::-webkit-scrollbar {
+        height: 4px;
+      }
+      
+      &::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 2px;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 2px;
+      }
+      
+      &::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+    }
+  }
+  

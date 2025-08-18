@@ -1,0 +1,83 @@
+<app-page-header pageSession="Usuário" title="Seja bem vindo(a)!"></app-page-header>
+<div class="min-h-screen bg-gray-50 p-6">
+    <div class="max-w-7xl mx-auto space-y-8">
+      <!-- Banner Section -->
+      <div class="relative rounded-3xl overflow-hidden shadow-lg">
+        <img 
+          src="assets/mock/banner-image.png" 
+          alt="Discover This Year's Trends Banner"
+          class="w-full h-80 object-cover"
+        >
+      </div>
+  
+      <!-- Top Row Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <app-dashboard-card 
+          *ngFor="let card of topRowCards" 
+          [data]="card"
+        ></app-dashboard-card>
+      </div>
+  
+      <!-- Middle Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Bar Chart Section -->
+        <div class="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm">
+          <h3 class="text-lg font-semibold text-gray-900 mb-6">Clientes impactados por dia</h3>
+          <apx-chart
+            [series]="barChartOptions.series!"
+            [chart]="barChartOptions.chart!"
+            [xaxis]="barChartOptions.xaxis!"
+            [yaxis]="barChartOptions.yaxis!"
+            [dataLabels]="barChartOptions.dataLabels!"
+            [grid]="barChartOptions.grid!"
+          ></apx-chart>
+        </div>
+  
+        <!-- Right Side Cards -->
+        <div class="space-y-6">
+          <!-- Impact Percentage Card -->
+          <div class="bg-white rounded-2xl p-6 shadow-sm">
+            <div class="mb-4">
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">Percentual de impacto</h3>
+              <p class="text-xs text-gray-500 leading-relaxed">
+                Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              </p>
+            </div>
+            <div class="flex items-center justify-center">
+              <apx-chart
+                [series]="donutChartOptions.series!"
+                [chart]="donutChartOptions.chart!"
+                [labels]="donutChartOptions.labels!"
+                [colors]="donutChartOptions.colors!"
+                [legend]="donutChartOptions.legend!"
+                [plotOptions]="donutChartOptions.plotOptions!"
+                [dataLabels]="donutChartOptions.dataLabels!"
+                [responsive]="donutChartOptions.responsive!"
+              ></apx-chart>
+            </div>
+            <div class="mt-4">
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-gray-600">0%</span>
+                <span class="text-gray-600">76%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                <div class="bg-green-500 h-2 rounded-full" style="width: 50%"></div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Duration Card -->
+          <app-dashboard-card [data]="durationCard"></app-dashboard-card>
+        </div>
+      </div>
+  
+      <!-- Bottom Row Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <app-dashboard-card 
+          *ngFor="let card of bottomRowCards" 
+          [data]="card"
+        ></app-dashboard-card>
+      </div>
+    </div>
+  </div>
+  
