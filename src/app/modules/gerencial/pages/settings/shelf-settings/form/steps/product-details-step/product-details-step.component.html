@@ -1,0 +1,62 @@
+<div>
+    <h2 class="text-xl font-semibold text-gray-900 mb-8">Dados do produto</h2>
+    
+    <form [formGroup]="form" class="space-y-6">
+      <!-- Product Name -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Nome do produto</label>
+        <mat-form-field appearance="outline" class="w-full">
+          <input matInput formControlName="productName" placeholder="Exemplo preenchido">
+        </mat-form-field>
+      </div>
+  
+      <!-- Description -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
+        <mat-form-field appearance="outline" class="w-full">
+          <textarea 
+            matInput 
+            formControlName="description" 
+            placeholder="Placeholder text"
+            rows="6"
+            class="resize-none"
+          ></textarea>
+        </mat-form-field>
+      </div>
+  
+      <!-- Three columns: Rescue Value, Validity, Discount -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Valor resgate</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input matInput formControlName="rescueValue" placeholder="000000">
+          </mat-form-field>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Validade</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input matInput formControlName="validity" placeholder="00/00/00" mask="00/00/00">
+          </mat-form-field>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Desconto</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input matInput formControlName="discount" placeholder="00/00/00" mask="00/00/00"> 
+          </mat-form-field>
+        </div>
+      </div>
+  
+      <!-- Rule Selection -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Selecione a regra</label>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-select formControlName="rule">
+            <mat-option *ngFor="let option of ruleOptions" [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+  
