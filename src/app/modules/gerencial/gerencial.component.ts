@@ -55,12 +55,12 @@ export class AdminComponent {
       icon: "image",
     },
     {
-      route: "/ranking",
+      route: "ranking",
       label: "Ranking",
       icon: "leaderboard",
     },
     {
-      route: "/acessos",
+      route: "acessos",
       label: "Acessos",
       icon: "lock",
     },

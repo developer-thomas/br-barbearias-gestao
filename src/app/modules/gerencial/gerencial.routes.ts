@@ -19,8 +19,10 @@ export const routes: Routes = [
       { path: 'campanhas/banco-perguntas', loadChildren: () => import('./pages/campaigns/question-bank/question-bank.routes').then((m) => m.routes) },
       { path: 'configuracao/pontuacao', loadChildren: () => import('./pages/settings/score-setting/score-settings.routes').then((m) => m.routes) },
       { path: 'configuracao/prateleira', loadChildren: () => import('./pages/settings/shelf-settings/shelf-settings.routes').then((m) => m.routes) },
+      { path: 'relatorios', loadChildren: () => import('./pages/reports/reports.routes').then((m) => m.routes) },
       { path: 'banners', loadChildren: () => import('./pages/banners/banners.routes').then((m) => m.routes) },
-      { path: 'configs', loadChildren: () => import('./pages/config/config.routes').then((m) => m.routes) },
+      { path: 'ranking', loadChildren: () => import('./pages/ranking/ranking.routes').then((m) => m.routes) },
+      { path: 'acessos', loadChildren: () => import('./pages/access/access.routes').then((m) => m.routes) },
     ],
   },
 ];
