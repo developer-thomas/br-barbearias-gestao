@@ -50,7 +50,7 @@ export class AdminComponent {
       ],
     },
     {
-      route: "/banners",
+      route: "banners",
       label: "Banners",
       icon: "image",
     },
