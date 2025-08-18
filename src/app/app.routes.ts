@@ -4,11 +4,7 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'landing-page',
-  },
-  {
-    path: 'landing-page',
-    loadChildren: () => import('./modules/landing-page/landing-page.routes').then(m => m.routes),
+    redirectTo: 'home',
   },
   {
     path: 'home',
@@ -17,5 +13,9 @@ export const routes: Routes = [
   {
     path: 'gerencial',
     loadChildren: () => import('./modules/gerencial/gerencial.routes').then(m => m.routes),
+  },
+  {
+    path: 'franqueado',
+    loadChildren: () => import('./modules/franchisee/franchisee.routes').then(m => m.routes),
   },
 ];
