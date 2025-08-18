@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { ProductDetailsData, ProductDetailsStepComponent } from './steps/product-details-step/product-details-step.component';
 import { ProductImageData, ProductImageStepComponent } from './steps/product-image-step/product-image-step.component';
+import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 
 export interface StepData {
   label: string
@@ -19,6 +20,7 @@ export interface StepData {
     MatButtonModule, 
     ProductDetailsStepComponent, 
     ProductImageStepComponent,
+    PageHeaderComponent
   ],
   templateUrl: './form.component.html',
   styleUrl: './form.component.scss'
@@ -69,7 +71,6 @@ export class FormComponent {
 
   onConfirm() {
     console.log("Configurações de prateleira finalizadas:", this.formData())
-    // Here you would typically send the data to a server
     this.router.navigate(["/gerencial/configuracao/prateleira"])
   }
 
