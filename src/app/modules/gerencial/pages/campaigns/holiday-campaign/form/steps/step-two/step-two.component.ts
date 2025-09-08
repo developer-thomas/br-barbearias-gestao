@@ -8,10 +8,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { NgxMaskDirective } from 'ngx-mask';
 
 export interface StepTwoData {
   date: string
   time: string
+  willRepeat: string;
   productType: "cupom" | "produto" | "nenhum"
   couponCode: string
   configuration: string
@@ -38,25 +40,13 @@ export interface StepTwoData {
     MatIconModule,
     MatButtonModule,
     MatCardModule,
+    NgxMaskDirective
   ],
   templateUrl: './step-two.component.html',
   styleUrl: './step-two.component.scss'
 })
 export class StepTwoComponent {
-  @Input() data: StepTwoData = {
-    date: "",
-    time: "",
-    productType: "cupom",
-    couponCode: "",
-    configuration: "percentual",
-    couponValue: "",
-    rescueValue: "",
-    usageLimit: "resgate-unico",
-    selectedProduct: "",
-    productNames: [],
-    productConfiguration: "ao-cortar-o-cabelo",
-    productUsageLimit: "resgate-unico",
-  }
+  @Input() data!: StepTwoData;
   @Output() dataChange = new EventEmitter<StepTwoData>()
 
   form: FormGroup
@@ -81,6 +71,7 @@ export class StepTwoComponent {
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       date: ["", [Validators.required]],
+      willRepeat: ["", [Validators.required]],
       time: ["", [Validators.required]],
       productType: ["cupom", [Validators.required]],
       // Cupom fields
@@ -97,21 +88,6 @@ export class StepTwoComponent {
   }
 
   ngOnInit() {
-    // Initialize form with input data
-    this.form.patchValue({
-      date: this.data.date,
-      time: this.data.time,
-      productType: this.data.productType,
-      couponCode: this.data.couponCode,
-      configuration: this.data.configuration,
-      couponValue: this.data.couponValue,
-      rescueValue: this.data.rescueValue,
-      usageLimit: this.data.usageLimit,
-      selectedProduct: this.data.selectedProduct,
-      productConfiguration: this.data.productConfiguration,
-      productUsageLimit: this.data.productUsageLimit,
-    })
-
     // Initialize product names
     this.productNames = [...this.data.productNames]
 

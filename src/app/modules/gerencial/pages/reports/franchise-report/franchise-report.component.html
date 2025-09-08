@@ -64,7 +64,7 @@
               <h1>Barbeiros</h1>
               
               @for(item of barbers; track item) {
-                <div class="shadow-lg rounded-md w-full flex space-x-3 h-28 p-5 items-center">
+                <div class="shadow-lg rounded-md w-full flex space-x-3 h-28 p-5 items-center" (click)="goToBarberDashboard(item.id)">
   
                   <div>
                     <img src="assets/png/default-user.png" class="rounded-full w-14" alt="">

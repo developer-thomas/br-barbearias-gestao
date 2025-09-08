@@ -25,7 +25,7 @@ type ActivePreview = "sms" | "email" | "whatsapp"
 })
 export class PositioningTabComponent implements OnInit {
   @Input() data: StepFiveData = {
-    selectedChannel: 'sms',
+    selectedChannel: 'whatsapp',
   }
   
   @Output() dataChange = new EventEmitter<StepFiveData>()

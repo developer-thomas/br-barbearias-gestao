@@ -40,9 +40,9 @@ export class FormComponent {
   currentStep = signal(0)
 
   steps: StepData[] = [
-    { label: "Campanha", completed: false, active: true },
+    { label: "Recuperação", completed: false, active: true },
     { label: "Período e produto", completed: false, active: false },
-    { label: "Imagens", completed: false, active: false },
+    { label: "Imagem", completed: false, active: false },
     { label: "Posicionamento", completed: false, active: false },
   ]
 
@@ -89,7 +89,7 @@ export class FormComponent {
   })
 
   onCancel() {
-    this.router.navigate(["/gerencial/campanhas/aniversario"])
+    this.router.navigate(["/gerencial/campanhas/recuperacao"])
   }
 
   onContinue() {
@@ -106,7 +106,7 @@ export class FormComponent {
 
   onConfirm() {
     console.log("Formulário finalizado:", this.formData())
-    this.router.navigate(["/gerencial/campanhas/aniversario"])
+    this.router.navigate(["/gerencial/campanhas/recuperacao"])
   }
 
   onStepDataChange(stepData: any) {

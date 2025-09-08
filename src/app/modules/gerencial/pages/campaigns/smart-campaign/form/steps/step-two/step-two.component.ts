@@ -8,10 +8,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { NgxMaskDirective } from 'ngx-mask';
 
 export interface StepTwoData {
-  date: string;
-  time: string;
+  initialDate: string;
+  validity: string;
   pointsType: string;
   pointsValue: string;
 }
@@ -29,27 +30,26 @@ export interface StepTwoData {
     MatIconModule,
     MatButtonModule,
     MatCardModule,
+    NgxMaskDirective
   ],
   templateUrl: './step-two.component.html',
   styleUrl: './step-two.component.scss'
 })
 export class StepTwoComponent {
-  @Input() data: StepTwoData = {
-    date: "",
-    time: "",
-    pointsType: "Quantitativa",
-    pointsValue: ""
-  }
-
+  @Input() data!: StepTwoData;
   @Output() dataChange = new EventEmitter<StepTwoData>()
+
+  pointsTypeOptions = [
+    { title: "Quantitativa", value: 'quantitative' }
+  ]
 
   form: FormGroup
   productNames: string[] = []
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      date: ["", [Validators.required]],
-      time: ["", [Validators.required]],
+      initialDate: ["", [Validators.required]],
+      validity: ["", [Validators.required]],
       pointsType: ["", [Validators.required]],
       pointsValue: ["", [Validators.required]]
     })

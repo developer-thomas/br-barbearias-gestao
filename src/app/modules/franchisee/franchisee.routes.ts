@@ -9,6 +9,9 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       { path: 'dashboard', component: DashboardComponent },
+      { path: 'clientes', loadChildren: () => import('./pages/users/users.routes').then((m) => m.routes) },
+      { path: 'campanhas/comuns', loadChildren: () => import('./pages/common-campaign/common-campaign.routes').then((m) => m.routes) },
+      { path: 'relatorios', loadChildren: () => import('./pages/reports/reports.routes').then((m) => m.routes) },
     ],
   },
 ];

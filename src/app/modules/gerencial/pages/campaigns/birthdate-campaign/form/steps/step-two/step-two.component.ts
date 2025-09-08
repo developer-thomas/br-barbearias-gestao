@@ -8,10 +8,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { NgxMaskDirective } from 'ngx-mask';
 
 export interface StepTwoData {
-  date: string
   time: string
+  willRepeat: string;
   productType: "cupom" | "produto" | "nenhum"
   couponCode: string
   configuration: string
@@ -38,14 +39,15 @@ export interface StepTwoData {
     MatIconModule,
     MatButtonModule,
     MatCardModule,
+    NgxMaskDirective
   ],
   templateUrl: './step-two.component.html',
   styleUrl: './step-two.component.scss'
 })
 export class StepTwoComponent {
   @Input() data: StepTwoData = {
-    date: "",
     time: "",
+    willRepeat: "", 
     productType: "cupom",
     couponCode: "",
     configuration: "percentual",
@@ -80,6 +82,7 @@ export class StepTwoComponent {
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
+      willRepeat: ["", [Validators.required]],
       date: ["", [Validators.required]],
       time: ["", [Validators.required]],
       productType: ["cupom", [Validators.required]],
@@ -99,8 +102,8 @@ export class StepTwoComponent {
   ngOnInit() {
     // Initialize form with input data
     this.form.patchValue({
-      date: this.data.date,
       time: this.data.time,
+      willRepeat: this.data.willRepeat,
       productType: this.data.productType,
       couponCode: this.data.couponCode,
       configuration: this.data.configuration,

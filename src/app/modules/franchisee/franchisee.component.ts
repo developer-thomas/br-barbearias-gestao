@@ -22,7 +22,7 @@ export class FranchiseeComponent {
       icon: "people",
     },
     {
-      route: "campanhas",
+      route: "campanhas/comuns",
       label: "Campanhas",
       icon: "campaign",
     },

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal, ViewChild } from '@angular/core';
+import { Component, inject, signal, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,6 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexDataLabels, ApexGrid, ApexStroke, ApexMarkers, ApexYAxis, ApexTitleSubtitle, ApexNonAxisChartSeries, ApexResponsive, ApexLegend, ApexPlotOptions, NgApexchartsModule, ChartComponent } from 'ng-apexcharts';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
 import { DashboardCardComponent } from '../../../../shared/components/dashboard-card/dashboard-card.component';
+import { Router } from '@angular/router';
 
 export interface MetricCard {
   label: string
@@ -58,6 +59,8 @@ export type DonutChartOptions = {
   styleUrl: './franchise-report.component.scss'
 })
 export class FranchiseReportComponent {
+  private readonly router = inject(Router);
+
   @ViewChild("chart") chart!: ChartComponent
   @ViewChild("donutChart") donutChart!: ChartComponent
 
@@ -110,21 +113,25 @@ export class FranchiseReportComponent {
 
   barbers = [
     {
+      id: 0,
       img: 'assets/png/default-user.png',
       average: '5.0',
       name: 'Nome do barbeiro'
     },
     {
+      id: 1,
       img: 'assets/png/default-user.png',
       average: '5.0',
       name: 'Nome do barbeiro'
     },
     {
+      id: 2,
       img: 'assets/png/default-user.png',
       average: '5.0',
       name: 'Nome do barbeiro'
     },
     {
+      id: 3,
       img: 'assets/png/default-user.png',
       average: '5.0',
       name: 'Nome do barbeiro'
@@ -258,5 +265,9 @@ export class FranchiseReportComponent {
 
   setActiveToggle(toggle: "quality" | "evolution") {
     this.activeToggle.set(toggle)
+  }
+
+  goToBarberDashboard(id: any) {
+    this.router.navigate([`gerencial/relatorios/barbeiro/${id}`])
   }
 }

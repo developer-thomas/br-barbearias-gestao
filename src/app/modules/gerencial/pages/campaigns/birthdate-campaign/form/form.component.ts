@@ -42,7 +42,7 @@ export class FormComponent {
   steps: StepData[] = [
     { label: "Campanha", completed: false, active: true },
     { label: "Período e produto", completed: false, active: false },
-    { label: "Mensagens", completed: false, active: false },
+    { label: "Imagem", completed: false, active: false },
     { label: "Posicionamento", completed: false, active: false },
   ]
 
@@ -57,7 +57,7 @@ export class FormComponent {
       description: "",
     } as any,
     step2: {
-      date: "",
+      willRepeat: "",
       time: "",
       productType: "cupom",
       couponCode: "",

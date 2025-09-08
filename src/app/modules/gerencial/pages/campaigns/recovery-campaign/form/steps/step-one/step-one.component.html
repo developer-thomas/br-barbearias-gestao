@@ -1,27 +1,41 @@
 <div [formGroup]="form">
-  <h2 class="text-xl font-semibold text-gray-900 mb-8">Aniversário</h2>
+  <h2 class="text-xl font-semibold text-gray-900 mb-8">Recuperação</h2>
   
   <div class="space-y-6">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <mat-form-field appearance="outline" class="md:col-span-1">
-        <mat-label>Nome da campanha</mat-label>
-        <input matInput formControlName="campaignName" placeholder="Placeholder text">
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Para quem</mat-label>
-        <mat-select formControlName="targetAudience">
-          <mat-option value="cliente">Cliente</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Quais</mat-label>
-        <mat-select formControlName="specificAudience">
-          <mat-option value="cliente-especifico">Cliente específico</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <!-- Quantity Days -->
+      <div class="flex flex-col space-y-2">
+        <label for="quantityDays">Quantidade de dias</label>
+        <mat-form-field appearance="outline" class="md:col-span-1">
+          <mat-label>Quantidade de dias</mat-label>
+          <input matInput formControlName="quantityDays" placeholder="Placeholder text">
+        </mat-form-field>
+      </div>
+
+      <div class="flex flex-col space-y-2"> 
+        <label for="settings">Configuração</label>
+        <mat-form-field appearance="outline">
+          <mat-label>Configuração</mat-label>
+          <mat-select formControlName="settings">
+            <mat-option value="fidelized-barber">Barbearia fidelizada</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Franquiado -->
+      <div class="flex flex-col space-y-2">
+        <label for="franchised">Franquiado</label>
+        <mat-form-field appearance="outline">
+          <mat-label>Franquiado</mat-label>
+          <mat-select formControlName="franchised">
+            <mat-option value="Todos">Todos</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </div>
 
-    <div>
+    <div class="space-y-2">
+      <label for="selectedClient">Selecione os clientes específicos</label>
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Selecione os clientes específicos</mat-label>
         <input 
@@ -47,10 +61,11 @@
       </div>
     </div>
 
-    <div>
+    <div class="space-y-2">
+      <label for="description">Mensagem</label>
       <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Descrição</mat-label>
-        <textarea matInput formControlName="description" placeholder="Placeholder text" rows="5" class="resize-none"></textarea>
+        <mat-label>Mensagem</mat-label>
+        <textarea matInput formControlName="message" placeholder="Placeholder text" rows="5" class="resize-none"></textarea>
       </mat-form-field>
     </div>
   </div>

@@ -43,6 +43,8 @@ export class ResultsTabComponent implements OnInit {
   public displayedColumns: TableColumn[] = [
     { label: 'ID', key: 'id', type: 'text' },
     { label: 'Nome', key: 'name', type: 'text' },
+    { label: 'Tipo', key: 'type', type: 'text' },
+    { label: 'Voucher', key: 'voucher', type: 'text' },
     { label: 'Status de envio', key: 'sendStatus', type: 'text' },
     { label: 'Conversões', key: 'convertions', type: 'text' },
   ];
@@ -58,7 +60,9 @@ export class ResultsTabComponent implements OnInit {
       data.push({
         id: i,
         name: 'Anderson',
+        type: i % 2 === 0 ? 'Enviado' : 'Recebido',
         sendStatus: i % 2 === 0 ? 'Enviado' : 'Recebido',
+        voucher: "000000",
         convertions: i % 2 === 0 ? 'Sim' : 'Não',
       })
     }

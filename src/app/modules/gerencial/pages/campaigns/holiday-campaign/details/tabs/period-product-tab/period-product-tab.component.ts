@@ -5,12 +5,13 @@ import { MatCardModule } from '@angular/material/card';
 export interface PeriodProductData {
   date: string
   time: string
-  validity: string
+  settings: string
   product: string
   productDescription: string
   rescueValue: string
   configuration: string
   value: string
+  validity: string;
 }
 
 @Component({
@@ -27,11 +28,12 @@ export class PeriodProductTabComponent {
   @Input() data: PeriodProductData = {
     date: "00/00/00",
     time: "00:00",
-    validity: "00/00/00",
+    settings: "Percentual",
     product: "Cupom",
     productDescription: "Exemplo preenchido",
     rescueValue: "00000",
     configuration: "Percentual",
     value: "00",
+    validity: "00/00/00"
   }
 }

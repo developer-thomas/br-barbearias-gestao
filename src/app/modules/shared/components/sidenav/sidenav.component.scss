@@ -82,6 +82,9 @@
       }
 
       &.active {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         background-color: #e8f5e8;
         border-left: 4px solid #96e500;
         
@@ -91,6 +94,7 @@
           
           .menu-icon {
             color: #96e500;
+            
           }
         }
       }
@@ -173,6 +177,9 @@
           }
 
           &.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             background-color: #e8f5e8;
             border-left: 3px solid #96e500;
             

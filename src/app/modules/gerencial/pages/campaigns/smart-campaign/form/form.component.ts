@@ -43,10 +43,10 @@ export class FormComponent {
   currentStep = signal(0)
 
   steps: StepData[] = [
-    { label: "Campanha", completed: false, active: true },
+    { label: "Inteligente", completed: false, active: true },
     { label: "Período e pontuação", completed: false, active: false },
     { label: "Público e localização", completed: false, active: false },
-    { label: "Imagens", completed: false, active: false },
+    { label: "Imagem", completed: false, active: false },
     { label: "Perguntas", completed: false, active: false },
     { label: "Posicionamento", completed: false, active: false },
   ]

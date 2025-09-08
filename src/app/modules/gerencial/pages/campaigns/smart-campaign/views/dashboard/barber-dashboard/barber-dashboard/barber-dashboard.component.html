@@ -1,0 +1,46 @@
+<app-page-header title="Relatórios" pageSession="Relatórios Inteligentes"></app-page-header>
+<div class="p-6 space-y-4 ">
+    <mat-card class="p-6 shadow-lg">
+        <mat-card-content>
+            <h1 class="font-semibold text-lg">
+                Nome do Barbeiro
+            </h1>
+        </mat-card-content>
+    </mat-card>
+    <div>
+      <!-- Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div *ngFor="let metric of topMetrics">
+          <app-dashboard-card [data]="metric"></app-dashboard-card>
+        </div>
+      </div>
+  
+      <!-- Chart Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm">
+          <h3 class="text-lg font-semibold text-gray-900 mb-6">Média de geral mensais</h3>
+          <apx-chart
+            [series]="chartOptions.series!"
+            [chart]="chartOptions.chart!"
+            [xaxis]="chartOptions.xaxis!"
+            [stroke]="chartOptions.stroke!"
+            [markers]="chartOptions.markers!"
+            [dataLabels]="chartOptions.dataLabels!"
+            [grid]="chartOptions.grid!"
+            [yaxis]="chartOptions.yaxis!"
+          ></apx-chart>
+        </div>
+  
+        <!-- Right Side Cards -->
+        <div class="space-y-2">
+          <!-- Evolution Cards -->
+          <div class="w-full">
+            @for(item of qualityMetric; track item.value) {
+                <app-dashboard-card [data]="item"></app-dashboard-card>
+            }
+          </div>
+
+      </div>
+    </div>
+  </div>
+  

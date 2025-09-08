@@ -1,0 +1,60 @@
+::ng-deep {
+  .mat-mdc-form-field {
+    .mat-mdc-text-field-wrapper {
+      .mat-mdc-form-field-flex {
+        .mat-mdc-form-field-infix {
+          .mat-mdc-input-element,
+          .mat-mdc-select {
+            color: #374151;
+            
+            &::placeholder {
+              color: #9CA3AF;
+            }
+          }
+        }
+      }
+    }
+    
+    .mat-mdc-form-field-outline {
+      .mat-mdc-form-field-outline-start,
+      .mat-mdc-form-field-outline-notch,
+      .mat-mdc-form-field-outline-end {
+        border-color: #D1D5DB;
+      }
+    }
+    
+    &.mat-focused {
+      .mat-mdc-form-field-outline {
+        .mat-mdc-form-field-outline-start,
+        .mat-mdc-form-field-outline-notch,
+        .mat-mdc-form-field-outline-end {
+          border-color: #96e500;
+          border-width: 2px;
+        }
+      }
+    }
+  }
+
+  .mat-mdc-raised-button {
+    &.bg-orange-500 {
+      background-color: #f97316 !important;
+      
+      &:hover {
+        background-color: #ea580c !important;
+      }
+    }
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

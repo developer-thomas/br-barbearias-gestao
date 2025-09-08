@@ -1,8 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 import { CommomTableComponent, TableColumn } from "../../../../../shared/components/commom-table/commom-table.component";
 import { FilterTableComponent } from '../../../../../shared/components/filter-table/filter-table.component';
 import { BaseButtonComponent } from '../../../../../shared/components/base-button/base-button.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -17,7 +18,7 @@ import { BaseButtonComponent } from '../../../../../shared/components/base-butto
   styleUrl: './list.component.scss'
 })
 export class ListComponent {
-
+  private readonly router = inject(Router);
   public data = signal<any[]>([]);
 
   public displayedColumns: TableColumn[] = [
@@ -51,7 +52,9 @@ export class ListComponent {
 
   gotoEditPage(row: any) {}
 
-  gotoDetailPage(row: any) {}
+  gotoDetailPage(row: any) {
+    this.router.navigate([`gerencial/configuracao/prateleira/${row.id}`])
+  }
 
   deleteRow(row: any) {}
 

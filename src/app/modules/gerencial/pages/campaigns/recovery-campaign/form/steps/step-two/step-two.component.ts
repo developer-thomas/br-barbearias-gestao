@@ -89,25 +89,11 @@ export class StepTwoComponent {
       productConfiguration: ["ao-cortar-o-cabelo"],
       productUsageLimit: ["resgate-unico"],
       productValidity: ["1-dia"],
+      expiration: "",
     })
   }
 
   ngOnInit() {
-    // Initialize form with input data
-    this.form.patchValue({
-      date: this.data.date,
-      time: this.data.time,
-      productType: this.data.productType,
-      couponCode: this.data.couponCode,
-      configuration: this.data.configuration,
-      couponValue: this.data.couponValue,
-      rescueValue: this.data.rescueValue,
-      usageLimit: this.data.usageLimit,
-      selectedProduct: this.data.selectedProduct,
-      productConfiguration: this.data.productConfiguration,
-      productUsageLimit: this.data.productUsageLimit,
-    })
-
     // Initialize product names
     this.productNames = [...this.data.productNames]
 

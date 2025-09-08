@@ -6,19 +6,18 @@ import { MatIconModule } from "@angular/material/icon"
 import { MatInputModule } from "@angular/material/input"
 import { MatSelectModule } from "@angular/material/select"
 
-
 export interface Client {
   name: string
   cpf: string
 }
 
 export interface Step1Data {
-  campaignName: string
-  targetAudience: string
-  specificAudience: string
+  quantityDays: string
+  settings: string
+  franchised: string
   selectedClient: string
   clients: Client[]
-  description: string
+  message: string
 }
 
 @Component({
@@ -44,11 +43,11 @@ export class StepOneComponent {
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      campaignName: ["", Validators.required],
-      targetAudience: ["cliente", Validators.required],
-      specificAudience: ["cliente-especifico", Validators.required],
+      quantityDays: ["", Validators.required],
+      settings: ["cliente", Validators.required],
+      franchised: ["cliente-especifico", Validators.required],
       selectedClient: [""],
-      description: ["", Validators.required],
+      message: ["", Validators.required],
     })
   }
 

@@ -44,7 +44,7 @@ export class FormComponent {
     { label: "Campanha", completed: false, active: true },
     { label: "Período e produto", completed: false, active: false },
     { label: "Público e localização", completed: false, active: false },
-    { label: "Mensagens", completed: false, active: false },
+    { label: "Imagem", completed: false, active: false },
     { label: "Posicionamento", completed: false, active: false },
   ]
 
@@ -107,7 +107,6 @@ export class FormComponent {
 
   onConfirm() {
     console.log("Formulário finalizado:", this.formData())
-    // Here you would typically send the data to a server
     this.router.navigate(["/gerencial/campanhas/comuns"])
   }
 

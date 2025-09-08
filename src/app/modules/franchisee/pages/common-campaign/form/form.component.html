@@ -1,0 +1,94 @@
+<app-page-header title="Campanhas" pageSession="Cadastrar Campanha Comum"></app-page-header>
+<div>
+  <div>
+    <!-- Custom Stepper -->
+    <div class="bg-white rounded-2xl shadow-sm p-8">
+      <!-- Steps Header -->
+      <div class="flex items-center justify-between mb-12">
+        <div *ngFor="let step of steps; let i = index" class="flex items-center">
+          <!-- Step Circle -->
+          <div class="flex items-center">
+            <div 
+              class="px-6 py-2 rounded-full text-sm font-medium transition-all duration-200"
+              [class.bg-green-500]="step.active"
+              [class.text-white]="step.active"
+              [class.bg-gray-200]="!step.active && !step.completed"
+              [class.text-gray-600]="!step.active && !step.completed"
+              [class.bg-green-100]="step.completed && !step.active"
+              [class.text-green-700]="step.completed && !step.active"
+            >
+              {{ step.label }}
+            </div>
+          </div>
+          
+          <!-- Connector Line -->
+          <div 
+            *ngIf="i < steps.length - 1" 
+            class="w-16 h-0.5 mx-4"
+            [class.bg-green-500]="step.completed"
+            [class.bg-gray-200]="!step.completed"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Step Content -->
+      <div class="mb-12">
+        <!-- Step 1: Campaign Details -->
+        <div *ngIf="currentStep() === 0">
+          <app-step-one 
+            [data]="formData().step1"
+            (dataChange)="onStepDataChange($event)"
+          ></app-step-one>
+        </div>
+
+        <!-- Step 2: Period and Product -->
+        <div *ngIf="currentStep() === 1">
+          <app-step-two 
+            [data]="formData().step2"
+            (dataChange)="onStep2DataChange($event)"
+          ></app-step-two>
+        </div>
+
+        <!-- Step 3: Public and Location -->
+        <div *ngIf="currentStep() === 2">
+          <app-step-three 
+            [data]="formData().step3"
+            (dataChange)="onStep3DataChange($event)"
+          ></app-step-three>
+        </div>
+
+        <!-- Step 4: Messages -->
+        <div *ngIf="currentStep() === 3">
+          <app-step-four
+            [data]="formData().step4"
+            (dataChange)="onStep4DataChange($event)"
+          ></app-step-four>
+        </div>
+
+        <!-- Step 5: Positioning -->
+        <div *ngIf="currentStep() === 4">
+          <app-step-five
+            [data]="formData().step5"
+            (dataChange)="onStep5DataChange($event)"
+          ></app-step-five>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-end gap-4">
+        <button 
+          class="px-8 py-3 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50"
+          (click)="onCancel()"
+        >
+          CANCELAR
+        </button>
+        <button 
+          class="px-8 py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg"
+          (click)="onContinue()"
+        >
+          {{ currentStep() === steps.length - 1 ? 'CONFIRMAR' : 'CONTINUAR' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
