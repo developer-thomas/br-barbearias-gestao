@@ -12,7 +12,7 @@ export class HomeService {
   private storageService = inject(StorageService);
 
   public signin(data: any) {
-    return this.http.post<SignInResponse>(`${environment.api}/auth/login`, data).pipe(
+    return this.http.post<SignInResponse>(`${environment.api}/v1/login`, data).pipe(
       tap(res => this.storageService.setToken(res.accessToken)),
     );
   }

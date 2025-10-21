@@ -6,6 +6,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterOutlet } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { HomeService } from './home.service';
 
 @Component({
   selector: 'app-home',
@@ -13,21 +15,24 @@ import { Router, RouterOutlet } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   imports: [
-    CommonModule, 
-    ReactiveFormsModule, 
-    MatFormFieldModule, 
-    MatInputModule, 
-    MatButtonModule, 
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
     MatIconModule
   ]
 })
 export class HomeComponent {
   private router = inject(Router)
   private fb = inject(FormBuilder)
+  private homeService = inject(HomeService)
+  private toastr = inject(ToastrService)
 
   currentStep = signal<"email" | "password">("email")
   showPassword = false
   userEmail = ""
+  isLoading = false
 
   form: FormGroup
 
@@ -47,18 +52,33 @@ export class HomeComponent {
         this.form.get("email")?.markAsTouched()
       }
     } else {
-      // Password step - login
-      if (this.form.get("password")?.valid) {
-        console.log("Login attempt:", {
+      // Password step - login real com API
+      if (this.form.get("password")?.valid && !this.isLoading) {
+        this.isLoading = true;
+
+        const loginData = {
           email: this.userEmail,
           password: this.form.get("password")?.value,
-        })
+        };
 
-        if(this.userEmail === 'user@franquia.com') {
-          this.router.navigate(["/gerencial/dashboard"])
-        } else if (this.userEmail === 'user@franqueado.com') {
-          this.router.navigate(["/franqueado/dashboard"])
-        }
+        this.homeService.signin(loginData).subscribe({
+          next: (response) => {
+            this.isLoading = false;
+            this.toastr.success('Login realizado com sucesso!');
+
+            // Redirecionar baseado no tipo de usuário (pode ser ajustado conforme a resposta da API)
+            if (this.userEmail.includes('franquia')) {
+              this.router.navigate(["/gerencial/dashboard"]);
+            } else {
+              this.router.navigate(["/franqueado/dashboard"]);
+            }
+          },
+          error: (error) => {
+            this.isLoading = false;
+            console.error('Erro no login:', error);
+            this.toastr.error('Erro ao fazer login. Verifique suas credenciais.');
+          }
+        });
       } else {
         this.form.get("password")?.markAsTouched()
       }
