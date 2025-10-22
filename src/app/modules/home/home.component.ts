@@ -66,8 +66,8 @@ export class HomeComponent {
             this.isLoading = false;
             this.toastr.success('Login realizado com sucesso!');
 
-            // Redirecionar baseado no tipo de usuário (pode ser ajustado conforme a resposta da API)
-            if (this.userEmail.includes('franquia')) {
+            // Redirecionar baseado no tipo de usuário
+            if (this.userEmail.includes('franquia') || this.userEmail.includes('master')) {
               this.router.navigate(["/gerencial/dashboard"]);
             } else {
               this.router.navigate(["/franqueado/dashboard"]);
