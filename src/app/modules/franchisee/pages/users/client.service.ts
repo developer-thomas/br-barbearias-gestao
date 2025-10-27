@@ -58,6 +58,10 @@ export type ClientResponse = {
   canAccess: boolean;
   payment: string;
   addresses: ClientAddressDto[];
+  gender?: string | null;
+  loyaltyStartedAt?: string | null;
+  lastVisit?: string | null;
+  lastReviews?: ClientReviewDto[];
 }
 
 export type ClientAddressDto = {
@@ -83,3 +87,18 @@ export type ClientSummary = {
   membershipStatedAt: string | null;
   lastVisit: string | null;
 };
+
+export type ClientReviewDto = {
+  id: string | number;
+  createdAt?: string | null;
+  date?: string | null;
+  establishmentName?: string | null;
+  establishment?: string | null;
+  campaignName?: string | null;
+  campaign?: string | null;
+  professionalName?: string | null;
+  professional?: string | null;
+  participated?: boolean | null;
+  haveParticipated?: boolean | null;
+  status?: string | null;
+}
