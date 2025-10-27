@@ -1,7 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../../environments/environment.development';
-import { Pagination } from '../../../shared/models/pagination.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -9,6 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class ClientService {
   private http = inject(HttpClient);
+  private readonly baseUrl = `${environment.api}/v1/web/franchisor/clients`;
 
   getClients(page?: number, size?: number, search?: string) {
     let params = new HttpParams();
@@ -19,30 +19,30 @@ export class ClientService {
       params = params.append('size', size);
     }
     if (search) {
-      params = params.append('search', search);
+      params = params.append('name', search);
     }
 
-    return this.http.get<Pagination<ClientResponse>>(`${environment.api}/client`, { params });
+    return this.http.get<ClientsListResponse>(this.baseUrl, { params });
   }
 
   getClientById(id: string) {
-    return this.http.get<ClientResponse>(`${environment.api}/client/${id}`);
+    return this.http.get<ClientResponse>(`${this.baseUrl}/${id}`);
   }
 
   save(data: any) {
-    return this.http.post(`${environment.api}/client`, data);
+    return this.http.post(this.baseUrl, data);
   }
 
   changeStatus(id: string) {
-    return this.http.patch<ClientResponse>(`${environment.api}/client/${id}/status`, {});
+    return this.http.patch<ClientResponse>(`${this.baseUrl}/${id}/status`, {});
   }
 
   updateClient(id: string, client: any): Observable<ClientResponse> {
-    return this.http.patch<ClientResponse>(`${environment.api}/${id}`, client)
+    return this.http.patch<ClientResponse>(`${this.baseUrl}/${id}`, client)
   }
 
   deleteClient(id: any): void {
-    this.http.delete(`${environment.api}/${id}`)
+    this.http.delete(`${this.baseUrl}/${id}`)
   }
 }
 
@@ -59,6 +59,19 @@ export type ClientResponse = {
   payment: string;
   addresses: ClientAddressDto[];
 }
+
+export type ClientsListResponse = {
+  clients: ClientSummary[];
+  pages: number;
+  count: number;
+};
+
+export type ClientSummary = {
+  id: number;
+  name: string;
+  membershipStatedAt: string | null;
+  lastVisit: string | null;
+};
 
 export type ClientAddressDto = {
   id: string;

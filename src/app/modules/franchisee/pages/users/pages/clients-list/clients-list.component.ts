@@ -4,8 +4,9 @@ import { BaseButtonComponent } from '../../../../../shared/components/base-butto
 import { CommomTableComponent, TableColumn } from '../../../../../shared/components/commom-table/commom-table.component';
 import { FilterTableComponent } from '../../../../../shared/components/filter-table/filter-table.component';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
-import { ClientResponse, ClientService } from '../../client.service';
+import { ClientService, ClientSummary } from '../../client.service';
 import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-clients-list',
@@ -27,6 +28,9 @@ export class ClientsListComponent implements OnInit {
   public pageSession = 'Clientes';
 
   public clients = signal<any[]>([]);
+  public isLoading = signal(false);
+  private readonly defaultPage = 1;
+  private readonly defaultPageSize = 20;
 
   public displayedColumns: TableColumn[] = [
     { label: 'ID', key: 'id', type: 'text' },
@@ -40,18 +44,72 @@ export class ClientsListComponent implements OnInit {
   }
 
   private getClients(search?: string) {
-    let data: any[] = [];
-    
-    for(let i = 0; i < 10; i++) {
-      data.push({
-        id: i,
-        name: 'Anderson',
-        fidelityTime: '3 meses',
-        timeFarAway: '20 dias'
-      })
+    this.isLoading.set(true);
+    this.clientService
+      .getClients(this.defaultPage, this.defaultPageSize, search)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          const mappedClients = this.mapClientsToTable(response?.clients ?? []);
+          this.clients.set(mappedClients);
+        },
+        error: (error) => {
+          console.error('Erro ao carregar clientes', error);
+          this.toastr.error('Não foi possível carregar a lista de clientes.');
+          this.clients.set([]);
+        },
+      });
+  }
+
+  private mapClientsToTable(clients: ClientSummary[]) {
+    return clients.map((client) => ({
+      id: client.id,
+      name: client.name ?? '-',
+      fidelityTime: this.formatDate(client.membershipStatedAt),
+      timeFarAway: this.formatRelativeTime(client.lastVisit),
+    }));
+  }
+
+  private formatDate(date?: string | null) {
+    if (!date) {
+      return '-';
     }
 
-    this.clients.set(data);
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      return '-';
+    }
+
+    return new Intl.DateTimeFormat('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(parsedDate);
+  }
+
+  private formatRelativeTime(date?: string | null) {
+    if (!date) {
+      return '-';
+    }
+
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      return '-';
+    }
+
+    const now = new Date();
+    const diffMs = now.getTime() - parsedDate.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays <= 0) {
+      return 'Hoje';
+    }
+
+    if (diffDays === 1) {
+      return '1 dia';
+    }
+
+    return `${diffDays} dias`;
   }
 
   public filter(search: string) {

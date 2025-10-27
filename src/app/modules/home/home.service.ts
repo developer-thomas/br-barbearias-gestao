@@ -13,11 +13,18 @@ export class HomeService {
 
   public signin(data: any) {
     return this.http.post<SignInResponse>(`${environment.api}/v1/login`, data).pipe(
-      tap(res => this.storageService.setToken(res.accessToken)),
+      tap((res) => {
+        if (res?.token) {
+          this.storageService.setToken(res.token);
+        }
+      }),
     );
   }
 }
 
 export type SignInResponse = {
-  accessToken: string;
+  token: string;
+  id: number;
+  role: string;
+  adminPermissions: string[];
 }
