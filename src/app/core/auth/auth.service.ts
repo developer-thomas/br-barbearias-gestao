@@ -13,11 +13,11 @@ import { UserService } from "./user.service";
 export class AuthService {
   constructor(private http: HttpClient, private userService: UserService) {}
 
-  auth( email: string, password: string ): Observable<SigninCredentialsResponse> {
+  auth( credential: string, password: string ): Observable<SigninCredentialsResponse> {
     return this.http.post<SigninCredentialsResponse>(
         `${environment.api}/v1/sessions/standard`,
         {
-          email,
+          credential,
           password,
         }
       )

@@ -37,22 +37,22 @@
         <div class="mb-8">
           <h1 class="text-2xl font-bold text-gray-900 mb-2">Acesse</h1>
           <p class="text-gray-600 text-sm">
-            {{ currentStep() === 'email' ? 'Conecte-se ao seu sistema' : 'Digite sua senha para continuar' }}
+            {{ currentStep() === 'credential' ? 'Conecte-se ao seu sistema' : 'Digite sua senha para continuar' }}
           </p>
         </div>
 
         <!-- Form -->
         <form [formGroup]="form" (ngSubmit)="onContinue()" class="space-y-6">
           <!-- Email Step -->
-          <div *ngIf="currentStep() === 'email'">
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+          <div *ngIf="currentStep() === 'credential'">
+            <label for="credential" class="block text-sm font-medium text-gray-700 mb-2">
               E-mail
             </label>
             <mat-form-field appearance="outline" class="w-full custom-field">
               <input 
                 matInput 
-                id="email"
-                formControlName="email"
+                id="credential"
+                formControlName="credential"
                 placeholder="carlosfrc@gmail.com"
                 type="email"
                 class="text-sm"
@@ -64,7 +64,7 @@
           <div *ngIf="currentStep() === 'password'">
             <!-- Show email -->
             <div class="mb-4 p-3 bg-gray-50 rounded-lg flex items-center justify-between">
-              <span class="text-sm text-gray-600">{{ userEmail }}</span>
+              <span class="text-sm text-gray-600">{{ userCredential }}</span>
               <button 
                 type="button"
                 class="text-green-500 text-sm font-medium hover:text-green-600"
@@ -117,9 +117,9 @@
               justify-center
             "
           >
-            {{ currentStep() === 'email' ? 'Continuar' : 'Entrar' }}
+            {{ currentStep() === 'credential' ? 'Continuar' : 'Entrar' }}
             <mat-icon class="ml-2 text-lg flex items-center justify-center mb-1">
-              {{ currentStep() === 'email' ? 'arrow_forward' : 'login' }}
+              {{ currentStep() === 'credential' ? 'arrow_forward' : 'login' }}
             </mat-icon>
           </button>
         </form>

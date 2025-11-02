@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterOutlet } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { HomeService } from './home.service';
+import { HomeService, SignInPayload } from './home.service';
 
 @Component({
   selector: 'app-home',
@@ -29,36 +29,43 @@ export class HomeComponent {
   private homeService = inject(HomeService)
   private toastr = inject(ToastrService)
 
-  currentStep = signal<"email" | "password">("email")
+  currentStep = signal<"credential" | "password">("credential")
   showPassword = false
-  userEmail = ""
+  userCredential = ""
   isLoading = false
 
   form: FormGroup
 
   constructor() {
     this.form = this.fb.group({
-      email: ["", [Validators.required, Validators.email]],
+      credential: ["", [Validators.required, Validators.email]],
       password: ["", [Validators.required, Validators.minLength(6)]],
     })
   }
 
   onContinue() {
-    if (this.currentStep() === "email") {
-      if (this.form.get("email")?.valid) {
-        this.userEmail = this.form.get("email")?.value
+    if (this.currentStep() === "credential") {
+      if (this.form.get("credential")?.valid) {
+        this.userCredential = this.form.get("credential")?.value
         this.currentStep.set("password")
       } else {
-        this.form.get("email")?.markAsTouched()
+        this.form.get("credential")?.markAsTouched()
       }
     } else {
       // Password step - login real com API
       if (this.form.get("password")?.valid && !this.isLoading) {
         this.isLoading = true;
 
-        const loginData = {
-          email: this.userEmail,
-          password: this.form.get("password")?.value,
+        const password = this.form.get("password")?.value;
+        if (!password) {
+          this.isLoading = false;
+          this.form.get("password")?.markAsTouched();
+          return;
+        }
+
+        const loginData: SignInPayload = {
+          credential: this.userCredential,
+          password,
         };
 
         this.homeService.signin(loginData).subscribe({
@@ -67,11 +74,13 @@ export class HomeComponent {
             this.toastr.success('Login realizado com sucesso!');
 
             // Redirecionar baseado no tipo de usuário
-            if (this.userEmail.includes('franquia') || this.userEmail.includes('master')) {
+            const role = response?.role?.toUpperCase?.() ?? '';
+            if (role === 'MASTER' || role === 'GERENCIAL') {
               this.router.navigate(["/gerencial/dashboard"]);
-            } else {
-              this.router.navigate(["/franqueado/dashboard"]);
+              return;
             }
+
+            this.router.navigate(["/franqueado/dashboard"]);
           },
           error: (error) => {
             this.isLoading = false;
@@ -86,7 +95,7 @@ export class HomeComponent {
   }
 
   onBackToEmail() {
-    this.currentStep.set("email")
+    this.currentStep.set("credential")
     this.form.get("password")?.setValue("")
   }
 

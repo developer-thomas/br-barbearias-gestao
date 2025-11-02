@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { HomeService } from '../../home.service';
+import { HomeService, SignInPayload } from '../../home.service';
 
 @Component({
   selector: 'app-signin',
@@ -31,7 +31,7 @@ export class SigninComponent {
   public hide = true;
 
   public form = this.fb.group({
-    credential: ['', [Validators.required]],
+    credential: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
   });
 
@@ -40,7 +40,19 @@ export class SigninComponent {
       return;
     }
 
-    this.homeService.signin(this.form.value).subscribe(() => {
+    const { credential, password } = this.form.getRawValue();
+
+    if (!credential || !password) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const payload: SignInPayload = {
+      credential,
+      password,
+    };
+
+    this.homeService.signin(payload).subscribe(() => {
       this.toastr.success('Login realizado com sucesso!');
       this.router.navigate(['/admin']);
     });

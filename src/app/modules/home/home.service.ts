@@ -11,11 +11,19 @@ export class HomeService {
   private http = inject(HttpClient);
   private storageService = inject(StorageService);
 
-  public signin(data: any) {
+  public signin(data: SignInPayload) {
     return this.http.post<SignInResponse>(`${environment.api}/v1/login`, data).pipe(
       tap((res) => {
-        if (res?.token) {
-          this.storageService.setToken(res.token);
+        if (res?.accessToken) {
+          this.storageService.setToken(res.accessToken);
+        }
+
+        if (res) {
+          this.storageService.setSession({
+            id: res.id,
+            role: res.role,
+            permissions: res.permissions ?? [],
+          });
         }
       }),
     );
@@ -23,8 +31,13 @@ export class HomeService {
 }
 
 export type SignInResponse = {
-  token: string;
   id: number;
+  accessToken: string;
   role: string;
-  adminPermissions: string[];
+  permissions: string[];
+}
+
+export type SignInPayload = {
+  credential: string;
+  password: string;
 }
