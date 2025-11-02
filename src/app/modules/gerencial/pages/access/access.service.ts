@@ -19,6 +19,18 @@ export interface AccessListResponse {
   count: number;
 }
 
+export interface AccessDetailDto {
+  permissions?: string[];
+  name?: string | null;
+  email?: string | null;
+  document?: string | null;
+  id: number;
+  fileUrl?: string | null;
+  fileKey?: string | null;
+  role?: string | null;
+  status?: string | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AccessService {
   private http = inject(HttpClient);
@@ -40,5 +52,9 @@ export class AccessService {
     }
 
     return this.http.get<AccessListResponse>(this.baseUrl, { params });
+  }
+
+  public getAccessDetail(id: number | string): Observable<AccessDetailDto> {
+    return this.http.get<AccessDetailDto>(`${this.baseUrl}/${id}/details`);
   }
 }

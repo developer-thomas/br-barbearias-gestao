@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,6 +8,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
+import { AccessDetailDto, AccessService } from '../access.service';
+import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs';
 
 export interface AccessModule {
   id: string
@@ -16,7 +19,7 @@ export interface AccessModule {
 }
 
 export interface UserDetails {
-  id: string
+  id: number
   name: string
   cpf: string
   email: string
@@ -24,7 +27,19 @@ export interface UserDetails {
   accessType: string
   isActive: boolean
   modules: AccessModule[]
+  permissions: string[]
 }
+
+const PERMISSION_LABELS: Record<string, string> = {
+  DASHBOARD: 'Dashboard',
+  CLIENTS: 'Clientes',
+  CAMPAIGNS: 'Campanhas',
+  REPORTS: 'Relatórios',
+  SETTINGS: 'Configurações',
+  BANNERS: 'Banners',
+  RANKS: 'Ranking',
+  ACCESS: 'Acessos',
+};
 
 @Component({
   selector: 'app-details',
@@ -45,56 +60,126 @@ export interface UserDetails {
 export class DetailsComponent {
   private route = inject(ActivatedRoute)
   private router = inject(Router)
+  private accessService = inject(AccessService)
+  private toastr = inject(ToastrService)
+
+  private readonly defaultImage = 'assets/png/default-user.png';
 
   accessTypeOptions = [
-    { value: "admin", label: "Admin" },
-    { value: "manager", label: "Gerente" },
-    { value: "employee", label: "Funcionário" },
-    { value: "viewer", label: "Visualizador" },
+    { value: "MASTER", label: "Master" },
+    { value: "ADMIN", label: "Administrador" },
+    { value: "MANAGER", label: "Gerente" },
+    { value: "EMPLOYEE", label: "Funcionário" },
+    { value: "VIEWER", label: "Visualizador" },
   ]
 
-  user: UserDetails = {
-    id: "1",
-    name: "Marina Silva",
-    cpf: "000000000-00",
-    email: "mail@email.com",
-    profileImage: "assets/png/default-user.png",
-    accessType: "admin",
-    isActive: true,
-    modules: [
-      { id: "dashboard", name: "Módulo", enabled: false },
-      { id: "campaigns", name: "Módulo", enabled: false },
-      { id: "clients", name: "Módulo", enabled: false },
-      { id: "reports", name: "Módulo", enabled: true },
-      { id: "settings", name: "Módulo", enabled: true },
-      { id: "banners", name: "Módulo", enabled: false },
-    ],
-  }
+  isLoading = signal(true);
+  errorMessage = signal<string | null>(null);
+  user = signal<UserDetails | null>(null);
 
   constructor() {
     const userId = this.route.snapshot.paramMap.get("id")
-    console.log("User ID:", userId)
+    if (!userId) {
+      this.errorMessage.set('Identificador do acesso não informado.');
+      this.isLoading.set(false);
+      return;
+    }
+
+    this.loadAccessDetail(userId);
+  }
+
+  private loadAccessDetail(id: string) {
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+
+    this.accessService
+      .getAccessDetail(id)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (detail) => this.user.set(this.mapDetailToUser(detail)),
+        error: (error) => {
+          console.error('Erro ao carregar detalhes do acesso', error);
+          this.toastr.error('Não foi possível carregar os detalhes do acesso.');
+          this.errorMessage.set('Não foi possível carregar os detalhes do acesso.');
+        },
+      });
+  }
+
+  private mapDetailToUser(detail: AccessDetailDto): UserDetails {
+    const permissions = detail.permissions ?? [];
+    return {
+      id: detail.id,
+      name: detail.name ?? '-',
+      cpf: detail.document ?? '-',
+      email: detail.email ?? '-',
+      profileImage: detail.fileUrl || this.defaultImage,
+      accessType: detail.role ?? '-',
+      isActive: (detail.status ?? '').toUpperCase() === 'ACTIVE',
+      modules: this.mapPermissionsToModules(permissions),
+      permissions,
+    };
+  }
+
+  private mapPermissionsToModules(permissions: string[] = []): AccessModule[] {
+    const baseModules = Object.entries(PERMISSION_LABELS).map(([id, name]) => ({
+      id,
+      name,
+      enabled: permissions.includes(id),
+    }));
+
+    const extraModules = permissions
+      .filter((permission) => !(permission in PERMISSION_LABELS))
+      .map((permission) => ({
+        id: permission,
+        name: permission,
+        enabled: true,
+      }));
+
+    return [...baseModules, ...extraModules];
   }
 
   onEdit() {
-    this.router.navigate(["/acessos/form", this.user.id])
+    const detail = this.user();
+    if (!detail) {
+      return;
+    }
+
+    this.router.navigate(["/acessos/form", detail.id])
   }
 
   onToggleStatus() {
-    this.user.isActive = !this.user.isActive
-    console.log("Status do usuário alterado:", this.user.isActive)
+    const detail = this.user();
+    if (!detail) {
+      return;
+    }
+
+    const updated = { ...detail, isActive: !detail.isActive };
+    this.user.set(updated);
+    console.log("Status do usuário alterado:", updated.isActive)
   }
 
   onAccessTypeChange(newAccessType: string) {
-    this.user.accessType = newAccessType
+    const detail = this.user();
+    if (!detail) {
+      return;
+    }
+
+    const updated = { ...detail, accessType: newAccessType };
+    this.user.set(updated);
     console.log("Tipo de acesso alterado:", newAccessType)
   }
 
   onModuleChange(moduleId: string, enabled: boolean) {
-    const moduleIndex = this.user.modules.findIndex((m) => m.id === moduleId)
-    if (moduleIndex !== -1) {
-      this.user.modules[moduleIndex].enabled = enabled
-      console.log(`Módulo ${moduleId} alterado:`, enabled)
+    const detail = this.user();
+    if (!detail) {
+      return;
     }
+
+    const modules = detail.modules.map((module) =>
+      module.id === moduleId ? { ...module, enabled } : module
+    );
+
+    this.user.set({ ...detail, modules });
+    console.log(`Módulo ${moduleId} alterado:`, enabled)
   }
 }
