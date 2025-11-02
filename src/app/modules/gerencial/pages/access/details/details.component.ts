@@ -5,10 +5,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
-import { AccessDetailDto, AccessService } from '../access.service';
+import { AccessDetailDto, AccessService, AccessStatus } from '../access.service';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
 
@@ -76,6 +76,7 @@ export class DetailsComponent {
   isLoading = signal(true);
   errorMessage = signal<string | null>(null);
   user = signal<UserDetails | null>(null);
+  isStatusUpdating = signal(false);
 
   constructor() {
     const userId = this.route.snapshot.paramMap.get("id")
@@ -147,15 +148,49 @@ export class DetailsComponent {
     this.router.navigate(["/acessos/form", detail.id])
   }
 
-  onToggleStatus() {
+  onToggleStatus(change: MatSlideToggleChange) {
     const detail = this.user();
     if (!detail) {
       return;
     }
 
-    const updated = { ...detail, isActive: !detail.isActive };
-    this.user.set(updated);
-    console.log("Status do usuário alterado:", updated.isActive)
+    if (this.isStatusUpdating()) {
+      change.source.checked = detail.isActive;
+      return;
+    }
+
+    const previousState = detail.isActive;
+    const nextState = change.checked;
+
+    if (previousState === nextState) {
+      return;
+    }
+
+    const nextStatus: AccessStatus = nextState ? 'ACTIVE' : 'INACTIVE';
+
+    this.isStatusUpdating.set(true);
+    this.user.set({ ...detail, isActive: nextState });
+
+    this.accessService
+      .updateAccessStatus(detail.id, nextStatus)
+      .pipe(finalize(() => this.isStatusUpdating.set(false)))
+      .subscribe({
+        next: (response) => {
+          const message = response?.message ?? this.buildStatusSuccessMessage(nextStatus);
+          this.toastr.success(message);
+        },
+        error: (error) => {
+          console.error('Erro ao atualizar status do acesso', error);
+          this.user.set({ ...detail, isActive: previousState });
+          this.toastr.error('Não foi possível alterar o status do administrador.');
+        },
+      });
+  }
+
+  private buildStatusSuccessMessage(status: AccessStatus): string {
+    return status === 'ACTIVE'
+      ? 'Status do administrador atualizado para ativo com sucesso.'
+      : 'Status do administrador atualizado para inativo com sucesso.';
   }
 
   onAccessTypeChange(newAccessType: string) {

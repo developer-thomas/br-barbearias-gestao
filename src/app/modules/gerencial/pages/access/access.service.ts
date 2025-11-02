@@ -31,6 +31,16 @@ export interface AccessDetailDto {
   status?: string | null;
 }
 
+export type AccessStatus = 'ACTIVE' | 'INACTIVE';
+
+export interface UpdateAccessStatusPayload {
+  status: AccessStatus;
+}
+
+export interface UpdateAccessStatusResponse {
+  message: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AccessService {
   private http = inject(HttpClient);
@@ -56,5 +66,13 @@ export class AccessService {
 
   public getAccessDetail(id: number | string): Observable<AccessDetailDto> {
     return this.http.get<AccessDetailDto>(`${this.baseUrl}/${id}/details`);
+  }
+
+  public updateAccessStatus(
+    id: number | string,
+    status: AccessStatus
+  ): Observable<UpdateAccessStatusResponse> {
+    const payload: UpdateAccessStatusPayload = { status };
+    return this.http.patch<UpdateAccessStatusResponse>(`${this.baseUrl}/${id}/status`, payload);
   }
 }

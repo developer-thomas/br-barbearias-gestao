@@ -58,10 +58,10 @@
             </button>
             <mat-slide-toggle
               [checked]="detail.isActive"
-              (change)="onToggleStatus()"
+              (change)="onToggleStatus($event)"
+              [disabled]="isStatusUpdating()"
               color="primary"
               class="user-toggle"
-              disabled
             ></mat-slide-toggle>
           </div>
         </div>
