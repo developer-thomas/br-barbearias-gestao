@@ -1,6 +1,6 @@
 <app-page-header pageSession="Prateleira" title="Prateleira"></app-page-header>
 
-<app-filter-table>
+<app-filter-table (filter)="onFilter($event)">
     <app-base-button 
         label="Cadastrar"
         styleClass="green"
@@ -8,11 +8,23 @@
     />
 </app-filter-table>
 
-<app-commom-table
-    [data]="data()"
-    [displayedColumns]="displayedColumns"
-    (detail)="gotoDetailPage($event)"
-    (edit)="gotoEditPage($event)"
-    (delete)="deleteRow($event)"
-/>
+@if (isLoading()) {
+    <div class="rounded-xl bg-white shadow-md p-6 text-center text-gray-500 mt-4">
+        Carregando lista de prateleiras...
+    </div>
+} @else {
+    @if (errorMessage()) {
+        <div class="rounded-xl bg-white shadow-md p-6 text-center text-red-500 mt-4">
+            {{ errorMessage() }}
+        </div>
+    } @else {
+        <app-commom-table
+            [data]="data()"
+            [displayedColumns]="displayedColumns"
+            (detail)="gotoDetailPage($event)"
+            (edit)="gotoEditPage($event)"
+            (delete)="deleteRow($event)"
+        />
+    }
+}
 

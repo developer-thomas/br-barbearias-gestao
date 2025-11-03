@@ -4,6 +4,9 @@ import { CommomTableComponent, TableColumn } from "../../../../../shared/compone
 import { FilterTableComponent } from '../../../../../shared/components/filter-table/filter-table.component';
 import { BaseButtonComponent } from '../../../../../shared/components/base-button/base-button.component';
 import { Router } from '@angular/router';
+import { ShelfSettingsService, ShelfDto } from '../shelf-settings.service';
+import { finalize } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-list',
@@ -19,7 +22,13 @@ import { Router } from '@angular/router';
 })
 export class ListComponent {
   private readonly router = inject(Router);
+  private readonly shelfSettingsService = inject(ShelfSettingsService);
+  private readonly toastr = inject(ToastrService);
   public data = signal<any[]>([]);
+  public isLoading = signal(false);
+  public errorMessage = signal<string | null>(null);
+  public totalItems = signal<number>(0);
+  public totalPages = signal<number>(0);
 
   public displayedColumns: TableColumn[] = [
     { label: 'COD', key: 'id', type: 'text' },
@@ -31,23 +40,78 @@ export class ListComponent {
   ];
 
   constructor() {
-    this.getData();
+    this.loadShelves();
   }
 
-  getData() {
-    const data = [];
+  private loadShelves(search?: string): void {
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
 
-    for(let i = 0; i < 10; i++) {
-      data.push({
-        id: i,
-        product: 'Nome do produto',
-        pointsRescue: '000000',
-        validity: '00/00/00',
-        status: i % 2 === 0 ? 'Ativo' : 'Desativado'
-      })
+    this.shelfSettingsService
+      .getShelves({ name: search })
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          this.data.set(this.mapShelves(response?.shelfs ?? []));
+          this.totalItems.set(response?.count ?? 0);
+          this.totalPages.set(response?.pages ?? 0);
+        },
+        error: (error) => {
+          console.error('Erro ao carregar prateleiras', error);
+          this.toastr.error('Não foi possível carregar as prateleiras.');
+          this.errorMessage.set('Não foi possível carregar as prateleiras.');
+          this.data.set([]);
+        },
+      });
+  }
+
+  public onFilter(search: string): void {
+    this.loadShelves(search);
+  }
+
+  private mapShelves(shelves: ShelfDto[]): any[] {
+    return shelves.map((shelf) => ({
+      id: shelf.id,
+      product: shelf.name ?? '-',
+      pointsRescue: this.formatPoints(shelf.points),
+      validity: this.formatDate(shelf.expirateAt),
+      status: this.formatStatus(shelf.status),
+    }));
+  }
+
+  private formatPoints(points?: number | null): string {
+    if (points === null || points === undefined) {
+      return '-';
     }
 
-    this.data.set(data);
+    return new Intl.NumberFormat('pt-BR').format(points);
+  }
+
+  private formatDate(date?: string | null): string {
+    if (!date) {
+      return '-';
+    }
+
+    const parsed = new Date(date);
+
+    if (isNaN(parsed.getTime())) {
+      return '-';
+    }
+
+    return new Intl.DateTimeFormat('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(parsed);
+  }
+
+  private formatStatus(status?: string | null): string {
+    if (!status) {
+      return '-';
+    }
+
+    const normalized = status.toUpperCase();
+    return normalized === 'ACTIVE' ? 'Ativo' : 'Inativo';
   }
 
   gotoEditPage(row: any) {}
