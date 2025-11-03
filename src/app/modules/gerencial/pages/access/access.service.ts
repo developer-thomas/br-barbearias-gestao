@@ -57,6 +57,15 @@ export interface CreateAccessResponse {
   message: string;
 }
 
+export interface UpdateAccessRequest {
+  role: AccessRole;
+  permissions: string[];
+}
+
+export interface UpdateAccessResponse {
+  message: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AccessService {
   private http = inject(HttpClient);
@@ -107,5 +116,12 @@ export class AccessService {
     formData.append('file', payload.file);
 
     return this.http.post<CreateAccessResponse>(`${this.baseUrl}/new`, formData);
+  }
+
+  public updateAccess(
+    id: number | string,
+    payload: UpdateAccessRequest
+  ): Observable<UpdateAccessResponse> {
+    return this.http.patch<UpdateAccessResponse>(`${this.baseUrl}/${id}/update`, payload);
   }
 }

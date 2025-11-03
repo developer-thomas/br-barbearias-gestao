@@ -124,9 +124,11 @@ export class ListComponent {
   }
 
   gotoEditPage(row: any) {
-    // Ajustar para redirecionar para um novo component de editar na integração
-    this.router.navigate(['form'], { relativeTo: this.activatedRoute })
+    if (!row?.id) {
+      return;
+    }
 
+    this.router.navigate(['form', row.id], { relativeTo: this.activatedRoute })
   }
 
   gotoDetailPage(row: any) {

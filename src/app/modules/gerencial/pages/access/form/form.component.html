@@ -1,8 +1,14 @@
-<app-page-header title="Novo acesso" pageSession="Acessos"></app-page-header>
+<app-page-header [title]="isEditMode ? 'Editar acesso' : 'Novo acesso'" pageSession="Acessos"></app-page-header>
 
 <div>
     <div>
       <div class="bg-white rounded-2xl shadow-sm p-8">
+        @if (isLoadingDetail) {
+          <div class="min-h-[200px] flex flex-col items-center justify-center text-gray-500 gap-2">
+            <mat-icon>hourglass_top</mat-icon>
+            <p>Carregando dados do acesso...</p>
+          </div>
+        } @else {
   <form [formGroup]="form" class="space-y-8" (ngSubmit)="onSubmit()">
           <!-- User Data Section -->
           <div>
@@ -62,6 +68,8 @@
               <div class="w-48">
                 <div 
                   class="w-full h-48 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-green-500 hover:bg-gray-50 transition-all relative"
+                  [class.pointer-events-none]="isEditMode || isLoadingDetail"
+                  [class.opacity-70]="isEditMode || isLoadingDetail"
                   (click)="!form.get('profileImage')?.value && triggerFileInput(fileInput)"
                 >
                   <input type="file" class="hidden" #fileInput (change)="onFileSelected($event)" accept="image/*">
@@ -105,7 +113,7 @@
             <div class="mb-8">
               <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de acesso</label>
               <mat-form-field appearance="outline" class="w-full max-w-xs">
-                <mat-select formControlName="accessType">
+                <mat-select formControlName="accessType" [disabled]="isSubmitting || isLoadingDetail">
                   <mat-option *ngFor="let option of accessTypeOptions" [value]="option.value">
                     {{ option.label }}
                   </mat-option>
@@ -125,7 +133,7 @@
                   (change)="onModuleChange(module.id, $event.checked)"
                   color="primary"
                   class="custom-checkbox"
-                  [disabled]="isSubmitting"
+                  [disabled]="isSubmitting || isLoadingDetail"
                 ></mat-checkbox>
               </div>
             </div>
@@ -143,12 +151,13 @@
             <button 
               type="submit"
               class="px-8 py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg disabled:opacity-70 disabled:cursor-not-allowed"
-              [disabled]="isSubmitting"
+              [disabled]="isSubmitting || isLoadingDetail"
             >
-              {{ isSubmitting ? 'SALVANDO...' : 'CONTINUAR' }}
+              {{ isSubmitting ? 'SALVANDO...' : (isEditMode ? 'SALVAR' : 'CONTINUAR') }}
             </button>
           </div>
         </form>
+        }
       </div>
     </div>
   </div>
