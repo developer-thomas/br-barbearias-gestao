@@ -3,7 +3,7 @@
 <div>
     <div>
       <div class="bg-white rounded-2xl shadow-sm p-8">
-        <form [formGroup]="form" class="space-y-8">
+  <form [formGroup]="form" class="space-y-8" (ngSubmit)="onSubmit()">
           <!-- User Data Section -->
           <div>
             <h2 class="text-xl font-semibold text-gray-900 mb-6">Dados do usuário</h2>
@@ -125,6 +125,7 @@
                   (change)="onModuleChange(module.id, $event.checked)"
                   color="primary"
                   class="custom-checkbox"
+                  [disabled]="isSubmitting"
                 ></mat-checkbox>
               </div>
             </div>
@@ -141,10 +142,10 @@
             </button>
             <button 
               type="submit"
-              class="px-8 py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg"
-              (click)="onContinue()"
+              class="px-8 py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg disabled:opacity-70 disabled:cursor-not-allowed"
+              [disabled]="isSubmitting"
             >
-              CONTINUAR
+              {{ isSubmitting ? 'SALVANDO...' : 'CONTINUAR' }}
             </button>
           </div>
         </form>

@@ -33,11 +33,27 @@ export interface AccessDetailDto {
 
 export type AccessStatus = 'ACTIVE' | 'INACTIVE';
 
+export type AccessRole = 'MASTER' | 'ADMIN' | 'MANAGER' | 'EMPLOYEE' | 'VIEWER';
+
 export interface UpdateAccessStatusPayload {
   status: AccessStatus;
 }
 
 export interface UpdateAccessStatusResponse {
+  message: string;
+}
+
+export interface CreateAccessRequest {
+  name: string;
+  email: string;
+  document: string;
+  password: string;
+  role: AccessRole;
+  permissions: string[];
+  file: File;
+}
+
+export interface CreateAccessResponse {
   message: string;
 }
 
@@ -74,5 +90,22 @@ export class AccessService {
   ): Observable<UpdateAccessStatusResponse> {
     const payload: UpdateAccessStatusPayload = { status };
     return this.http.patch<UpdateAccessStatusResponse>(`${this.baseUrl}/${id}/status`, payload);
+  }
+
+  public createAccess(payload: CreateAccessRequest): Observable<CreateAccessResponse> {
+    const formData = new FormData();
+    formData.append('name', payload.name);
+    formData.append('email', payload.email);
+    formData.append('document', payload.document);
+    formData.append('password', payload.password);
+    formData.append('role', payload.role);
+
+    payload.permissions.forEach((permission) => {
+      formData.append('permissions', permission);
+    });
+
+    formData.append('file', payload.file);
+
+    return this.http.post<CreateAccessResponse>(`${this.baseUrl}/new`, formData);
   }
 }

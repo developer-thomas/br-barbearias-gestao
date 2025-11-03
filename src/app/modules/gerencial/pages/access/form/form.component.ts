@@ -10,6 +10,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
 import { NgxMaskDirective } from 'ngx-mask';
+import { AccessRole, AccessService, CreateAccessRequest } from '../access.service';
+import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs';
 
 export interface AccessModule {
   id: string
@@ -17,15 +20,16 @@ export interface AccessModule {
   enabled: boolean
 }
 
-export interface AccessFormData {
-  fullName: string
-  cpf: string
-  email: string
-  password: string
-  accessType: string
-  profileImage: string | null
-  modules: AccessModule[]
-}
+const PERMISSION_OPTIONS: AccessModule[] = [
+  { id: 'DASHBOARD', name: 'Dashboard', enabled: false },
+  { id: 'CLIENTS', name: 'Clientes', enabled: false },
+  { id: 'CAMPAIGNS', name: 'Campanhas', enabled: false },
+  { id: 'REPORTS', name: 'Relatórios', enabled: false },
+  { id: 'SETTINGS', name: 'Configurações', enabled: false },
+  { id: 'BANNERS', name: 'Banners', enabled: false },
+  { id: 'RANKS', name: 'Ranking', enabled: false },
+  { id: 'ACCESS', name: 'Acessos', enabled: false },
+];
 
 @Component({
   selector: 'app-form',
@@ -48,25 +52,23 @@ export interface AccessFormData {
 export class FormComponent {
   private router = inject(Router)
   private fb: FormBuilder = inject(FormBuilder)
+  private accessService = inject(AccessService)
+  private toastr = inject(ToastrService)
 
   form: FormGroup
   showPassword = false
+  isSubmitting = false
+  selectedFile: File | null = null
 
   accessTypeOptions = [
-    { value: "admin", label: "Admin" },
-    { value: "manager", label: "Gerente" },
-    { value: "employee", label: "Funcionário" },
-    { value: "viewer", label: "Visualizador" },
+    { value: "MASTER" as AccessRole, label: "Master" },
+    { value: "ADMIN" as AccessRole, label: "Administrador" },
+    { value: "MANAGER" as AccessRole, label: "Gerente" },
+    { value: "EMPLOYEE" as AccessRole, label: "Funcionário" },
+    { value: "VIEWER" as AccessRole, label: "Visualizador" },
   ]
 
-  modules: AccessModule[] = [
-    { id: "dashboard", name: "Módulo", enabled: false },
-    { id: "campaigns", name: "Módulo", enabled: false },
-    { id: "clients", name: "Módulo", enabled: false },
-    { id: "reports", name: "Módulo", enabled: true },
-    { id: "settings", name: "Módulo", enabled: true },
-    { id: "banners", name: "Módulo", enabled: false },
-  ]
+  modules: AccessModule[] = PERMISSION_OPTIONS.map((module) => ({ ...module }))
 
   constructor() {
     this.form = this.fb.group({
@@ -74,7 +76,7 @@ export class FormComponent {
       cpf: ["", [Validators.required]],
       email: ["", [Validators.required, Validators.email]],
       password: ["", [Validators.required, Validators.minLength(6)]],
-      accessType: ["admin", [Validators.required]],
+      accessType: ["ADMIN", [Validators.required]],
       profileImage: [null],
     })
   }
@@ -83,19 +85,43 @@ export class FormComponent {
     this.router.navigate(["/acessos"])
   }
 
-  onContinue() {
+  onSubmit() {
     if (this.form.valid) {
-      const formData: AccessFormData = {
-        ...this.form.value,
-        modules: this.modules,
+      if (!this.selectedFile) {
+        this.toastr.warning('Adicione uma foto do administrador.');
+        return;
       }
-      console.log("Dados do usuário:", formData)
-      // Here you would typically send the data to a server
-      this.router.navigate(["/acessos"])
-    } else {
-      console.log("Formulário inválido")
-      this.markFormGroupTouched()
+
+      const permissions = this.getSelectedPermissions();
+
+      if (permissions.length === 0) {
+        this.toastr.warning('Selecione ao menos uma permissão.');
+        return;
+      }
+
+      const payload = this.buildCreateAccessPayload(permissions);
+
+      this.isSubmitting = true;
+
+      this.accessService
+        .createAccess(payload)
+        .pipe(finalize(() => (this.isSubmitting = false)))
+        .subscribe({
+          next: (response) => {
+            const message = response?.message ?? 'Administrador criado com sucesso.';
+            this.toastr.success(message);
+            this.router.navigate(["/acessos"]);
+          },
+          error: (error) => {
+            console.error('Erro ao criar administrador', error);
+            this.toastr.error('Não foi possível criar o administrador.');
+          },
+        });
+      return;
     }
+
+    this.toastr.error('Formulário inválido. Verifique os campos obrigatórios.');
+    this.markFormGroupTouched()
   }
 
   private markFormGroupTouched() {
@@ -112,6 +138,7 @@ export class FormComponent {
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0]
     if (file) {
+      this.selectedFile = file
       const reader = new FileReader()
       reader.onload = () => {
         this.form.patchValue({ profileImage: reader.result as string })
@@ -126,12 +153,34 @@ export class FormComponent {
 
   removeImage() {
     this.form.patchValue({ profileImage: null })
+    this.selectedFile = null
   }
 
   onModuleChange(moduleId: string, enabled: boolean) {
-    const moduleIndex = this.modules.findIndex((m) => m.id === moduleId)
-    if (moduleIndex !== -1) {
-      this.modules[moduleIndex].enabled = enabled
+    this.modules = this.modules.map((module) =>
+      module.id === moduleId ? { ...module, enabled } : module
+    )
+  }
+
+  private getSelectedPermissions(): string[] {
+    return this.modules.filter((module) => module.enabled).map((module) => module.id)
+  }
+
+  private sanitizeDocument(document: string): string {
+    return document.replace(/\D/g, '')
+  }
+
+  private buildCreateAccessPayload(permissions: string[]): CreateAccessRequest {
+    const { fullName, cpf, email, password, accessType } = this.form.value
+
+    return {
+      name: (fullName ?? '').trim(),
+      email: (email ?? '').trim(),
+      document: this.sanitizeDocument(cpf ?? ''),
+      password: password ?? '',
+      role: (accessType ?? 'ADMIN') as AccessRole,
+      permissions,
+      file: this.selectedFile!,
     }
   }
 }
