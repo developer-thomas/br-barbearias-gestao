@@ -17,6 +17,19 @@ export interface ShelfListResponse {
   count: number;
 }
 
+export interface CreateShelfRequest {
+  name: string;
+  description: string;
+  points: number;
+  expirateAt: string;
+  discount: number;
+  rule: 'UNIQUE' | 'MULTIPLE';
+}
+
+export interface CreateShelfResponse {
+  message: string;
+}
+
 export interface ShelfListQuery {
   name?: string;
   take?: number;
@@ -49,5 +62,9 @@ export class ShelfSettingsService {
     }
 
     return this.http.get<ShelfListResponse>(this.baseUrl, { params });
+  }
+
+  public createShelf(payload: CreateShelfRequest): Observable<CreateShelfResponse> {
+    return this.http.post<CreateShelfResponse>(`${this.baseUrl}/new`, payload);
   }
 }

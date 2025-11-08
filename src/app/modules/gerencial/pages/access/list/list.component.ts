@@ -31,11 +31,11 @@ export class ListComponent {
   public errorMessage = signal<string | null>(null);
 
   public displayedColumns: TableColumn[] = [
+    { label: 'ID', key: 'id', type: 'text' },
     { label: 'Nome', key: 'name', type: 'text' },
     { label: 'Email', key: 'email', type: 'text' },
     { label: 'Função', key: 'role', type: 'text' },
     { label: 'Status', key: 'status', type: 'text' },
-    { label: 'Criado em', key: 'createdAt', type: 'text' },
     { label: '', key: 'menu', type: 'menu' },
   ];
 
@@ -74,7 +74,6 @@ export class ListComponent {
       email: admin.email ?? '-',
       role: this.formatRole(admin.role),
       status: this.formatStatus(admin.status),
-      createdAt: this.formatDate(admin.createdAt),
     }));
   }
 

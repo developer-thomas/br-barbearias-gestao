@@ -9,10 +9,10 @@ import { NgxMaskDirective } from 'ngx-mask';
 export interface ProductDetailsData {
   productName: string
   description: string
-  rescueValue: string
+  rescueValue: string | number
   validity: string
-  discount: string
-  rule: string
+  discount: string | number
+  rule: 'UNIQUE' | 'MULTIPLE'
 }
 
 @Component({
@@ -20,7 +20,7 @@ export interface ProductDetailsData {
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule, 
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -36,16 +36,15 @@ export class ProductDetailsStepComponent {
     rescueValue: "",
     validity: "",
     discount: "",
-    rule: "cupom-unico",
+    rule: "UNIQUE",
   }
   @Output() dataChange = new EventEmitter<ProductDetailsData>()
 
   form: FormGroup
 
   ruleOptions = [
-    { value: "cupom-unico", label: "Cupom único" },
-    { value: "cupom-multiplo", label: "Cupom múltiplo" },
-    { value: "desconto-progressivo", label: "Desconto progressivo" },
+    { value: "UNIQUE" as const, label: "Cupom único" },
+    { value: "MULTIPLE" as const, label: "Cupom múltiplo" },
   ]
 
   constructor(private fb: FormBuilder) {
@@ -55,7 +54,7 @@ export class ProductDetailsStepComponent {
       rescueValue: ["", [Validators.required]],
       validity: ["", [Validators.required]],
       discount: ["", [Validators.required]],
-      rule: ["cupom-unico", [Validators.required]],
+      rule: ["UNIQUE", [Validators.required]],
     })
   }
 
@@ -65,7 +64,7 @@ export class ProductDetailsStepComponent {
 
     // Emit changes when form values change
     this.form.valueChanges.subscribe((value) => {
-      this.dataChange.emit(value)
+      this.dataChange.emit(value as ProductDetailsData)
     })
   }
 }
