@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { Router } from '@angular/router';
+import { of } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { QuestionBankService } from '../question-bank.service';
 import { FormComponent } from './form.component';
 
 describe('FormComponent', () => {
@@ -8,7 +11,28 @@ describe('FormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormComponent]
+      imports: [FormComponent],
+      providers: [
+        {
+          provide: QuestionBankService,
+          useValue: {
+            createQuestion: () => of({ message: 'ok' }),
+          },
+        },
+        {
+          provide: ToastrService,
+          useValue: {
+            success: jasmine.createSpy('success'),
+            error: jasmine.createSpy('error'),
+          },
+        },
+        {
+          provide: Router,
+          useValue: {
+            navigate: jasmine.createSpy('navigate'),
+          },
+        },
+      ],
     })
     .compileComponents();
     

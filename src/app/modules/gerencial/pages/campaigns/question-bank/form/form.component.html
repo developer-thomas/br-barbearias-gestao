@@ -5,52 +5,79 @@
     <mat-card-content>
         <div class="flex justify-between">
             <div></div>
-            <div (click)="openModal()" class="cursor-pointer border-4 rounded-full bg-gray-200 flex items-center p-2 space-x-2">
+            <button
+                type="button"
+                class="cursor-pointer border-4 rounded-full bg-gray-200 flex items-center p-2 space-x-2"
+                (click)="openModal()"
+            >
                 <mat-icon>visibility</mat-icon>
                 <span>Visualizar</span>
-            </div>
+            </button>
         </div>
-        <form class="p-5" [formGroup]="form" (ngSubmit)="submit()">
-            <div class="grid grid-cols-1 md:grid-cols-2 space-x-8">
-                <!-- Linked to select field -->
+
+        <form class="p-5 space-y-8" [formGroup]="form" (ngSubmit)="submit()">
+            <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
                 <div class="flex flex-col">
-                    <span>Vinculado a que</span>
-                    <mat-form-field appearance="outline">
-                        <mat-select formControlName="linkedTo">
-                            @for(item of likedToOptions; track item) {
-                                <mat-option [value]="item.value"> {{ item.value }} </mat-option>
+                    <span>Vinculado a</span>
+                                <mat-form-field appearance="outline">
+                                    <mat-select formControlName="target" [disabled]="isSubmitting()">
+                            @for (option of targetOptions; track option.value) {
+                                <mat-option [value]="option.value">{{ option.label }}</mat-option>
                             }
                         </mat-select>
+                        <mat-error *ngIf="form.get('target')?.hasError('required') && form.get('target')?.touched">
+                            Selecione o público alvo.
+                        </mat-error>
                     </mat-form-field>
                 </div>
 
-                <!-- questionCategory select field -->
                 <div class="flex flex-col">
-                    <span>Categoria da pergunta</span>
-                    <mat-form-field appearance="outline">
-                        <mat-select formControlName="linkedTo">
-                            @for(item of categoryQuestion; track item) {
-                                <mat-option [value]="item.value"> {{ item.value }} </mat-option>
+                    <span>Tipo da pergunta</span>
+                                <mat-form-field appearance="outline">
+                                    <mat-select formControlName="type" [disabled]="isSubmitting()">
+                            @for (option of questionTypeOptions; track option.value) {
+                                <mat-option [value]="option.value">{{ option.label }}</mat-option>
                             }
                         </mat-select>
+                        <mat-error *ngIf="form.get('type')?.hasError('required') && form.get('type')?.touched">
+                            Selecione o tipo de pergunta.
+                        </mat-error>
                     </mat-form-field>
                 </div>
-
-                <!-- Description -->
-                 
             </div>
+
             <div class="flex flex-col">
-                <label for="description">Descrição</label> 
+                <label for="title">Pergunta</label>
                 <mat-form-field appearance="outline" class="w-full">
                     <textarea
-                     matInput
-                     id="description"
-                     formControlName="description"
-                     placeholder="Descrição"
-                     rows="6"
-                     class="text-sm resize-none w-full">
-                   </textarea>
-                 </mat-form-field>
+                        matInput
+                        id="title"
+                        formControlName="title"
+                        placeholder="Digite a pergunta"
+                        rows="6"
+                        class="text-sm resize-none w-full"
+                        [disabled]="isSubmitting()"
+                    ></textarea>
+                    <mat-error *ngIf="form.get('title')?.hasError('required') && form.get('title')?.touched">
+                        Informe a pergunta que será cadastrada.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="flex justify-end gap-4">
+                <app-base-button
+                    label="Cancelar"
+                    styleClass="outlined"
+                    buttonType="button"
+                    (click)="onCancel()"
+                    [disabled]="isSubmitting()"
+                ></app-base-button>
+                <app-base-button
+                    [label]="isSubmitting() ? 'Salvando...' : 'Salvar'"
+                    styleClass="green"
+                    buttonType="submit"
+                    [disabled]="isSubmitting()"
+                ></app-base-button>
             </div>
         </form>
     </mat-card-content>
