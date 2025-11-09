@@ -13,6 +13,8 @@ export class BaseButtonComponent {
   @Input({ required: true }) public label!: string;
   @Input() public styleClass?: 'primary' | 'outlined' | 'green' = 'primary';
   @Input() public routerLink?: string;
+  @Input() public buttonType: 'button' | 'submit' | 'reset' = 'button';
+  @Input() public disabled = false;
 
   getClass(): string {
     const baseStyle = 'w-full md:w-auto px-7 py-4 rounded-md uppercase whitespace-nowrap ';

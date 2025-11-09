@@ -7,36 +7,76 @@
     <mat-card-content class="h-[600px]">
         <h1 class="text-2xl mb-5">Pontuação geral</h1>
         <div>
-            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-x-5 flex flex-col justify-between">
+                        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-x-5 flex flex-col justify-between">
                 <div class="space-x-5 grid grid-cols md:grid-cols-2 h-[450px]">
                     <div>
                         <div>
                             <label for="search">Pesquisa</label>
                             <mat-form-field class="w-full" appearance="outline">
-                                <input formControlName="search" appearence="outline" matInput placeholder="00000"/>
+                                                                <input
+                                                                    formControlName="search"
+                                                                    matInput
+                                                                    type="number"
+                                                                    min="0"
+                                                                    placeholder="0"
+                                                                    [disabled]="isSubmitting()"
+                                                                />
+                                                                <mat-error *ngIf="form.get('search')?.hasError('required') && form.get('search')?.touched">
+                                                                    Informe a pontuação de pesquisa.
+                                                                </mat-error>
                             </mat-form-field>
                         </div>
         
                         <div>
-                            <label for="smartSearch">Pesquisa Inteligente</label>
+                                                        <label for="intelSearch">Pesquisa inteligente</label>
                             <mat-form-field class="w-full" appearance="outline">
-                                <input formControlName="smartSearch" appearence="outline" matInput placeholder="00000"/>
+                                                                <input
+                                                                    formControlName="intelSearch"
+                                                                    matInput
+                                                                    type="number"
+                                                                    min="0"
+                                                                    placeholder="0"
+                                                                    [disabled]="isSubmitting()"
+                                                                />
+                                                                <mat-error *ngIf="form.get('intelSearch')?.hasError('required') && form.get('intelSearch')?.touched">
+                                                                    Informe a pontuação de pesquisa inteligente.
+                                                                </mat-error>
                             </mat-form-field>
                         </div>
                     </div>
                     
                     <div>
                         <div>
-                            <label for="productBuy">Compra de produto</label>
+                                                        <label for="sale">Compra de produto</label>
                             <mat-form-field class="w-full" appearance="outline">
-                                <input formControlName="productBuy" appearence="outline" matInput placeholder="00000"/>
+                                                                <input
+                                                                    formControlName="sale"
+                                                                    matInput
+                                                                    type="number"
+                                                                    min="0"
+                                                                    placeholder="0"
+                                                                    [disabled]="isSubmitting()"
+                                                                />
+                                                                <mat-error *ngIf="form.get('sale')?.hasError('required') && form.get('sale')?.touched">
+                                                                    Informe a pontuação para compra de produto.
+                                                                </mat-error>
                             </mat-form-field>
                         </div>
     
                         <div>
-                            <label for="serviceBuy">Compra de serviço</label>
+                                                        <label for="service">Compra de serviço</label>
                             <mat-form-field class="w-full" appearance="outline">
-                                <input formControlName="serviceBuy" appearence="outline" matInput placeholder="00000"/>
+                                                                <input
+                                                                    formControlName="service"
+                                                                    matInput
+                                                                    type="number"
+                                                                    min="0"
+                                                                    placeholder="0"
+                                                                    [disabled]="isSubmitting()"
+                                                                />
+                                                                <mat-error *ngIf="form.get('service')?.hasError('required') && form.get('service')?.touched">
+                                                                    Informe a pontuação para compra de serviço.
+                                                                </mat-error>
                             </mat-form-field>
                         </div>
                     </div>
@@ -45,8 +85,19 @@
                 <div class="flex justify-between">
                     <div></div>
                     <div class="space-x-5">
-                        <app-base-button (click)="goBack()" styleClass="outlined" label="Cancelar" ></app-base-button>
-                        <app-base-button styleClass="green" label="Confirmar"></app-base-button>
+                                                <app-base-button
+                                                    (click)="onCancel()"
+                                                    styleClass="outlined"
+                                                    label="Cancelar"
+                                                    buttonType="button"
+                                                    [disabled]="isSubmitting()"
+                                                ></app-base-button>
+                                                <app-base-button
+                                                    styleClass="green"
+                                                    label="{{ isSubmitting() ? 'Salvando...' : 'Confirmar' }}"
+                                                    buttonType="submit"
+                                                    [disabled]="isSubmitting()"
+                                                ></app-base-button>
                     </div>
                 </div>
             </form>

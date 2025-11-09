@@ -1,3 +1,8 @@
-<button [ngClass]="getClass()" [routerLink]="routerLink">
+<button
+    [attr.type]="buttonType"
+    [ngClass]="getClass()"
+    [routerLink]="routerLink"
+    [disabled]="disabled"
+>
     {{ label }}
 </button>
