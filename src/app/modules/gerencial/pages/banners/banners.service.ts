@@ -24,6 +24,11 @@ export interface BannersListQuery {
   status?: string;
 }
 
+export interface BannerRegionDto {
+  city: string;
+  state: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class BannersService {
   private http = inject(HttpClient);
@@ -49,5 +54,9 @@ export class BannersService {
     }
 
     return this.http.get<BannersListResponse>(this.baseUrl, { params });
+  }
+
+  public getRegions(): Observable<BannerRegionDto[]> {
+    return this.http.get<BannerRegionDto[]>(`${this.baseUrl}/regions`);
   }
 }

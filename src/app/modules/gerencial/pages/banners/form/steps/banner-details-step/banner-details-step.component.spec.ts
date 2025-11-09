@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { of } from 'rxjs';
+import { BannersService } from '../../../banners.service';
+import { ToastrService } from 'ngx-toastr';
 import { BannerDetailsStepComponent } from './banner-details-step.component';
 
 describe('BannerDetailsStepComponent', () => {
@@ -8,7 +10,21 @@ describe('BannerDetailsStepComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BannerDetailsStepComponent]
+      imports: [BannerDetailsStepComponent],
+      providers: [
+        {
+          provide: BannersService,
+          useValue: {
+            getRegions: () => of([]),
+          },
+        },
+        {
+          provide: ToastrService,
+          useValue: {
+            error: jasmine.createSpy('error'),
+          },
+        },
+      ],
     })
     .compileComponents();
     

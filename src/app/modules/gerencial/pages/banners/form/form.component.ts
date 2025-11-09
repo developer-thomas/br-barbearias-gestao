@@ -35,7 +35,10 @@ export class FormComponent {
     { label: "Imagem do Banner", completed: false, active: false },
   ]
 
-  formData = signal({
+  formData = signal<{
+    bannerDetails: BannerDetailsData
+    bannerImage: BannerImageData
+  }>({
     bannerDetails: {
       title: "",
       link: "",
@@ -43,7 +46,7 @@ export class FormComponent {
       endDate: "",
       targetAudience: "",
       selectedLocation: "",
-      locations: [""],
+      locations: [],
     },
     bannerImage: {
       imageUrl: null,
