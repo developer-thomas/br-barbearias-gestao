@@ -1,6 +1,6 @@
 <div>
     <h2 class="text-xl font-semibold text-gray-900 mb-8">Dados do banner</h2>
-    
+
     <form [formGroup]="form" class="space-y-6">
       <!-- Title and Dates Row -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -11,7 +11,7 @@
             <input matInput formControlName="title" placeholder="Exemplo preenchido">
           </mat-form-field>
         </div>
-  
+
         <!-- Start Date -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Data inicial</label>
@@ -19,7 +19,7 @@
             <input matInput formControlName="startDate" placeholder="00/00/00" mask="00/00/00">
           </mat-form-field>
         </div>
-  
+
         <!-- End Date -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Data final</label>
@@ -28,7 +28,7 @@
           </mat-form-field>
         </div>
       </div>
-  
+
       <!-- Link and Target Audience Row -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Link -->
@@ -38,33 +38,41 @@
             <input matInput formControlName="link" placeholder="Exemplo preenchido">
           </mat-form-field>
         </div>
-  
+
         <!-- Target Audience -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Para quem</label>
           <mat-form-field appearance="outline" class="w-full">
-            <mat-select formControlName="targetAudience">
-              <mat-option *ngFor="let option of targetAudienceOptions" [value]="option.value">
+            <mat-select formControlName="target">
+              <mat-option *ngFor="let option of targetOptions" [value]="option.value">
                 {{ option.label }}
               </mat-option>
             </mat-select>
           </mat-form-field>
         </div>
       </div>
-  
+
+      <!-- Franchiser IDs -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">IDs das franquias (separados por vírgula)</label>
+        <mat-form-field appearance="outline" class="w-full">
+          <input matInput formControlName="franchiserIds" placeholder="Ex: 1,2,3">
+        </mat-form-field>
+      </div>
+
       <!-- Location Section -->
       <div class="space-y-4">
         <h3 class="text-lg font-semibold text-gray-900">Localização</h3>
-        
+
         <!-- Location Search -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Selecione a</label>
           <div class="flex gap-3 items-start">
             <mat-form-field appearance="outline" class="flex-1">
-              <input 
-                matInput 
+              <input
+                matInput
                 formControlName="selectedLocation"
-                placeholder="Bahia, Salvador, Filial"
+                placeholder="São Paulo - São Paulo"
                 (keydown)="onLocationSelected($event)"
                 [matAutocomplete]="regionAutocomplete"
               >
@@ -83,7 +91,7 @@
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
-            <button 
+            <button
               type="button"
               class="h-[56px] px-6 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50"
               (click)="addLocation()"
@@ -92,17 +100,17 @@
             </button>
           </div>
         </div>
-  
-        <!-- Location Cards -->     
+
+        <!-- Location Cards -->
            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-             <div 
-               *ngFor="let location of locations; let i = index" 
+             <div
+               *ngFor="let location of locations; let i = index"
                class="flex items-center justify-between bg-gray-100 border border-gray-200 rounded-md px-4 py-3"
              >
-               
+
                <span class="text-sm font-medium text-gray-700">{{ location }}</span>
-               <button 
-                 type="button" 
+               <button
+                 type="button"
                  class="text-green-500 hover:text-red-500 w-6 h-6"
                  (click)="removeLocation(i)"
                >
@@ -113,4 +121,3 @@
       </div>
     </form>
   </div>
-  

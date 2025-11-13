@@ -17,7 +17,8 @@ export interface BannerDetailsData {
   link: string
   startDate: string
   endDate: string
-  targetAudience: string
+  target: string
+  franchiserIds: string
   selectedLocation: string
   locations: string[]
 }
@@ -54,10 +55,10 @@ export class BannerDetailsStepComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
   private readonly regionsSubject = new BehaviorSubject<BannerRegionDto[]>([]);
 
-  targetAudienceOptions = [
-    { value: "filiais", label: "Filiais" },
-    { value: "clientes", label: "Clientes" },
-    { value: "todos", label: "Todos" },
+  targetOptions = [
+    { value: "BRANCH", label: "Filiais" },
+    { value: "CLIENT", label: "Clientes" },
+    { value: "ALL", label: "Todos" },
   ]
 
   constructor(private fb: FormBuilder) {
@@ -66,7 +67,8 @@ export class BannerDetailsStepComponent implements OnInit, OnDestroy {
       link: ["", [Validators.required]],
       startDate: ["", [Validators.required]],
       endDate: ["", [Validators.required]],
-      targetAudience: ["filiais", [Validators.required]],
+      target: ["BRANCH", [Validators.required]],
+      franchiserIds: ["", [Validators.required]],
       selectedLocation: [""],
     })
   }
@@ -137,7 +139,8 @@ export class BannerDetailsStepComponent implements OnInit, OnDestroy {
         link: this.data.link ?? "",
         startDate: this.data.startDate ?? "",
         endDate: this.data.endDate ?? "",
-        targetAudience: this.data.targetAudience ?? "filiais",
+        target: this.data.target ?? "BRANCH",
+        franchiserIds: this.data.franchiserIds ?? "",
         selectedLocation: this.data.selectedLocation ?? "",
       }, { emitEvent: false })
 

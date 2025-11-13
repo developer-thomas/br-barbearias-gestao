@@ -29,6 +29,11 @@ export interface BannerRegionDto {
   state: string;
 }
 
+export interface CreateBannerResponse {
+  message: string;
+  id: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class BannersService {
   private http = inject(HttpClient);
@@ -58,5 +63,9 @@ export class BannersService {
 
   public getRegions(): Observable<BannerRegionDto[]> {
     return this.http.get<BannerRegionDto[]>(`${this.baseUrl}/regions`);
+  }
+
+  public createBanner(formData: FormData): Observable<CreateBannerResponse> {
+    return this.http.post<CreateBannerResponse>(`${this.baseUrl}/new`, formData);
   }
 }

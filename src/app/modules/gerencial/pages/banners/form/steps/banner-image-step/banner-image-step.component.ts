@@ -3,14 +3,15 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 export interface BannerImageData {
-  imageUrl: string | null | any;
+  previewUrl: string | null;
+  file: File | null;
 }
 
 @Component({
   selector: 'app-banner-image-step',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     ReactiveFormsModule
   ],
   templateUrl: './banner-image-step.component.html',
@@ -18,34 +19,41 @@ export interface BannerImageData {
 })
 export class BannerImageStepComponent {
   @Input() data: BannerImageData = {
-    imageUrl: null,
+    previewUrl: null,
+    file: null,
   }
   @Output() dataChange = new EventEmitter<BannerImageData>()
 
   form: FormGroup
+  private selectedFile: File | null = null
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      imageUrl: [null],
+      previewUrl: [null],
     })
   }
 
   ngOnInit() {
     // Initialize form with input data
-    this.form.patchValue(this.data)
+    this.selectedFile = this.data.file ?? null
+    this.form.patchValue({ previewUrl: this.data.previewUrl ?? null })
 
     // Emit changes when form values change
     this.form.valueChanges.subscribe((value) => {
-      this.dataChange.emit(value)
+      this.emitData()
     })
+
+    this.emitData()
   }
 
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0]
     if (file) {
+      this.selectedFile = file
       const reader = new FileReader()
       reader.onload = () => {
-        this.form.patchValue({ imageUrl: reader.result as string })
+        this.form.patchValue({ previewUrl: reader.result as string })
+        this.emitData()
       }
       reader.readAsDataURL(file)
     }
@@ -56,11 +64,21 @@ export class BannerImageStepComponent {
   }
 
   removeImage() {
-    this.form.patchValue({ imageUrl: null })
+    this.selectedFile = null
+    this.form.patchValue({ previewUrl: null })
     // Also reset the file input value to allow re-uploading the same file
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement
     if (fileInput) {
       fileInput.value = ""
     }
+    this.emitData()
+  }
+
+  private emitData(): void {
+    const previewUrl = this.form.get('previewUrl')?.value ?? null
+    this.dataChange.emit({
+      previewUrl,
+      file: this.selectedFile,
+    })
   }
 }

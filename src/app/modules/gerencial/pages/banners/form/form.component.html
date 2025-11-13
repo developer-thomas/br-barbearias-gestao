@@ -8,7 +8,7 @@
           <div *ngFor="let step of steps; let i = index" class="flex items-center">
             <!-- Step Circle -->
             <div class="flex items-center">
-              <div 
+              <div
                 class="px-6 py-2 rounded-full text-sm font-medium transition-all duration-200"
                 [class.bg-green-500]="step.active"
                 [class.text-white]="step.active"
@@ -20,27 +20,27 @@
                 {{ step.label }}
               </div>
             </div>
-            
+
             <!-- Connector Line -->
-            <div 
-              *ngIf="i < steps.length - 1" 
+            <div
+              *ngIf="i < steps.length - 1"
               class="w-16 h-0.5 mx-4"
               [class.bg-green-500]="step.completed"
               [class.bg-gray-200]="!step.completed"
             ></div>
           </div>
         </div>
-  
+
         <!-- Step Content -->
         <div class="mb-12">
           <!-- Step 1: Banner Details -->
           <div *ngIf="currentStep() === 0">
-            <app-banner-details-step 
+            <app-banner-details-step
               [data]="formData().bannerDetails"
               (dataChange)="onBannerDetailsChange($event)"
             ></app-banner-details-step>
           </div>
-  
+
           <!-- Step 2: Banner Image -->
           <div *ngIf="currentStep() === 1">
             <app-banner-image-step
@@ -49,23 +49,28 @@
             ></app-banner-image-step>
           </div>
         </div>
-  
+
         <!-- Action Buttons -->
         <div class="flex items-center justify-end gap-4">
-          <button 
+          <button
+            type="button"
             class="px-8 py-3 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50"
             (click)="onCancel()"
+            [disabled]="isSubmitting()"
+            [class.opacity-60]="isSubmitting()"
           >
             CANCELAR
           </button>
-          <button 
+          <button
+            type="button"
             class="px-8 py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg"
             (click)="onContinue()"
+            [disabled]="isSubmitting()"
+            [class.opacity-60]="isSubmitting()"
           >
-            {{ currentStep() === steps.length - 1 ? 'CONFIRMAR' : 'CONTINUAR' }}
+            {{ isSubmitting() ? 'SALVANDO...' : (currentStep() === steps.length - 1 ? 'CONFIRMAR' : 'CONTINUAR') }}
           </button>
         </div>
       </div>
     </div>
   </div>
-  

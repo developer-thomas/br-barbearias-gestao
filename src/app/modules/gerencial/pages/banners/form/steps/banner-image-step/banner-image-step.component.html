@@ -1,28 +1,28 @@
 <div>
     <h2 class="text-xl font-semibold text-gray-900 mb-8">Imagem do Banner</h2>
-    
+
     <form [formGroup]="form">
       <!-- Image Upload Section -->
-      <div 
+      <div
         class="relative w-full h-80 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer hover:border-green-500 hover:bg-gray-50 transition-all"
-        (click)="!form.get('imageUrl')?.value && triggerFileInput(fileInput)"
+        (click)="!form.get('previewUrl')?.value && triggerFileInput(fileInput)"
       >
         <input type="file" class="hidden" #fileInput (change)="onFileSelected($event)" accept="image/*">
-        
+
         <!-- Placeholder -->
-        <div *ngIf="!form.get('imageUrl')?.value" class="text-center text-gray-500">
+        <div *ngIf="!form.get('previewUrl')?.value" class="text-center text-gray-500">
           <div class="text-6xl mb-4 font-light">+</div>
           <p class="text-lg text-gray-700">Adicione uma imagem do banner</p>
         </div>
-  
+
         <!-- Image Preview -->
-        <div *ngIf="form.get('imageUrl')?.value" class="relative w-full h-full">
-          <img 
-            [src]="form.get('imageUrl')?.value" 
+        <div *ngIf="form.get('previewUrl')?.value" class="relative w-full h-full">
+          <img
+            [src]="form.get('previewUrl')?.value"
             alt="Preview da imagem do banner"
             class="w-full h-full object-contain rounded-lg p-4"
           >
-          <button 
+          <button
             type="button"
             class="absolute top-4 right-4 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 text-sm font-bold"
             (click)="removeImage()"
@@ -31,7 +31,7 @@
           </button>
         </div>
       </div>
-  
+
       <!-- Upload Instructions -->
       <div class="mt-4 text-center text-sm text-gray-500">
         <p>Recomendamos imagens com resolução mínima de 1200x400 pixels para banners</p>
@@ -39,4 +39,3 @@
       </div>
     </form>
   </div>
-  
