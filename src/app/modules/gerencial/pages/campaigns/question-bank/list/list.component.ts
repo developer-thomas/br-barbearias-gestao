@@ -1,10 +1,11 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs';
 import { CommomTableComponent, TableColumn } from '../../../../../shared/components/commom-table/commom-table.component';
-import { ClientService } from '../../../users/client.service';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 import { FilterTableComponent } from '../../../../../shared/components/filter-table/filter-table.component';
+import { QuestionBankService, QuestionDto } from '../question-bank.service';
 
 @Component({
   selector: 'app-list',
@@ -21,37 +22,52 @@ import { FilterTableComponent } from '../../../../../shared/components/filter-ta
 export class ListComponent implements OnInit {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
-  private clientService = inject(ClientService);
   private toastr = inject(ToastrService);
+  private questionBankService = inject(QuestionBankService);
+
   public questions = signal<any[]>([]);
+  public isLoading = signal(false);
+  public errorMessage = signal<string | null>(null);
+  public totalItems = signal(0);
+  public totalPages = signal(0);
 
   public displayedColumns: TableColumn[] = [
     { label: 'ID', key: 'id', type: 'text' },
-    { label: 'Pergunta', key: 'question', type: 'text' },
+    { label: 'Pergunta', key: 'title', type: 'text' },
+    { label: 'Público', key: 'target', type: 'text' },
     { label: 'Status', key: 'status', type: 'text' },
     { label: '', key: 'menu', type: 'menu' },
   ];
 
   ngOnInit() {
-    this.getQuestions();
+    this.loadQuestions();
   }
 
-  private getQuestions(search?: string) {
-    let data: any[] = [];
-    
-    for(let i = 0; i < 10; i++) {
-      data.push({
-        id: i,
-        question: 'Exemplo de pergunta',
-        status: i % 2 === 0 ? 'Ativa' : 'Desativada'
-      })
-    }
+  private loadQuestions(search?: string): void {
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
 
-    this.questions.set(data);
+    this.questionBankService
+      .getQuestions({ name: search })
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          const questions = this.mapQuestions(response?.questions ?? []);
+          this.questions.set(questions);
+          this.totalItems.set(response?.count ?? questions.length);
+          this.totalPages.set(response?.pages ?? 1);
+        },
+        error: (error) => {
+          console.error('Erro ao carregar perguntas', error);
+          this.toastr.error('Não foi possível carregar as perguntas.');
+          this.errorMessage.set('Não foi possível carregar as perguntas.');
+          this.questions.set([]);
+        },
+      });
   }
 
   public filter(search: string) {
-    this.getQuestions(search);
+    this.loadQuestions(search);
   }
 
   public gotoDetailPage(row: any) {
@@ -59,17 +75,51 @@ export class ListComponent implements OnInit {
   }
 
   gotoEditPage(row: any) {
-    this.router.navigate(['/admin/clients/edit', row.id])
+    if (!row?.id) {
+      return;
+    }
+
+    this.router.navigate(['form', row.id], { relativeTo: this.activatedRoute });
   }
 
   deleteClient(row: any) {
-    const deleteUser = confirm('Deseja deletar esse usuário?');
-    if (deleteUser) {
-      this.clientService.deleteClient(row.id);
-      this.toastr.success('Cliente excluído com sucesso!')
+    this.toastr.info('Remoção de perguntas não está disponível no momento.');
+  }
+
+  private mapQuestions(questions: QuestionDto[]) {
+    return questions.map((question) => ({
+      id: question.id,
+      title: question.title ?? '-',
+      target: this.formatTarget(question.target),
+      rawTarget: question.target,
+      status: this.formatStatus(question.status),
+      rawStatus: question.status,
+      createdAt: question.createdAt,
+    }));
+  }
+
+  private formatTarget(target: string | null | undefined): string {
+    if (!target) {
+      return '-';
     }
 
-    return
+    const normalized = target.toUpperCase();
 
+    switch (normalized) {
+      case 'FRANCHISEE':
+        return 'Franqueado';
+      case 'CLIENT':
+        return 'Cliente';
+      default:
+        return target;
+    }
+  }
+
+  private formatStatus(status: string | null | undefined): string {
+    if (!status) {
+      return '-';
+    }
+
+    return status.toUpperCase() === 'ACTIVE' ? 'Ativa' : 'Inativa';
   }
 }
