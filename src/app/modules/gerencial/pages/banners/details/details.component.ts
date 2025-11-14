@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
-import { BannersService, BannerDetailsResponse } from '../banners.service';
+import { BannersService, BannerDetailsResponse, DeleteBannerResponse } from '../banners.service';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
 
@@ -45,6 +45,8 @@ export class DetailsComponent implements OnInit {
 
   banner = signal<BannerDetailsView | null>(null)
   isLoading = signal(false)
+  deleteConfirmationVisible = signal(false)
+  isDeleting = signal(false)
 
   ngOnInit(): void {
     const bannerIdParam = this.route.snapshot.paramMap.get('id')
@@ -77,14 +79,44 @@ export class DetailsComponent implements OnInit {
 
   onDelete() {
     const currentBanner = this.banner()
-    if (!currentBanner) {
+    if (!currentBanner || this.isDeleting()) {
       return
     }
 
-    if (confirm("Tem certeza que deseja excluir este banner?")) {
-      console.log("Banner excluído:", currentBanner.id)
-      this.router.navigate(["/gerencial/banners"])
+    this.deleteConfirmationVisible.set(!this.deleteConfirmationVisible())
+  }
+
+  onCancelDelete() {
+    if (this.isDeleting()) {
+      return
     }
+
+    this.deleteConfirmationVisible.set(false)
+  }
+
+  onConfirmDelete() {
+    const currentBanner = this.banner()
+    if (!currentBanner || this.isDeleting()) {
+      return
+    }
+
+    this.deleteConfirmationVisible.set(false)
+    this.isDeleting.set(true)
+
+    this.bannersService
+      .deleteBanner(currentBanner.id)
+      .pipe(finalize(() => this.isDeleting.set(false)))
+      .subscribe({
+        next: (response: DeleteBannerResponse) => {
+          const message = response?.message ?? 'Banner excluído com sucesso.'
+          this.toastr.success(message)
+          this.router.navigate(['/gerencial/banners'])
+        },
+        error: (error: unknown) => {
+          console.error('Erro ao excluir banner', error)
+          this.toastr.error('Não foi possível excluir o banner. Tente novamente.')
+        },
+      })
   }
 
   onToggleStatus() {

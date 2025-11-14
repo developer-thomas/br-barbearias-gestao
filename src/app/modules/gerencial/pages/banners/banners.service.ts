@@ -47,6 +47,10 @@ export interface BannerDetailsResponse {
   regions: string[];
 }
 
+export interface DeleteBannerResponse {
+  message: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class BannersService {
   private http = inject(HttpClient);
@@ -84,5 +88,9 @@ export class BannersService {
 
   public getBannerDetails(id: number | string): Observable<BannerDetailsResponse> {
     return this.http.get<BannerDetailsResponse>(`${this.baseUrl}/${id}/details`);
+  }
+
+  public deleteBanner(id: number | string): Observable<DeleteBannerResponse> {
+    return this.http.delete<DeleteBannerResponse>(`${this.baseUrl}/${id}`);
   }
 }

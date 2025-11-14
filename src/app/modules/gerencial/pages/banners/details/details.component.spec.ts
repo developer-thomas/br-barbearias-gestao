@@ -28,12 +28,14 @@ describe('DetailsComponent', () => {
               status: 'ACTIVE',
               regions: ['São Paulo, São Paulo'],
             }),
+            deleteBanner: jasmine.createSpy('deleteBanner').and.returnValue(of({ message: 'ok' })),
           },
         },
         {
           provide: ToastrService,
           useValue: {
             error: jasmine.createSpy('error'),
+            success: jasmine.createSpy('success'),
           },
         },
         {

@@ -2,5 +2,5 @@
 //   api: 'https://homolog.crosoften.com:3015',
 // };
 export const environment = {
-  api: 'https://6bf80bcda8a4.ngrok-free.app',
+  api: 'https://97bca06db8a8.ngrok-free.app',
 };

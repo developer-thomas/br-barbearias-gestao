@@ -7,6 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BannersService, AdminBannerDto } from '../banners.service';
 import { finalize } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteConfirmationDialogComponent } from './delete-confirmation-dialog.component';
 
 @Component({
   selector: 'app-list',
@@ -25,12 +27,15 @@ export class ListComponent {
   private activatedRoute = inject(ActivatedRoute);
   private bannersService = inject(BannersService);
   private toastr = inject(ToastrService);
+  private dialog = inject(MatDialog);
 
   public data = signal<any[]>([]);
   public isLoading = signal(false);
   public errorMessage = signal<string | null>(null);
   public totalItems = signal<number>(0);
   public totalPages = signal<number>(0);
+  public deletingId = signal<number | null>(null);
+  private searchTerm: string | undefined;
 
   public displayedColumns: TableColumn[] = [
     { label: 'Data inicial', key: 'initialDate', type: 'text' },
@@ -45,11 +50,18 @@ export class ListComponent {
   }
 
   private loadBanners(search?: string): void {
+    if (search !== undefined) {
+      const normalized = search.trim();
+      this.searchTerm = normalized ? normalized : undefined;
+    }
+
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
+    const query = this.searchTerm ? { name: this.searchTerm } : undefined;
+
     this.bannersService
-      .getBanners({ name: search })
+      .getBanners(query)
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: (response) => {
@@ -118,7 +130,47 @@ export class ListComponent {
     this.router.navigate([row.id], { relativeTo: this.activatedRoute })
   }
 
-  deleteRow(row: any) {}
+  deleteRow(row: any) {
+    if (!row || typeof row.id !== 'number' || this.deletingId() !== null) {
+      return;
+    }
+
+    const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
+      width: '360px',
+      data: { name: row.name }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) {
+        return;
+      }
+
+      this.executeDelete(row.id);
+    });
+  }
+
+  private executeDelete(bannerId: number): void {
+    if (this.deletingId() !== null) {
+      return;
+    }
+
+    this.deletingId.set(bannerId);
+
+    this.bannersService
+      .deleteBanner(bannerId)
+      .pipe(finalize(() => this.deletingId.set(null)))
+      .subscribe({
+        next: (response) => {
+          const message = response?.message ?? 'Banner excluído com sucesso.';
+          this.toastr.success(message);
+          this.loadBanners();
+        },
+        error: (error) => {
+          console.error('Erro ao excluir banner', error);
+          this.toastr.error('Não foi possível excluir o banner. Tente novamente.');
+        }
+      });
+  }
 
   
 
