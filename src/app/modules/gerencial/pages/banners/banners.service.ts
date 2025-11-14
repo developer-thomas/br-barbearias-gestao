@@ -34,6 +34,19 @@ export interface CreateBannerResponse {
   id: number;
 }
 
+export interface BannerDetailsResponse {
+  id: number;
+  title: string;
+  target: string;
+  link: string;
+  fileUrl: string;
+  fileKey: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+  regions: string[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class BannersService {
   private http = inject(HttpClient);
@@ -67,5 +80,9 @@ export class BannersService {
 
   public createBanner(formData: FormData): Observable<CreateBannerResponse> {
     return this.http.post<CreateBannerResponse>(`${this.baseUrl}/new`, formData);
+  }
+
+  public getBannerDetails(id: number | string): Observable<BannerDetailsResponse> {
+    return this.http.get<BannerDetailsResponse>(`${this.baseUrl}/${id}/details`);
   }
 }
