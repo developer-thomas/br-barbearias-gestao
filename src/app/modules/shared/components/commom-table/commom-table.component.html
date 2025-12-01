@@ -110,8 +110,9 @@
 
   <mat-paginator
     #paginator
-    [pageIndex]="0"
-    [pageSize]="10"
+    [length]="resolvedLength"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
     [pageSizeOptions]="[5, 10, 20]"
     aria-label="Select page"
     (page)="pagination($event)"

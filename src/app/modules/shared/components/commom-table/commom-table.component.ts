@@ -43,6 +43,9 @@ export class CommomTableComponent<T> implements OnChanges, AfterViewInit {
   @Input() useDetailBtn: boolean = true;
   @Input() useEditBtn: boolean = true;
   @Input() useDeleteBtn: boolean = true;
+  @Input() length: number | null = null;
+  @Input() pageIndex: number = 0;
+  @Input() pageSize: number = 10;
   // Marca as box de acordo com o conteúdo
   @Input() checkboxMarks: any[] = [];
 
@@ -51,6 +54,7 @@ export class CommomTableComponent<T> implements OnChanges, AfterViewInit {
   @Output() edit = new EventEmitter<T>();
   @Output() delete = new EventEmitter<T>();
   @Output() checkboxChange = new EventEmitter<any>();
+  @Output() pageChange = new EventEmitter<{ page: number; size: number }>();
 
   // Botões da tela de aprovação de campanhas
   @Output() onApproveCampaign = new EventEmitter<any>();
@@ -62,25 +66,46 @@ export class CommomTableComponent<T> implements OnChanges, AfterViewInit {
   public dataSource!: MatTableDataSource<T>;
   public displayedColumnsKeys!: string[];
 
+  get resolvedLength(): number {
+    if (this.length !== null && this.length !== undefined) {
+      return this.length;
+    }
+
+    return this.dataSource ? this.dataSource.data.length : 0;
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) {
       this.dataSource = new MatTableDataSource(changes['data'].currentValue);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      this.updatePaginatorState();
     }
     if (changes['displayedColumns']) {
       this.displayedColumnsKeys = changes['displayedColumns'].currentValue.map((column: TableColumn) => column.key);
     }
+    if (changes['length'] || changes['pageIndex'] || changes['pageSize']) {
+      this.updatePaginatorState();
+    }
   }
 
   ngAfterViewInit(): void {
+    if (!this.dataSource) {
+      this.dataSource = new MatTableDataSource(this.data ?? []);
+    }
+
     this.dataSource.sort = this.sort;
     this.table.dataSource = this.dataSource;
+    this.updatePaginatorState();
   }
 
   pagination(event: PageEvent) {
     this.page = event.pageIndex + 1;
     this.size = event.pageSize;
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePaginatorState();
+    this.pageChange.emit({ page: this.page, size: this.size });
   }
 
   detailClick(row: T) {
@@ -121,5 +146,15 @@ export class CommomTableComponent<T> implements OnChanges, AfterViewInit {
     this.onchangeCampaignStatus.emit(event.checked);
     console.log(event.checked); // true ou false
     console.log('changeStatus:', row);
+  }
+
+  private updatePaginatorState(): void {
+    if (!this.paginator) {
+      return;
+    }
+
+    this.paginator.length = this.resolvedLength;
+    this.paginator.pageIndex = this.pageIndex;
+    this.paginator.pageSize = this.pageSize;
   }
 }
