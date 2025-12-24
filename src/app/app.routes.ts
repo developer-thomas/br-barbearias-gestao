@@ -16,6 +16,7 @@ export const routes: Routes = [
   },
   {
     path: 'franqueado',
+    loadComponent: () => import('./modules/franchisee/franchisee.component').then(m => m.FranchiseeComponent),
     loadChildren: () => import('./modules/franchisee/franchisee.routes').then(m => m.routes),
   },
 ];
