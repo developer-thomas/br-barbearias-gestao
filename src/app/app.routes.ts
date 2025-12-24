@@ -12,6 +12,7 @@ export const routes: Routes = [
   },
   {
     path: 'gerencial',
+    loadComponent: () => import('./modules/gerencial/gerencial.component').then(m => m.AdminComponent),
     loadChildren: () => import('./modules/gerencial/gerencial.routes').then(m => m.routes),
   },
   {
