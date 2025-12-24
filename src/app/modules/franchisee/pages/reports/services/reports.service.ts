@@ -9,6 +9,7 @@ export class ReportsService {
 
 
   baseUrl = environment.api + "/v1/web/franchise/reports/"
+  franchisorUrl = environment.api + "/v1/web/franchisor/reports/"
   constructor() { }
   httpClient = inject(HttpClient);
 
@@ -24,4 +25,11 @@ export class ReportsService {
   getLoyalty() {
     return this.httpClient.get<any>(this.baseUrl + "loyalty");
   }
+  getBarberOverview(barberId: string) {
+    return this.httpClient.get<any>(this.franchisorUrl + barberId + "/overview");
+  }
+  getreportsbyfranchisee(franchiseeId: string) {
+    return this.httpClient.get<any>(this.franchisorUrl + franchiseeId + "/overview");
+  }
+
 }
