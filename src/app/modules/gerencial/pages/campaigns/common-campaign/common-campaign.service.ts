@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../../environments/environment.development';
 
@@ -28,6 +29,35 @@ export interface CommonCampaignListResponse {
   pages: number;
   count: number;
   items: CommonCampaignListItem[];
+}
+
+export interface CreateCommonCampaignRequest {
+  name: string;
+  description: string;
+  startAt: string;
+  productType: string;
+  couponcode: string;
+  config: string;
+  couponValue: number;
+  rescueLimit: number;
+  rescueType: string;
+  productsId: number[];
+  productConfig: string;
+  productRescue: string;
+  startAge: number;
+  endAge: number;
+  gender: string;
+  franchiseesId: number[];
+  sms: boolean;
+  whatsapp: boolean;
+  email: boolean;
+  fileUrl: string | null;
+  filekey: string | null;
+}
+
+export interface CreateCommonCampaignResponse {
+  id: number;
+  message: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -67,6 +97,10 @@ export class CommonCampaignService {
     }
 
     return this.http.get<CommonCampaignListResponse>(`${this.baseUrl}/list`, { params });
+  }
+
+  public createCommonCampaign(data: CreateCommonCampaignRequest): Observable<CreateCommonCampaignResponse> {
+    return this.http.post<CreateCommonCampaignResponse>(`${this.baseUrl}/new`, data);
   }
 }
 

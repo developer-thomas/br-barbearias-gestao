@@ -1,15 +1,18 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatStepperModule } from "@angular/material/stepper"
-import { MatIconModule } from '@angular/material/icon';
-import { StepOneComponent } from './steps/step-one/step-one.component';
-import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
+import { CommonCampaignService, CreateCommonCampaignRequest } from '../common-campaign.service';
+import { Component, ViewChild, inject, signal } from '@angular/core';
 import { StepTwoComponent, StepTwoData } from './steps/step-two/step-two.component';
-import { StepThreeComponent } from './steps/step-three/step-three.component';
+
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatStepperModule } from "@angular/material/stepper"
+import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 import { Router } from '@angular/router';
-import { StepFourComponent } from './steps/step-four/step-four.component';
 import { StepFiveComponent } from './steps/step-five/step-five.component';
+import { StepFourComponent } from './steps/step-four/step-four.component';
+import { StepOneComponent } from './steps/step-one/step-one.component';
+import { StepThreeComponent } from './steps/step-three/step-three.component';
+import { ToastrService } from 'ngx-toastr';
 
 export interface StepData {
   label: string
@@ -21,10 +24,10 @@ export interface StepData {
   selector: 'app-form',
   standalone: true,
   imports: [
-    CommonModule, 
-    MatStepperModule, 
-    MatButtonModule, 
-    MatIconModule, 
+    CommonModule,
+    MatStepperModule,
+    MatButtonModule,
+    MatIconModule,
     StepOneComponent,
     PageHeaderComponent,
     StepTwoComponent,
@@ -37,6 +40,10 @@ export interface StepData {
 })
 export class FormComponent {
   private router = inject(Router)
+  private commonCampaignService = inject(CommonCampaignService)
+  private toastr = inject(ToastrService)
+
+  @ViewChild(StepOneComponent) stepOneComponent!: StepOneComponent
 
   currentStep = signal(0)
 
@@ -90,13 +97,23 @@ export class FormComponent {
   }
 
   onContinue() {
-    if (this.currentStep() < this.steps.length - 1) {
+    const currentStepIndex = this.currentStep()
+
+    // Validate current step before proceeding
+    if (currentStepIndex === 0) {
+      if (!this.stepOneComponent.isFormValid) {
+        this.toastr.error('Preencha todos os campos obrigatórios', 'Erro de validação')
+        return
+      }
+    }
+
+    if (currentStepIndex < this.steps.length - 1) {
       // Mark current step as completed
-      this.steps[this.currentStep()].completed = true
-      this.steps[this.currentStep()].active = false
+      this.steps[currentStepIndex].completed = true
+      this.steps[currentStepIndex].active = false
 
       // Move to next step
-      const nextStep = this.currentStep() + 1
+      const nextStep = currentStepIndex + 1
       this.currentStep.set(nextStep)
       this.steps[nextStep].active = true
     } else {
@@ -106,8 +123,96 @@ export class FormComponent {
   }
 
   onConfirm() {
-    console.log("Formulário finalizado:", this.formData())
-    this.router.navigate(["/gerencial/campanhas/comuns"])
+    const formValues = this.formData()
+
+    // Validate required fields
+    if (!formValues.step1.title || !formValues.step1.description) {
+      this.toastr.error('Preencha o título e descrição da campanha', 'Erro de validação')
+      return
+    }
+
+    if (!formValues.step2.date) {
+      this.toastr.error('Selecione a data de início da campanha', 'Erro de validação')
+      return
+    }
+
+    if (!formValues.step3.locationNames || formValues.step3.locationNames.length === 0) {
+      this.toastr.error('Selecione pelo menos uma localização', 'Erro de validação')
+      return
+    }
+
+    // Map form data to API request format
+    const requestData: CreateCommonCampaignRequest = {
+      name: formValues.step1.title,
+      description: formValues.step1.description,
+      startAt: this.formatDateToISO(formValues.step2.date, formValues.step2.time),
+      productType: this.mapProductType(formValues.step2.productType),
+      couponcode: formValues.step2.couponCode || '',
+      config: formValues.step2.configuration || 'percentual',
+      couponValue: parseFloat(formValues.step2.couponValue) || 0,
+      rescueLimit: parseInt(formValues.step2.rescueValue) || 1,
+      rescueType: this.mapRescueType(formValues.step2.configuration),
+      productsId: formValues.step2.productNames || [],
+      productConfig: formValues.step2.productConfiguration || '',
+      productRescue: formValues.step2.productUsageLimit || '',
+      startAge: formValues.step3.ageFrom || 18,
+      endAge: formValues.step3.ageTo || 100,
+      gender: this.mapGender(formValues.step3.gender),
+      franchiseesId: formValues.step3.locationNames || [],
+      sms: formValues.step5.sms === true,
+      whatsapp: formValues.step5.whatsapp === true,
+      email: formValues.step5.email === true,
+      fileUrl: formValues.step4.imageUrl || null,
+      filekey: null,
+    }
+
+    this.commonCampaignService.createCommonCampaign(requestData).subscribe({
+      next: (response) => {
+        this.toastr.success('Campanha criada com sucesso!', 'Sucesso')
+        this.router.navigate(["/gerencial/campanhas/comuns"])
+      },
+      error: (error) => {
+        // Error is handled by globalErrorInterceptor
+        console.error('Erro ao criar campanha:', error)
+      }
+    })
+  }
+
+  private formatDateToISO(date: string, time: string): string {
+    if (!date) return new Date().toISOString()
+
+    // Format: YYYY-MM-DDTHH:mm:ss.sssZ
+    const timeValue = time || '00:00'
+    const dateTimeString = `${date}T${timeValue}:00.000Z`
+    return dateTimeString
+  }
+
+  private mapProductType(type: string): string {
+    const typeMap: { [key: string]: string } = {
+      'cupom': 'COUPON',
+      'produto': 'PRODUCT',
+      'nenhum': 'NONE'
+    }
+    return typeMap[type] || 'COUPON'
+  }
+
+  private mapRescueType(configuration: string): string {
+    const typeMap: { [key: string]: string } = {
+      'percentual': 'PERCENT',
+      'valor': 'VALUE',
+      'fixo': 'FIXED'
+    }
+    return typeMap[configuration] || 'PERCENT'
+  }
+
+  private mapGender(gender: string): string {
+    const genderMap: { [key: string]: string } = {
+      'homens-e-mulheres': 'BOTH',
+      'homens': 'MALE',
+      'mulheres': 'FEMALE',
+      'outros': 'OTHER'
+    }
+    return genderMap[gender] || 'BOTH'
   }
 
   onStepDataChange(stepData: any) {

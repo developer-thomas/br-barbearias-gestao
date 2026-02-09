@@ -1,20 +1,23 @@
 <div>
   <h2 class="text-xl font-semibold text-gray-900 mb-8">Detalhes da campanha</h2>
-  
+
   <form [formGroup]="form" class="space-y-6">
     <!-- Title Field -->
     <div>
       <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
-        Título
+        Título <span class="text-red-500">*</span>
       </label>
       <mat-form-field appearance="outline" class="w-full">
-        <input 
-          matInput 
+        <input
+          matInput
           id="title"
           formControlName="title"
-          placeholder="Placeholder text"
+          placeholder="Digite o título da campanha"
           class="text-sm"
         >
+        <mat-error *ngIf="form.get('title')?.hasError('required')">
+          Título é obrigatório
+        </mat-error>
       </mat-form-field>
     </div>
 
@@ -24,11 +27,11 @@
         Descrição
       </label>
       <mat-form-field appearance="outline" class="w-full">
-        <textarea 
-          matInput 
+        <textarea
+          matInput
           id="description"
           formControlName="description"
-          placeholder="Placeholder text"
+          placeholder="Digite a descrição da campanha"
           rows="6"
           class="text-sm resize-none"
         ></textarea>

@@ -1,23 +1,26 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
-import { MatCardModule } from '@angular/material/card';
-import { MatIcon } from '@angular/material/icon';
+import { CreateQuestionRequest, QuestionBankService, QuestionTarget, QuestionType } from '../question-bank.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
+
+import { BaseButtonComponent } from '../../../../../shared/components/base-button/base-button.component';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { ModalComponent } from './modal/modal.component';
-import { QuestionBankService, CreateQuestionRequest, QuestionTarget, QuestionType } from '../question-bank.service';
+import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
-import { BaseButtonComponent } from '../../../../../shared/components/base-button/base-button.component';
 
 @Component({
   selector: 'app-form',
   standalone: true,
   imports: [
+    CommonModule,
     PageHeaderComponent,
     MatCardModule,
     MatIcon,
