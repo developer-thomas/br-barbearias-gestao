@@ -1,6 +1,10 @@
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FranchiseeItem, FranchiseeRegionsResponse, FranchiseeService } from '../../../../../../../../core/services/franchisee.service';
+import { Observable, map, startWith } from 'rxjs';
+
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,7 +16,13 @@ export interface Step3Data {
   ageTo: number
   gender: string
   selectedLocation: string
-  locationNames: string[]
+  locationNames: number[]
+}
+
+interface RegionDisplay extends FranchiseeItem {
+  state: string
+  city: string
+  fullName: string
 }
 
 @Component({
@@ -26,6 +36,7 @@ export interface Step3Data {
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
+    MatAutocompleteModule,
   ],
   templateUrl: './step-three.component.html',
   styleUrl: './step-three.component.scss'
@@ -40,8 +51,13 @@ export class StepThreeComponent {
   }
   @Output() dataChange = new EventEmitter<Step3Data>()
 
+  private franchiseeService = inject(FranchiseeService)
+
   form: FormGroup
-  locationNames: string[] = []
+  locationNames: number[] = []
+  selectedRegions: RegionDisplay[] = []
+  allRegions: RegionDisplay[] = []
+  filteredRegions$!: Observable<RegionDisplay[]>
 
   ageOptions = Array.from({ length: 81 }, (_, i) => i + 18) // 18 to 98
 
@@ -72,10 +88,52 @@ export class StepThreeComponent {
     // Initialize location names
     this.locationNames = [...this.data.locationNames]
 
+    // Load regions from API
+    this.loadRegions()
+
+    // Setup autocomplete filter
+    this.filteredRegions$ = this.form.get('selectedLocation')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterRegions(value || ''))
+    )
+
     // Emit changes when form values change
     this.form.valueChanges.subscribe((value) => {
       this.emitFormData()
     })
+  }
+
+  private loadRegions() {
+    this.franchiseeService.getRegions().subscribe({
+      next: (regionsResponse: FranchiseeRegionsResponse) => {
+        this.allRegions = []
+        Object.entries(regionsResponse).forEach(([state, cities]) => {
+          Object.entries(cities).forEach(([city, items]) => {
+            items.forEach(item => {
+              this.allRegions.push({
+                ...item,
+                state,
+                city,
+                fullName: `${state}, ${city}, ${item.name}`
+              })
+            })
+          })
+        })
+      },
+      error: (error) => {
+        console.error('Erro ao carregar regiões:', error)
+      }
+    })
+  }
+
+  private _filterRegions(value: string): RegionDisplay[] {
+    const filterValue = (value?.toString() || '').toLowerCase();
+    return this.allRegions.filter(region =>
+      region.fullName.toLowerCase().includes(filterValue) ||
+      region.name.toLowerCase().includes(filterValue) ||
+      region.city.toLowerCase().includes(filterValue) ||
+      region.state.toLowerCase().includes(filterValue)
+    )
   }
 
   private emitFormData() {
@@ -86,9 +144,10 @@ export class StepThreeComponent {
     })
   }
 
-  addLocationName(locationName: string) {
-    if (locationName.trim()) {
-      this.locationNames.push(locationName.trim())
+  onRegionSelected(region: RegionDisplay) {
+    if (region && !this.locationNames.includes(region.id)) {
+      this.locationNames.push(region.id)
+      this.selectedRegions.push(region)
       this.form.get("selectedLocation")?.setValue("")
       this.emitFormData()
     }
@@ -96,21 +155,18 @@ export class StepThreeComponent {
 
   removeLocationName(index: number) {
     this.locationNames.splice(index, 1)
+    this.selectedRegions.splice(index, 1)
     this.emitFormData()
   }
 
   onLocationSearch() {
-    const locationValue = this.form.get("selectedLocation")?.value
-    if (locationValue) {
-      this.addLocationName(locationValue)
+    const searchValue = this.form.get("selectedLocation")?.value
+    if (typeof searchValue === 'object' && searchValue !== null) {
+      this.onRegionSelected(searchValue)
     }
   }
 
-  onLocationSelected(event: KeyboardEvent) {
-    if (event.key === "Enter") {
-      event.preventDefault()
-      const inputElement = event.target as HTMLInputElement
-      this.addLocationName(inputElement.value)
-    }
+  displayRegionFn(region: RegionDisplay): string {
+    return region && region.fullName ? region.fullName : ''
   }
 }

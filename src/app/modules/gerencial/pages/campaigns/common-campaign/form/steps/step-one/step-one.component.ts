@@ -31,6 +31,7 @@ export class StepOneComponent {
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       title: ["", [Validators.required]],
+      description: ["", ],
     })
   }
 
