@@ -1,13 +1,17 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormArray, FormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 export interface StepTwoData {
   date: string
@@ -38,7 +42,10 @@ export interface StepTwoData {
     MatIconModule,
     MatButtonModule,
     MatCardModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
+  providers: [provideNativeDateAdapter()],
   templateUrl: './step-two.component.html',
   styleUrl: './step-two.component.scss'
 })
@@ -80,8 +87,8 @@ export class StepTwoComponent {
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      date: ["", [Validators.required]],
-      time: ["", [Validators.required]],
+      date: [null, [Validators.required]],
+      time: [""],
       productType: ["cupom", [Validators.required]],
       // Cupom fields
       couponCode: [""],
@@ -131,8 +138,8 @@ export class StepTwoComponent {
 
   private updateValidators() {
     const productType = this.form.get("productType")?.value
-    const couponFields = ["couponCode", "configuration", "couponValue", "rescueValue", "usageLimit"]
-    const productFields = ["productConfiguration", "productUsageLimit"]
+    const couponFields = ["couponCode", "configuration", "couponValue", "rescueValue"]
+    const productFields = ["selectedProduct", "productConfiguration", "productUsageLimit"]
 
     if (productType === "cupom") {
       // Add validators for coupon fields
@@ -145,10 +152,16 @@ export class StepTwoComponent {
         this.form.get(field)?.clearValidators()
         this.form.get(field)?.updateValueAndValidity()
       })
+      // Remove validator for usageLimit
+      this.form.get("usageLimit")?.clearValidators()
+      this.form.get("usageLimit")?.updateValueAndValidity()
     } else if (productType === "produto") {
-      // Add validators for product fields
-      productFields.forEach((field) => {
-        this.form.get(field)?.setValidators([Validators.required])
+      // Add validators for selectedProduct only
+      this.form.get("selectedProduct")?.setValidators([Validators.required])
+      this.form.get("selectedProduct")?.updateValueAndValidity()
+      // Remove validators for other product fields
+      const otherProductFields = ["productConfiguration", "productUsageLimit"]; otherProductFields.forEach((field) => {
+        this.form.get(field)?.clearValidators()
         this.form.get(field)?.updateValueAndValidity()
       })
       // Remove validators for coupon fields
@@ -156,9 +169,12 @@ export class StepTwoComponent {
         this.form.get(field)?.clearValidators()
         this.form.get(field)?.updateValueAndValidity()
       })
+      this.form.get("usageLimit")?.clearValidators()
+      this.form.get("usageLimit")?.updateValueAndValidity()
     } else {
       // Remove validators for all fields
-      ;[...couponFields, ...productFields].forEach((field) => {
+      const allFields = [...couponFields, "selectedProduct", "productConfiguration", "productUsageLimit", "usageLimit"];
+      allFields.forEach((field) => {
         this.form.get(field)?.clearValidators()
         this.form.get(field)?.updateValueAndValidity()
       })
@@ -201,5 +217,9 @@ export class StepTwoComponent {
       this.addProductName(inputElement.value)
       inputElement.value = ""
     }
+  }
+
+  get isFormValid(): boolean {
+    return this.form.valid
   }
 }

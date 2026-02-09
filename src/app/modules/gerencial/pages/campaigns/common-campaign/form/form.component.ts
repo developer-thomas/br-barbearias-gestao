@@ -44,6 +44,7 @@ export class FormComponent {
   private toastr = inject(ToastrService)
 
   @ViewChild(StepOneComponent) stepOneComponent!: StepOneComponent
+  @ViewChild(StepTwoComponent) stepTwoComponent!: StepTwoComponent
 
   currentStep = signal(0)
 
@@ -102,7 +103,14 @@ export class FormComponent {
     // Validate current step before proceeding
     if (currentStepIndex === 0) {
       if (!this.stepOneComponent.isFormValid) {
-        this.toastr.error('Preencha todos os campos obrigatórios', 'Erro de validação')
+        this.toastr.error('Preencha todos os campos obrigatórios 1 ', 'Erro de validação')
+        return
+      }
+    }
+
+    if (currentStepIndex === 1) {
+      if (!this.stepTwoComponent.isFormValid) {
+        this.toastr.error('Preencha todos os campos obrigatórios 2', 'Erro de validação')
         return
       }
     }
@@ -126,8 +134,8 @@ export class FormComponent {
     const formValues = this.formData()
 
     // Validate required fields
-    if (!formValues.step1.title || !formValues.step1.description) {
-      this.toastr.error('Preencha o título e descrição da campanha', 'Erro de validação')
+    if (!formValues.step1.title) {
+      this.toastr.error('Preencha o título da campanha', 'Erro de validação')
       return
     }
 

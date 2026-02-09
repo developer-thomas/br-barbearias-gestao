@@ -7,16 +7,23 @@
       <!-- Date Field -->
       <div>
         <label for="date" class="block text-sm font-medium text-gray-700 mb-2">
-          Data
+          Data <span class="text-red-500">*</span>
         </label>
         <mat-form-field appearance="outline" class="w-full">
           <input 
             matInput 
+            [matDatepicker]="picker"
             id="date"
             formControlName="date"
-            placeholder="00/00/00"
+            placeholder="dd/mm/aa"
             class="text-sm"
+            required
           >
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="form.get('date')?.hasError('required')">
+            Data é obrigatória
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -66,7 +73,7 @@
         <!-- Coupon Code -->
         <div>
           <label for="couponCode" class="block text-sm font-medium text-gray-700 mb-2">
-            Código do cupom
+            Código do cupom <span class="text-red-500">*</span>
           </label>
           <mat-form-field appearance="outline" class="w-full">
             <input 
@@ -75,28 +82,35 @@
               formControlName="couponCode"
               placeholder="000000000"
               class="text-sm"
+              required
             >
+            <mat-error *ngIf="form.get('couponCode')?.hasError('required')">
+              Código do cupom é obrigatório
+            </mat-error>
           </mat-form-field>
         </div>
 
         <!-- Configuration -->
         <div>
           <label for="configuration" class="block text-sm font-medium text-gray-700 mb-2">
-            Selecione a configuração
+            Selecione a configuração <span class="text-red-500">*</span>
           </label>
           <mat-form-field appearance="outline" class="w-full">
-            <mat-select formControlName="configuration" class="text-sm">
+            <mat-select formControlName="configuration" class="text-sm" required>
               <mat-option *ngFor="let option of configurationOptions" [value]="option.value">
                 {{ option.label }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="form.get('configuration')?.hasError('required')">
+              Configuração é obrigatória
+            </mat-error>
           </mat-form-field>
         </div>
 
         <!-- Coupon Value -->
         <div>
           <label for="couponValue" class="block text-sm font-medium text-gray-700 mb-2">
-            Valor do cupom
+            Valor do cupom <span class="text-red-500">*</span>
           </label>
           <mat-form-field appearance="outline" class="w-full">
             <input 
@@ -105,7 +119,11 @@
               formControlName="couponValue"
               placeholder="000000000"
               class="text-sm"
+              required
             >
+            <mat-error *ngIf="form.get('couponValue')?.hasError('required')">
+              Valor do cupom é obrigatório
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -114,7 +132,7 @@
         <!-- Rescue Value -->
         <div>
           <label for="rescueValue" class="block text-sm font-medium text-gray-700 mb-2">
-            Valor para resgate
+            Valor para resgate <span class="text-red-500">*</span>
           </label>
           <mat-form-field appearance="outline" class="w-full">
             <input 
@@ -123,7 +141,11 @@
               formControlName="rescueValue"
               placeholder="000000000"
               class="text-sm"
+              required
             >
+            <mat-error *ngIf="form.get('rescueValue')?.hasError('required')">
+              Valor para resgate é obrigatório
+            </mat-error>
           </mat-form-field>
         </div>
 
@@ -148,7 +170,7 @@
       <!-- Select Product -->
       <div>
         <label for="selectedProduct" class="block text-sm font-medium text-gray-700 mb-2">
-          Selecione o produto
+          Selecione o produto <span class="text-red-500">*</span>
         </label>
         <mat-form-field appearance="outline" class="w-full">
           <input 
@@ -157,9 +179,11 @@
             formControlName="selectedProduct"
             placeholder="Dropdown item"
             class="text-sm"
-            (keydown)="onProductSelected($event)"
+            required
           >
-          <mat-icon matSuffix class="text-green-500">search</mat-icon>
+          <mat-error *ngIf="form.get('selectedProduct')?.hasError('required')">
+            Selecione um produto
+          </mat-error>
         </mat-form-field>
       </div>
 
