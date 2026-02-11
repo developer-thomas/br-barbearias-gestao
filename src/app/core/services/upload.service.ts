@@ -1,11 +1,13 @@
-import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface FileResponse {
-  url: string;
+  fileUrl: string;
+  fileKey: string;
 }
+
 @Injectable({
   providedIn: 'root',
 })
@@ -16,7 +18,7 @@ export class UploadService {
     const formData = new FormData();
     formData.append('file', file);
     return this.http.post<FileResponse>(
-      `${environment.api}/v1/upload-one-file`,
+      `${environment.api}/v1/upload/one-file`,
       formData
     );
   }

@@ -86,6 +86,7 @@ export class FormComponent {
     } as any,
     step4: {
       imageUrl: null,
+      imageKey: null,
     } as any,
     step5: {
       sms: true,
@@ -178,8 +179,8 @@ export class FormComponent {
       sms: formValues.step5.sms === true,
       zapzap: formValues.step5.whatsapp === true,
       email: formValues.step5.email === true,
-      fileUrl: formValues.step4.imageUrl || null,
-      fileKey: null,
+      imageUrl: formValues.step4.imageUrl || null,
+      imageKey: formValues.step4.imageKey || null,
     }
 
     this.commonCampaignService.createCommonCampaign(requestData).subscribe({
@@ -197,10 +198,17 @@ export class FormComponent {
   private formatDateToISO(date: string, time: string): string {
     if (!date) return new Date().toISOString()
 
-    // Format: YYYY-MM-DDTHH:mm:ss.sssZ
+    // Combine date and time and convert to ISO 8601
     const timeValue = time || '00:00'
-    const dateTimeString = `${date}T${timeValue}:00.000Z`
-    return dateTimeString
+    const dateTimeString = `${date}T${timeValue}:00`
+    const dateObject = new Date(dateTimeString)
+    
+    // Check if date is valid
+    if (isNaN(dateObject.getTime())) {
+      return new Date().toISOString()
+    }
+    
+    return dateObject.toISOString()
   }
 
   private mapProductType(type: string): string {

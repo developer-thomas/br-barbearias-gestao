@@ -1,13 +1,22 @@
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { FileResponse, UploadService } from '../../../../../../../../core/services/upload.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { ToastrService } from 'ngx-toastr';
 
 export interface Step4Data {
   imageUrl: string | null
+  imageKey?: string | null
+}
+
+interface UploadFileResponse {
+  fileUrl: string
+  fileKey: string | null
 }
 
 @Component({
@@ -30,11 +39,17 @@ export class StepFourComponent {
   }
   @Output() dataChange = new EventEmitter<Step4Data>()
 
-  form: FormGroup
+  form!: FormGroup
+
+  private uploadService = inject(UploadService)
+  private toastr = inject(ToastrService)
+
+  @Input() uploading = false
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       imageUrl: [null],
+      imageKey: [null],
     })
   }
 
@@ -50,13 +65,22 @@ export class StepFourComponent {
 
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = () => {
-        this.form.patchValue({ imageUrl: reader.result as string })
+    if (!file) return
+
+    this.uploadService.uploadFile(file).subscribe({
+      next: (resp: FileResponse) => {
+        if (!this.isUploadFileResponse(resp)) {
+          this.toastr.error('Resposta inválida do upload', 'Upload')
+          return
+        }
+        this.form.patchValue({ imageUrl: resp.fileUrl, imageKey: resp.fileKey })
+        this.toastr.success('Imagem enviada com sucesso', 'Upload')
+      },
+      error: (err) => {
+        console.error('Upload error', err)
+        this.toastr.error('Erro ao enviar a imagem', 'Upload')
       }
-      reader.readAsDataURL(file)
-    }
+    })
   }
 
   triggerFileInput(fileInput: HTMLInputElement) {
@@ -64,11 +88,19 @@ export class StepFourComponent {
   }
 
   removeImage() {
-    this.form.patchValue({ imageUrl: null })
+    this.form.patchValue({ imageUrl: null, imageKey: null })
     // Also reset the file input value to allow re-uploading the same file
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement
     if (fileInput) {
       fileInput.value = ""
     }
+  }
+
+  private isUploadFileResponse(value: unknown): value is UploadFileResponse {
+    return typeof value === 'object' &&
+      value !== null &&
+      'fileUrl' in value &&
+      typeof (value as { fileUrl: unknown }).fileUrl === 'string' &&
+      'fileKey' in value
   }
 }

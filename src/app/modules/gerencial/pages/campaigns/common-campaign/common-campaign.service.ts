@@ -51,8 +51,8 @@ export interface CreateCommonCampaignRequest {
   sms: boolean;
   zapzap: boolean;
   email: boolean;
-  fileUrl: string | null;
-  fileKey: string | null;
+  imageUrl: string | null;
+  imageKey: string | null;
 }
 
 export interface CreateCommonCampaignResponse {
