@@ -45,6 +45,7 @@ export class FormComponent {
 
   @ViewChild(StepOneComponent) stepOneComponent!: StepOneComponent
   @ViewChild(StepTwoComponent) stepTwoComponent!: StepTwoComponent
+  @ViewChild(StepThreeComponent) stepThreeComponent!: StepThreeComponent
 
   currentStep = signal(0)
 
@@ -103,14 +104,21 @@ export class FormComponent {
     // Validate current step before proceeding
     if (currentStepIndex === 0) {
       if (!this.stepOneComponent.isFormValid) {
-        this.toastr.error('Preencha todos os campos obrigatórios 1 ', 'Erro de validação')
+        this.toastr.error('Preencha todos os campos obrigatórios', 'Erro de validação')
         return
       }
     }
 
     if (currentStepIndex === 1) {
       if (!this.stepTwoComponent.isFormValid) {
-        this.toastr.error('Preencha todos os campos obrigatórios 2', 'Erro de validação')
+        this.toastr.error('Preencha todos os campos obrigatórios', 'Erro de validação')
+        return
+      }
+    }
+
+    if (currentStepIndex === 2) {
+      if (!this.stepThreeComponent.isFormValid) {
+        this.toastr.error('Selecione pelo menos uma localização', 'Erro de validação')
         return
       }
     }
@@ -155,10 +163,10 @@ export class FormComponent {
       description: formValues.step1.description,
       startAt: this.formatDateToISO(formValues.step2.date, formValues.step2.time),
       productType: this.mapProductType(formValues.step2.productType),
-      couponcode: formValues.step2.couponCode || '',
+      couponCode: formValues.step2.couponCode || '',
       config: formValues.step2.configuration || 'percentual',
       couponValue: parseFloat(formValues.step2.couponValue) || 0,
-      rescueLimit: parseInt(formValues.step2.rescueValue) || 1,
+      rescuedValue: parseInt(formValues.step2.rescueValue) || 1,
       rescueType: this.mapRescueType(formValues.step2.configuration),
       productsId: formValues.step2.productNames || [],
       productConfig: formValues.step2.productConfiguration || '',
@@ -166,12 +174,12 @@ export class FormComponent {
       startAge: formValues.step3.ageFrom || 18,
       endAge: formValues.step3.ageTo || 100,
       gender: this.mapGender(formValues.step3.gender),
-      franchiseesId: formValues.step3.locationNames || [],
+      franchiseeIds: formValues.step3.locationNames || [],
       sms: formValues.step5.sms === true,
-      whatsapp: formValues.step5.whatsapp === true,
+      zapzap: formValues.step5.whatsapp === true,
       email: formValues.step5.email === true,
       fileUrl: formValues.step4.imageUrl || null,
-      filekey: null,
+      fileKey: null,
     }
 
     this.commonCampaignService.createCommonCampaign(requestData).subscribe({

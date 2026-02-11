@@ -1,9 +1,13 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonCampaignService, ShelfProduct, ShelfProductsResponse } from '../../../common-campaign.service';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Observable, map, startWith } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,7 +27,7 @@ export interface StepTwoData {
   rescueValue: string
   usageLimit: string
   selectedProduct: string
-  productNames: string[]
+  productNames: number[]
   productConfiguration: string
   productUsageLimit: string
 }
@@ -44,12 +48,16 @@ export interface StepTwoData {
     MatCardModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatAutocompleteModule,
+    MatChipsModule,
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './step-two.component.html',
   styleUrl: './step-two.component.scss'
 })
 export class StepTwoComponent {
+  private commonCampaignService = inject(CommonCampaignService)
+
   @Input() data: StepTwoData = {
     date: "",
     time: "",
@@ -66,8 +74,13 @@ export class StepTwoComponent {
   }
   @Output() dataChange = new EventEmitter<StepTwoData>()
 
+  @ViewChild('productInput') productInput!: ElementRef<HTMLInputElement>
+
   form: FormGroup
-  productNames: string[] = []
+  productCtrl = new FormControl<string | ShelfProduct | null>('')
+  selectedProducts: ShelfProduct[] = []
+  allProducts: ShelfProduct[] = []
+  filteredProducts!: Observable<ShelfProduct[]>
 
   configurationOptions = [
     { value: "percentual", label: "Percentual" },
@@ -97,7 +110,6 @@ export class StepTwoComponent {
       rescueValue: [""],
       usageLimit: ["resgate-unico"],
       // Produto fields
-      selectedProduct: [""],
       productConfiguration: ["ao-cortar-o-cabelo"],
       productUsageLimit: ["resgate-unico"],
     })
@@ -114,13 +126,21 @@ export class StepTwoComponent {
       couponValue: this.data.couponValue,
       rescueValue: this.data.rescueValue,
       usageLimit: this.data.usageLimit,
-      selectedProduct: this.data.selectedProduct,
       productConfiguration: this.data.productConfiguration,
       productUsageLimit: this.data.productUsageLimit,
     })
 
-    // Initialize product names
-    this.productNames = [...this.data.productNames]
+    // Load products from API
+    this.loadProducts()
+
+    // Setup filtered products
+    this.filteredProducts = this.productCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : (value as ShelfProduct | null)?.name;
+        return this._filterProducts(name || '');
+      })
+    )
 
     // Update validators based on product type
     this.updateValidators()
@@ -139,7 +159,7 @@ export class StepTwoComponent {
   private updateValidators() {
     const productType = this.form.get("productType")?.value
     const couponFields = ["couponCode", "configuration", "couponValue", "rescueValue"]
-    const productFields = ["selectedProduct", "productConfiguration", "productUsageLimit"]
+    const productFields = ["productConfiguration", "productUsageLimit"]
 
     if (productType === "cupom") {
       // Add validators for coupon fields
@@ -156,11 +176,8 @@ export class StepTwoComponent {
       this.form.get("usageLimit")?.clearValidators()
       this.form.get("usageLimit")?.updateValueAndValidity()
     } else if (productType === "produto") {
-      // Add validators for selectedProduct only
-      this.form.get("selectedProduct")?.setValidators([Validators.required])
-      this.form.get("selectedProduct")?.updateValueAndValidity()
-      // Remove validators for other product fields
-      const otherProductFields = ["productConfiguration", "productUsageLimit"]; otherProductFields.forEach((field) => {
+      // Remove validators for product fields
+      productFields.forEach((field) => {
         this.form.get(field)?.clearValidators()
         this.form.get(field)?.updateValueAndValidity()
       })
@@ -173,7 +190,7 @@ export class StepTwoComponent {
       this.form.get("usageLimit")?.updateValueAndValidity()
     } else {
       // Remove validators for all fields
-      const allFields = [...couponFields, "selectedProduct", "productConfiguration", "productUsageLimit", "usageLimit"];
+      const allFields = [...couponFields, ...productFields, "usageLimit"];
       allFields.forEach((field) => {
         this.form.get(field)?.clearValidators()
         this.form.get(field)?.updateValueAndValidity()
@@ -185,7 +202,7 @@ export class StepTwoComponent {
     const formValue = this.form.value
     this.dataChange.emit({
       ...formValue,
-      productNames: this.productNames,
+      productNames: this.selectedProducts.map(p => p.id),
     })
   }
 
@@ -197,29 +214,64 @@ export class StepTwoComponent {
     return this.form.get("productType")?.value === "produto"
   }
 
-  addProductName(productName: string) {
-    if (productName.trim()) {
-      this.productNames.push(productName.trim())
-      this.form.get("selectedProduct")?.setValue("")
+  loadProducts() {
+    this.commonCampaignService.getShelfProducts({ status: 'ACTIVE' }).subscribe({
+      next: (response: ShelfProductsResponse) => {
+        this.allProducts = response.shelfs || []
+        
+        // Force filter to run once products are loaded
+        const currentVal = this.productCtrl.value;
+        this.productCtrl.setValue(currentVal, { emitEvent: true });
+        
+        // Load previously selected products if any
+        if (this.data.productNames && this.data.productNames.length > 0) {
+          this.selectedProducts = this.allProducts.filter(p => 
+            this.data.productNames.includes(p.id)
+          )
+          this.emitFormData() // Ensure form state is updated with selected products
+        }
+      },
+      error: (error: any) => {
+        console.error('Erro ao carregar produtos:', error)
+      }
+    })
+  }
+
+  private _filterProducts(value: string): ShelfProduct[] {
+    const filterValue = value.toLowerCase()
+    return this.allProducts.filter(product => 
+      !this.selectedProducts.some(p => p.id === product.id) &&
+      product.name.toLowerCase().includes(filterValue)
+    )
+  }
+
+  selectProduct(event: MatAutocompleteSelectedEvent): void {
+    const product = event.option.value as ShelfProduct
+    if (!this.selectedProducts.some(p => p.id === product.id)) {
+      this.selectedProducts.push(product)
+      this.emitFormData()
+    }
+    this.productInput.nativeElement.value = ''
+    this.productCtrl.setValue('')
+  }
+
+  displayProduct(product: ShelfProduct | string | null): string {
+    if (!product) return ''
+    return typeof product === 'string' ? product : product.name
+  }
+
+  removeProduct(product: ShelfProduct): void {
+    const index = this.selectedProducts.indexOf(product)
+    if (index >= 0) {
+      this.selectedProducts.splice(index, 1)
       this.emitFormData()
     }
   }
 
-  removeProductName(index: number) {
-    this.productNames.splice(index, 1)
-    this.emitFormData()
-  }
-
-  onProductSelected(event: KeyboardEvent) {
-    if (event.key === "Enter") {
-      event.preventDefault()
-      const inputElement = event.target as HTMLInputElement
-      this.addProductName(inputElement.value)
-      inputElement.value = ""
-    }
-  }
-
   get isFormValid(): boolean {
+    if (this.form.get('productType')?.value === 'produto') {
+      return this.form.valid && this.selectedProducts.length > 0
+    }
     return this.form.valid
   }
 }

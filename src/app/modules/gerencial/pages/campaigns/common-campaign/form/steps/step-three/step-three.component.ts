@@ -149,6 +149,7 @@ export class StepThreeComponent {
       this.locationNames.push(region.id)
       this.selectedRegions.push(region)
       this.form.get("selectedLocation")?.setValue("")
+      this.form.get("selectedLocation")?.setErrors(null)
       this.emitFormData()
     }
   }
@@ -168,5 +169,9 @@ export class StepThreeComponent {
 
   displayRegionFn(region: RegionDisplay): string {
     return region && region.fullName ? region.fullName : ''
+  }
+
+  get isFormValid(): boolean {
+    return this.form.valid && this.locationNames.length > 0
   }
 }

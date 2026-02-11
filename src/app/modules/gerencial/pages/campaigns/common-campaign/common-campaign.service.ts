@@ -36,10 +36,10 @@ export interface CreateCommonCampaignRequest {
   description: string;
   startAt: string;
   productType: string;
-  couponcode: string;
+  couponCode: string;
   config: string;
   couponValue: number;
-  rescueLimit: number;
+  rescuedValue: number;
   rescueType: string;
   productsId: number[];
   productConfig: string;
@@ -47,17 +47,31 @@ export interface CreateCommonCampaignRequest {
   startAge: number;
   endAge: number;
   gender: string;
-  franchiseesId: number[];
+  franchiseeIds: number[];
   sms: boolean;
-  whatsapp: boolean;
+  zapzap: boolean;
   email: boolean;
   fileUrl: string | null;
-  filekey: string | null;
+  fileKey: string | null;
 }
 
 export interface CreateCommonCampaignResponse {
   id: number;
   message: string;
+}
+
+export interface ShelfProduct {
+  id: number;
+  name: string;
+  status: string;
+  points: number;
+  expirateAt: string;
+}
+
+export interface ShelfProductsResponse {
+  pages: number;
+  count: number;
+  shelfs: ShelfProduct[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -101,6 +115,28 @@ export class CommonCampaignService {
 
   public createCommonCampaign(data: CreateCommonCampaignRequest): Observable<CreateCommonCampaignResponse> {
     return this.http.post<CreateCommonCampaignResponse>(`${this.baseUrl}/new`, data);
+  }
+
+  public getShelfProducts(query?: { name?: string; take?: number; skip?: number; status?: string }): Observable<ShelfProductsResponse> {
+    let params = new HttpParams();
+
+    if (query?.name) {
+      params = params.set('name', query.name);
+    }
+
+    if (query?.take !== undefined) {
+      params = params.set('take', query.take.toString());
+    }
+
+    if (query?.skip !== undefined) {
+      params = params.set('skip', query.skip.toString());
+    }
+
+    if (query?.status) {
+      params = params.set('status', query.status);
+    }
+
+    return this.http.get<ShelfProductsResponse>(`${environment.api}/v1/web/franchisor/config/shelf`, { params });
   }
 }
 

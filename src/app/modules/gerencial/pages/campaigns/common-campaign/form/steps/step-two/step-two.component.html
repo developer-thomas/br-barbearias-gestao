@@ -167,41 +167,54 @@
 
     <!-- Product Fields (shown when 'produto' is selected) -->
     <div *ngIf="showProductFields" class="space-y-6">
-      <!-- Select Product -->
+      <!-- Select Product with Autocomplete -->
       <div>
-        <label for="selectedProduct" class="block text-sm font-medium text-gray-700 mb-2">
+        <label class="block text-sm font-medium text-gray-700 mb-2">
           Selecione o produto <span class="text-red-500">*</span>
         </label>
         <mat-form-field appearance="outline" class="w-full">
-          <input 
-            matInput 
-            id="selectedProduct"
-            formControlName="selectedProduct"
-            placeholder="Dropdown item"
+          <input
+            #productInput
+            matInput
+            placeholder="Escreva para buscar produtos"
+            [formControl]="productCtrl"
+            [matAutocomplete]="auto"
             class="text-sm"
-            required
+          />
+          <mat-icon matSuffix class="text-green-500">search</mat-icon>
+          <mat-autocomplete 
+            #auto="matAutocomplete"
+            (optionSelected)="selectProduct($event)"
+            [displayWith]="displayProduct"
           >
-          <mat-error *ngIf="form.get('selectedProduct')?.hasError('required')">
-            Selecione um produto
-          </mat-error>
+            <mat-option 
+              *ngFor="let product of filteredProducts | async" 
+              [value]="product"
+            >
+              {{ product.name }}
+            </mat-option>
+          </mat-autocomplete>
         </mat-form-field>
-      </div>
 
-      <!-- Product Name Cards -->
-      <div *ngIf="productNames.length > 0" class="flex flex-wrap gap-3">
-        <div 
-          *ngFor="let productName of productNames; let i = index" 
-          class="flex items-center bg-gray-100 border border-gray-200 rounded-md px-3 py-1"
-        >
-          <span class="text-sm font-medium text-gray-700 mr-2">{{ productName }}</span>
-          <button 
-            type="button" 
-            mat-icon-button
-            class="text-gray-400 hover:text-red-500 w-5 h-5 leading-5"
-            (click)="removeProductName(i)"
+        <!-- Selected Products (Boxes below as per Image 2) -->
+        <div *ngIf="selectedProducts.length > 0" class="flex flex-wrap gap-3 mt-4">
+          <div 
+            *ngFor="let product of selectedProducts" 
+            class="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-2"
           >
-            <mat-icon class="text-sm">close</mat-icon>
-          </button>
+            <span class="text-sm font-medium text-gray-700 mr-2">{{ product.name }}</span>
+            <button 
+              type="button" 
+              class="text-green-600 hover:text-green-700 font-bold"
+              (click)="removeProduct(product)"
+            >
+              <mat-icon class="text-lg">close</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="showProductFields && selectedProducts.length === 0" class="text-red-500 text-xs mt-1">
+          Selecione pelo menos um produto
         </div>
       </div>
 

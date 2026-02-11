@@ -40,7 +40,7 @@
 
     <!-- Localização Section -->
     <div class="bg-white rounded-xl p-6 border border-gray-200">
-      <h3 class="text-lg font-semibold text-gray-900 mb-6">Localização</h3>
+      <h3 class="text-lg font-semibold text-gray-900 mb-6">Localização <span class="text-red-500">*</span></h3>
 
       <!-- Location Search -->
       <div class="mb-6">
@@ -55,21 +55,26 @@
             >
             <mat-autocomplete
               #auto="matAutocomplete"
-              [displayWith]="displayRegionFn.bind(this)"
+              [displayWith]="displayRegionFn"
               (optionSelected)="onRegionSelected($event.option.value)"
             >
-              <mat-option *ngFor="let region of filteredRegions$ | async" [value]="region">
-                {{ region.fullName }}
-              </mat-option>
+              @for (region of filteredRegions$ | async; track region.fullName) {
+                <mat-option [value]="region">
+                  {{ region.fullName }}
+                </mat-option>
+              }
             </mat-autocomplete>
           </mat-form-field>
           <button
             type="button"
-            class="h-[56px] px-6 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50"
+            class="h-[56px] px-6 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50"
             (click)="onLocationSearch()"
           >
             Procurar
           </button>
+        </div>
+        <div *ngIf="locationNames.length === 0" class="text-red-500 text-xs mt-1">
+          * Selecione pelo menos uma localização
         </div>
       </div>
 
