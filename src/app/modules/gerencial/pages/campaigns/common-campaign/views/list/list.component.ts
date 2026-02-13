@@ -1,21 +1,20 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { CommomTableComponent, TableColumn } from '../../../../../../shared/components/commom-table/commom-table.component';
-import { PageHeaderComponent } from '../../../../../../shared/components/page-header/page-header.component';
+import { CommonCampaignListItem, CommonCampaignListResponse, CommonCampaignService } from '../../common-campaign.service';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FilterOption, MultipleFilterTableComponent, ViewMode } from '../../../../../../shared/components/multiple-filter-table/multiple-filter-table.component';
+
 import { CommonModule } from '@angular/common';
 import { DashboardComponent } from '../dashboard/dashboard.component';
+import { PageHeaderComponent } from '../../../../../../shared/components/page-header/page-header.component';
+import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
-import { CommonCampaignService, CommonCampaignListItem, CommonCampaignListResponse } from '../../common-campaign.service';
 
 export interface CampaignData {
   id: number
   date: string
   time: string
   campaignName: string
-  sendes: string
-  impacteds: string
   status: 'Em andamento' | 'Finalizada'
 }
 
@@ -51,8 +50,6 @@ export class ListComponent implements OnInit {
     { label: 'Data', key: 'date', type: 'text' },
     { label: 'Horário', key: 'time', type: 'text' },
     { label: 'Nome da campanha', key: 'campaignName', type: 'text' },
-    { label: 'Envios', key: 'sendes', type: 'text' },
-    { label: 'Impactados', key: 'impacteds', type: 'text' },
     { label: 'Status', key: 'status', type: 'text' },
     { label: '', key: 'menu', type: 'menu' },
   ];
@@ -105,8 +102,10 @@ export class ListComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
+    const skip = (page - 1) * size;
+
     this.commonCampaignService
-      .getCommonCampaigns({ page, take: size })
+      .getCommonCampaigns({ skip, take: size })
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: (response: CommonCampaignListResponse) => {
@@ -161,8 +160,6 @@ export class ListComponent implements OnInit {
       date: this.formatDate(item.createdAt),
       time: this.formatHour(item.hour),
       campaignName: item.name ?? '-',
-      sendes: this.formatNumber(item.sent),
-      impacteds: this.formatNumber(item.impact),
       status: this.formatStatus(item.status)
     }));
   }

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../../../environments/environment.development';
 
 export interface CommonCampaignListQuery {
-  page?: number;
+  skip?: number;
   take?: number;
   status?: string;
   type?: string;
@@ -20,9 +20,8 @@ export interface CommonCampaignListItem {
   status: string;
   createdAt: string;
   hour: number;
-  sent: number;
-  impact: number;
   type?: string;
+  approvedStatus: string;
 }
 
 export interface CommonCampaignListResponse {
@@ -77,13 +76,13 @@ export interface ShelfProductsResponse {
 @Injectable({ providedIn: 'root' })
 export class CommonCampaignService {
   private http = inject(HttpClient);
-  private readonly baseUrl = `${environment.api}/v1/web/franchisor/campaigns/common`;
+  private readonly baseUrl = `${environment.api}/v1/web/franchisor/campaigns`;
 
   public getCommonCampaigns(query?: CommonCampaignListQuery): Observable<CommonCampaignListResponse> {
     let params = new HttpParams();
 
-    if (query?.page !== undefined) {
-      params = params.set('page', query.page.toString());
+    if (query?.skip !== undefined) {
+      params = params.set('skip', query.skip.toString());
     }
 
     if (query?.take !== undefined) {
@@ -110,11 +109,11 @@ export class CommonCampaignService {
       params = params.set('endDate', query.endDate);
     }
 
-    return this.http.get<CommonCampaignListResponse>(`${this.baseUrl}/list`, { params });
+    return this.http.get<CommonCampaignListResponse>(`${this.baseUrl}/approvals/list`, { params });
   }
 
   public createCommonCampaign(data: CreateCommonCampaignRequest): Observable<CreateCommonCampaignResponse> {
-    return this.http.post<CreateCommonCampaignResponse>(`${this.baseUrl}/new`, data);
+    return this.http.post<CreateCommonCampaignResponse>(`${this.baseUrl}/common/new`, data);
   }
 
   public getShelfProducts(query?: { name?: string; take?: number; skip?: number; status?: string }): Observable<ShelfProductsResponse> {
