@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatStepperModule } from "@angular/material/stepper"
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 import { Router } from '@angular/router';
 import { StepFiveComponent } from './steps/step-five/step-five.component';
@@ -28,6 +29,7 @@ export interface StepData {
     MatStepperModule,
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
     StepOneComponent,
     PageHeaderComponent,
     StepTwoComponent,

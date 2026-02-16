@@ -14,12 +14,16 @@
             (click)="step.completed && goToStep(i)"
             (keydown.enter)="step.completed && goToStep(i)"
             [attr.aria-disabled]="!step.completed"
-          >
+            matTooltip="Complete este passo antes"
+            [matTooltipDisabled]="step.completed"
+            matTooltipPosition="above"
+            >
           <!-- Step Circle -->
           <div class="flex items-center">
             <div 
               class="px-6 py-2 rounded-full text-sm font-medium transition-all duration-200"
               [class.cursor-pointer]="step.completed"
+              [class.cursor-not-allowed]="!step.completed"
               [class.bg-green-500]="step.active"
               [class.text-white]="step.active"
               [class.bg-gray-200]="!step.active && !step.completed"
