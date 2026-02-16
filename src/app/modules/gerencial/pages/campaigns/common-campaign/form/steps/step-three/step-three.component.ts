@@ -174,4 +174,9 @@ export class StepThreeComponent {
   get isFormValid(): boolean {
     return this.form.valid && this.locationNames.length > 0
   }
+
+  /** mark controls as touched so validation messages appear */
+  public markAsTouched(): void {
+    this.form.markAllAsTouched();
+  }
 }

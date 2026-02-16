@@ -300,4 +300,9 @@ export class StepTwoComponent {
     }
     return this.form.valid
   }
+
+  /** mark all inner controls as touched so validation UI appears */
+  public markAsTouched(): void {
+    this.form.markAllAsTouched();
+  }
 }

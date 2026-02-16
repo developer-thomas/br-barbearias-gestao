@@ -104,6 +104,8 @@ export class FormComponent {
 
     // Validate current step before proceeding
     if (currentStepIndex === 0) {
+      // highlight fields then validate
+      this.stepOneComponent.markAsTouched();
       if (!this.stepOneComponent.isFormValid) {
         this.toastr.error('Preencha todos os campos obrigatórios', 'Erro de validação')
         return
@@ -111,6 +113,7 @@ export class FormComponent {
     }
 
     if (currentStepIndex === 1) {
+      this.stepTwoComponent.markAsTouched();
       if (!this.stepTwoComponent.isFormValid) {
         this.toastr.error('Preencha todos os campos obrigatórios', 'Erro de validação')
         return
@@ -118,6 +121,7 @@ export class FormComponent {
     }
 
     if (currentStepIndex === 2) {
+      this.stepThreeComponent.markAsTouched();
       if (!this.stepThreeComponent.isFormValid) {
         this.toastr.error('Selecione pelo menos uma localização', 'Erro de validação')
         return

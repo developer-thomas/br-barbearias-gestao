@@ -39,6 +39,11 @@ export class StepOneComponent {
     return this.form.valid
   }
 
+  /** mark all controls as touched so UI shows validation errors */
+  public markAsTouched(): void {
+    this.form.markAllAsTouched();
+  }
+
   ngOnInit() {
     // Initialize form with input data
     this.form.patchValue(this.data)
