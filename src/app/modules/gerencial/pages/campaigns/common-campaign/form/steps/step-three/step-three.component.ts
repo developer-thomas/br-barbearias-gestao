@@ -149,6 +149,7 @@ export class StepThreeComponent {
       this.locationNames.push(region.id)
       this.selectedRegions.push(region)
       this.form.get("selectedLocation")?.setValue("")
+      // clear any previous required error once a location is selected
       this.form.get("selectedLocation")?.setErrors(null)
       this.emitFormData()
     }
@@ -157,6 +158,10 @@ export class StepThreeComponent {
   removeLocationName(index: number) {
     this.locationNames.splice(index, 1)
     this.selectedRegions.splice(index, 1)
+    // if no locations remain, set error so UI shows validation state when touched
+    if (this.locationNames.length === 0) {
+      this.form.get('selectedLocation')?.setErrors({ required: true });
+    }
     this.emitFormData()
   }
 
@@ -178,5 +183,12 @@ export class StepThreeComponent {
   /** mark controls as touched so validation messages appear */
   public markAsTouched(): void {
     this.form.markAllAsTouched();
+
+    // if no locations selected, mark the selectedLocation control as required
+    if (this.locationNames.length === 0) {
+      this.form.get('selectedLocation')?.setErrors({ required: true });
+    } else {
+      this.form.get('selectedLocation')?.setErrors(null);
+    }
   }
 }
