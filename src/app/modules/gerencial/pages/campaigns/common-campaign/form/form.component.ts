@@ -266,6 +266,9 @@ export class FormComponent {
   public goToStep(index: number): void {
     if (index < 0 || index >= this.steps.length) return;
 
+    // allow navigation only to already completed (past) steps
+    if (index >= this.currentStep()) return;
+
     // set active flags and keep completed state for previous steps
     this.steps = this.steps.map((s, i) => ({
       ...s,
