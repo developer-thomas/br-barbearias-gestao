@@ -40,4 +40,46 @@
       }
     }
   }
+
+.details {
+    ::ng-deep {
+      .mat-mdc-tab-header {
+        border-bottom: none;
+      }
   
+      .mat-mdc-tab-labels {
+        gap: 24px;
+      }
+  
+      .mat-mdc-tab {
+        padding: 0;
+        min-width: auto;
+        opacity: 0.6;
+      }
+  
+      .mat-mdc-tab:not(.mat-mdc-tab-disabled) .mdc-tab__text-label, 
+      .mat-mdc-tab-link:not(.mat-mdc-tab-disabled) .mdc-tab__text-label {
+        color: #1f2937;
+        font-weight: 500;
+      }
+  
+      .mat-mdc-tab.mdc-tab--active {
+        opacity: 1;
+        .mdc-tab__text-label {
+          font-weight: 600;
+        }
+      }
+  
+      .mat-mdc-tab-body-content {
+        padding-top: 24px;
+      }
+  
+      .mat-mdc-tab-ripple {
+        display: none;
+      }
+  
+      .mat-mdc-tab-indicator__content--underline {
+        background-color: #1f2937;
+      }
+    }
+  }

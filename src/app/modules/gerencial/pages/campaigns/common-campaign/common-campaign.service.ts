@@ -73,6 +73,38 @@ export interface ShelfProductsResponse {
   shelfs: ShelfProduct[];
 }
 
+export interface CommonCampaignDetails {
+  id: number;
+  type: string;
+  name: string;
+  description: string;
+  isRecurring: boolean;
+  status: string;
+  fileKey: string | null;
+  fileUrl: string | null;
+  sents: any[];
+  result: any[];
+  product: {
+    startDate: string;
+    endDate: string | null;
+    productConfig: string;
+    productRescue: string;
+    productType: string;
+    products: {
+      id: number;
+      name: string;
+      description: string;
+    }[];
+    redemptionValue: number;
+  };
+  publicLoc: {
+    ageEnd: number;
+    ageStart: number;
+    genderFilter: string;
+    loc: string;
+  };
+}
+
 @Injectable({ providedIn: 'root' })
 export class CommonCampaignService {
   private http = inject(HttpClient);
@@ -110,6 +142,11 @@ export class CommonCampaignService {
     }
 
     return this.http.get<CommonCampaignListResponse>(`${this.baseUrl}/approvals/list`, { params });
+  }
+
+  public getCommonCampaignById(id: number): Observable<CommonCampaignDetails> {
+    const detailsUrl = `${environment.api}/v1/web/franchisor/campaigns/common/${id}/details`;
+    return this.http.get<CommonCampaignDetails>(detailsUrl);
   }
 
   public createCommonCampaign(data: CreateCommonCampaignRequest): Observable<CreateCommonCampaignResponse> {

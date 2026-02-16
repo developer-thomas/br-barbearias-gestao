@@ -258,4 +258,17 @@ export class FormComponent {
   onStep5DataChange(stepData: any) {
     this.formData.update((current) => ({ ...current, step5: stepData }))
   }
+
+  public goToStep(index: number): void {
+    if (index < 0 || index >= this.steps.length) return;
+
+    // set active flags and keep completed state for previous steps
+    this.steps = this.steps.map((s, i) => ({
+      ...s,
+      active: i === index,
+      completed: i < index ? true : s.completed && i === index ? s.completed : i < this.currentStep() ? true : s.completed
+    }));
+
+    this.currentStep.set(index);
+  }
 }

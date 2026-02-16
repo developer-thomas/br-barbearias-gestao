@@ -6,6 +6,7 @@ import { FilterOption, MultipleFilterTableComponent, ViewMode } from '../../../.
 
 import { CommonModule } from '@angular/common';
 import { DashboardComponent } from '../dashboard/dashboard.component';
+import { MatButtonModule } from '@angular/material/button';
 import { PageHeaderComponent } from '../../../../../../shared/components/page-header/page-header.component';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
@@ -26,7 +27,8 @@ export interface CampaignData {
     CommomTableComponent,
     MultipleFilterTableComponent,
     CommonModule,
-    DashboardComponent
+    DashboardComponent,
+    MatButtonModule
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'

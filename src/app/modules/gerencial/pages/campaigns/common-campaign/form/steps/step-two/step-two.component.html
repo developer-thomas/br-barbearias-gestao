@@ -33,13 +33,20 @@
           Horário
         </label>
         <mat-form-field appearance="outline" class="w-full">
-          <input 
-            matInput 
+          <!-- use native time input to enforce time format -->
+          <input
+            matInput
             id="time"
+            type="time"
             formControlName="time"
-            placeholder="00:00"
+            placeholder="hh:mm"
+            maxlength="5"
             class="text-sm"
-          >
+            (keypress)="onTimeKeyPress($event)"
+          />
+          <mat-error *ngIf="form.get('time')?.hasError('pattern')">
+            Horário inválido (use HH:MM)
+          </mat-error>
         </mat-form-field>
       </div>
     </div>

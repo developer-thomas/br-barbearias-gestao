@@ -101,7 +101,8 @@ export class StepTwoComponent {
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       date: [null, [Validators.required]],
-      time: [""],
+      // enforce HH:MM pattern; use native time input in the template
+      time: ["", [Validators.pattern(/^([01]\d|2[0-3]):[0-5]\d$/)]],
       productType: ["cupom", [Validators.required]],
       // Cupom fields
       couponCode: [""],
@@ -265,6 +266,31 @@ export class StepTwoComponent {
     if (index >= 0) {
       this.selectedProducts.splice(index, 1)
       this.emitFormData()
+    }
+  }
+
+  // Allow only digits and colon for time input and enforce max length HH:MM
+  onTimeKeyPress(event: KeyboardEvent): void {
+    const key = event.key;
+
+    // allow control keys (Backspace, Tab, Arrow keys, etc.)
+    if (key.length > 1) return;
+
+    // only allow digits and colon
+    if (!/[0-9:]/.test(key)) {
+      event.preventDefault();
+      return;
+    }
+
+    const control = this.form.get('time');
+    const currentValue: string = control?.value || '';
+
+    // If selection covers text, allow replacement; otherwise block when length >= 5
+    const target = event.target as HTMLInputElement | null;
+    const selectionLength = target ? (target.selectionEnd ?? 0) - (target.selectionStart ?? 0) : 0;
+
+    if (currentValue.length - selectionLength >= 5) {
+      event.preventDefault();
     }
   }
 

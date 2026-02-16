@@ -6,16 +6,25 @@
       <!-- Steps Header -->
       <div class="flex items-center justify-between mb-12">
         <div *ngFor="let step of steps; let i = index" class="flex items-center">
+          <!-- clickable step -->
+          <div
+            class="flex items-center"
+            role="button"
+            tabindex="0"
+            (click)="goToStep(i)"
+            (keydown.enter)="goToStep(i)"
+          >
           <!-- Step Circle -->
           <div class="flex items-center">
             <div 
-              class="px-6 py-2 rounded-full text-sm font-medium transition-all duration-200"
+              class="px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer"
               [class.bg-green-500]="step.active"
               [class.text-white]="step.active"
               [class.bg-gray-200]="!step.active && !step.completed"
               [class.text-gray-600]="!step.active && !step.completed"
               [class.bg-green-100]="step.completed && !step.active"
               [class.text-green-700]="step.completed && !step.active"
+              aria-label="Ir para o passo {{ step.label }}"
             >
               {{ step.label }}
             </div>

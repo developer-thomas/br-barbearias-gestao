@@ -1,11 +1,13 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommomTableComponent, TableColumn } from '../../../../../../shared/components/commom-table/commom-table.component';
-import { PageHeaderComponent } from '../../../../../../shared/components/page-header/page-header.component';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FilterOption, MultipleFilterTableComponent, ViewMode } from '../../../../../../shared/components/multiple-filter-table/multiple-filter-table.component';
+
 import { CommonModule } from '@angular/common';
 import { DashboardComponent } from '../dashboard/dashboard.component';
+import { MatButtonModule } from '@angular/material/button';
+import { PageHeaderComponent } from '../../../../../../shared/components/page-header/page-header.component';
+import { ToastrService } from 'ngx-toastr';
 
 export interface CampaignData {
   id: number
@@ -25,7 +27,8 @@ export interface CampaignData {
     CommomTableComponent,
     MultipleFilterTableComponent,
     CommonModule,
-    DashboardComponent
+    DashboardComponent,
+    MatButtonModule
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'

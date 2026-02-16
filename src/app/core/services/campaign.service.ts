@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 
 import { Campaign } from '../models/campaign';
 import { Observable } from 'rxjs';
-import { Pagination } from '../../shared/models/pagination.model';
+import { Pagination } from '../../modules/shared/models/pagination.model';
 import { environment } from '../../../environments/environment';
 
 export interface CampaignsParams {
